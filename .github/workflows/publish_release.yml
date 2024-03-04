@@ -1,0 +1,23 @@
+name: Publish Release  
+
+on:
+  push:
+    tags:
+    - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Setup Rust
+      uses: ATiltedTree/setup-rust@v1
+      with:
+        rust-version: stable
+
+    - name: Publish Crate on Crates.io 
+      run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
+

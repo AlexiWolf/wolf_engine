@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run_tests:
+    name: Run Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        rust-version: 
+          - stable 
+        platform:
+          - { os: ubuntu-latest }
+          - { os: windows-latest }
+          - { os: macos-latest }
+    env:
+      RUST_BACKTRACE: 1
+      CARGO_TERM_COLOR: always
+    runs-on: ${{ matrix.platform.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        toolchain: stable 
+    - name: Test Workspace on ${{ matrix.platform.os }} 
+      shell: bash
+      run: cargo test --workspace --verbose --all-features  
+
+  check_code_format:
+    name: Check Code Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable 
+          components: rustfmt 
+      - name: Check Code Format
+        shell: bash
+        run: cargo fmt --check 
+
+  check_clippy_warnings:
+    name: Check Clippy Warnings
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable 
+          components: clippy
+      - name: Check Code Format
+        shell: bash
+        run: cargo clippy --all-features -- --deny warnings 
+ 

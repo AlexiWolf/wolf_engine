@@ -1,0 +1,16 @@
+/target
+Cargo.lock
+
+# IDE files
+
+# Intelij / Pycharm
+
+*.iml
+.idea/
+
+# VS Code
+
+.vscode/
+
+# Tags File
+tags
