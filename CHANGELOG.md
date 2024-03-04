@@ -5,11 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+# [Unreleased]
 
-- None yet.
+- Added `wolf_engine_events` crate.
+  - Added public re-export of `wolf_engine_events` as `events`.
+- Added `wolf_engine_codegen` crate.
 
-## [0.1 - 0.25] 2021-08-11 - 2024-03-02
+## [wolf_engine_events]
+
+### [0.1]
+
+- Added `dynamic` module.
+- Added `dynamic::Event` trait.
+- Added `mpsc` module.
+  - Added `MpscEventReceiver` struct.
+  - Added `MpscEvenSender` struct. 
+  - Added `event_queue` struct.
+- Added `EventReceiver` trait.
+  - Added `next_event()` method.
+- Added `EventSender` trait.
+  - Added `send_event()` method.
+- Added `ReceiverDroppedError` struct.
+
+## [wolf_engine_codegen]
+
+### [0.1]
+
+- Added `Event` derive macro.
+
+# [0.1 - 0.25] 2021-08-11 - 2024-03-02
 
 These are the old, prototype versions of Wolf Engine, and changes to them
 are mostly undocumented.  You can find these versions in the
