@@ -10,4 +10,8 @@ homepage = "https://github.com/AlexiWolf/wolf_engine"
 keywords = ["wolf-engine", "game", "gamedev"]
 categories = ["game-development", "game-engines"]
 
+[workspace]
+members = ["crates/*"]
+
 [dependencies]
+wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events" }

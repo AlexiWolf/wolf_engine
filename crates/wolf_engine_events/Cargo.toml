@@ -1,0 +1,17 @@
+[package]
+name = "wolf_engine_events"
+description = "An event modules for Wolf Engine."
+version = "0.1.0"
+authors = ["AlexiWolf <alexi@wolvesin.space>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/AlexiWolf/wolf_engine"
+homepage = "https://github.com/AlexiWolf/wolf_engine"
+
+[dependencies]
+wolf_engine_codegen = {version = "0.1.0", path = "../wolf_engine_codegen"}
+generic_event_queue = "0.2.0"
+downcast-rs = "1.2.0"
+
+[dev-dependencies]
+test-case = "3.3.1"
