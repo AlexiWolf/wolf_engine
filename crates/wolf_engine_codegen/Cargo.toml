@@ -1,0 +1,17 @@
+[package]
+name = "wolf_engine_codegen"
+description = "An internal macro crate for Wolf Engine."
+version = "0.1.0"
+authors = ["AlexiWolf <alexi@wolvesin.space>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/AlexiWolf/wolf_engine"
+homepage = "https://github.com/AlexiWolf/wolf_engine"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0.76"
+quote = "1.0.35"
+syn = "2.0.48"
