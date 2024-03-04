@@ -1,5 +1,5 @@
-use crate::events::mpsc::{MpscEventReceiver, MpscEventSender};
-use crate::events::*;
+use crate::mpsc::{MpscEventReceiver, MpscEventSender};
+use crate::dynamic::EventBox;
 
 pub struct EventLoop {
     event_receiver: MpscEventReceiver<EventBox>,
@@ -49,8 +49,6 @@ impl EventReceiver<EventBox> for EventLoop {
 #[cfg(test)]
 mod event_loop_tests {
     use ntest::timeout;
-
-    use crate::prelude::*;
 
     #[test]
     #[timeout(100)]
