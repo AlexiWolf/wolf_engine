@@ -1,7 +1,7 @@
 //! Provides dynamically-typed events for the engine.
 
-use std::fmt::Debug;
 use downcast_rs::*;
+use std::fmt::Debug;
 
 pub use wolf_engine_codegen::Event;
 
