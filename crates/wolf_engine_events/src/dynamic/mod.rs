@@ -1,5 +1,6 @@
 //! Provides dynamically-typed events for the engine.
 
+
 use downcast_rs::*;
 
 use std::fmt::Debug;
@@ -8,6 +9,7 @@ use crate::EventSender;
 use crate::ReceiverDroppedError;
 
 pub use wolf_engine_codegen::DynamicEvent;
+pub mod event_loop;
 
 /// Represents a [`Boxed`](Box) dynamic [`Event`].
 pub type EventBox = Box<dyn DynamicEvent>;
