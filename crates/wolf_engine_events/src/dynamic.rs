@@ -19,7 +19,7 @@ pub trait DynamicEventSender {
     where
         Self: EventSender<EventBox>,
     {
-        EventSender::<EventBox>::send_event(self, Box::from(event))
+        EventSender::send_event(self, Box::from(event))
     }
 }
 
