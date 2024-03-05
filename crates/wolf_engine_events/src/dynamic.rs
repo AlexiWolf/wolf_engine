@@ -5,6 +5,7 @@ use downcast_rs::*;
 use std::fmt::Debug;
 
 use crate::ReceiverDroppedError;
+use crate::mpsc::MpscEventSender;
 
 pub use wolf_engine_codegen::Event;
 
@@ -13,6 +14,12 @@ pub type EventBox = Box<dyn Event>;
 
 pub trait DynamicEventSender {
     fn send_event<T: Event + 'static>(&self, event: T) -> Result<(), ReceiverDroppedError>;
+}
+
+impl DynamicEventSender for MpscEventSender<EventBox> {
+    fn send_event<T: Event + 'static>(&self, event: T) -> Result<(), ReceiverDroppedError> {
+        crate::EventSender::send_event(self, Box::from(event))
+    }
 }
 
 /// A dynamically-typed event.
