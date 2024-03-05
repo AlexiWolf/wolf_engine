@@ -69,7 +69,7 @@ mod event_loop_tests {
         while let Some(event) = event_loop.next_event() {
             if let Ok(event) = event.downcast::<EventsCleared>() {
                 if updates == 3 {
-                    event_sender.send_event(Quit);
+                    event_sender.send_event(Box::from(Quit));
                 } else {
                     updates += 1;
                 }
@@ -101,10 +101,10 @@ mod event_loop_tests {
         let event_sender = event_loop.event_sender();
         while let Some(event) = event_loop.next_event() {
             if let Ok(event) = event.downcast::<Quit>() {
-                event_sender.send_event(Quit);
+                event_sender.send_event(Box::from(Quit));
             }
             if let Ok(event) = event.downcast::<EventsCleared>() {
-                event_sender.send_event(Quit);
+                event_sender.send_event(Box::from(Quit));
             }
         }
     }
