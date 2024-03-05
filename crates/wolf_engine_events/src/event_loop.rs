@@ -58,13 +58,12 @@ mod event_loop_tests {
     #[timeout(100)]
     fn should_run_and_quit() {
         let mut event_loop = EventLoop::new();
-        let event_sender = event_loop.event_sender();
         let mut updates = 0;
 
         while let Some(event) = event_loop.next_event() {
             if let Ok(event) = event.downcast::<EventsCleared>() {
                 if updates == 3 {
-                    event_sender.send_event(Box::from(Quit));
+                    event_loop.event_sender().send_event(Box::from(Quit));
                 } else {
                     updates += 1;
                 }
