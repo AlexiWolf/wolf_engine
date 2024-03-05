@@ -23,7 +23,7 @@ pub trait DynamicEventSender {
     }
 }
 
-impl DynamicEventSender for MpscEventSender<EventBox> {}
+impl<T> DynamicEventSender for T where T: crate::EventSender<EventBox> {}
 
 /// A dynamically-typed event.
 ///
