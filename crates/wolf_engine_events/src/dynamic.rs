@@ -4,8 +4,8 @@ use downcast_rs::*;
 
 use std::fmt::Debug;
 
-use crate::ReceiverDroppedError;
 use crate::EventSender;
+use crate::ReceiverDroppedError;
 
 pub use wolf_engine_codegen::Event;
 

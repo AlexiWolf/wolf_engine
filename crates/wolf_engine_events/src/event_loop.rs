@@ -62,10 +62,7 @@ mod event_loop_tests {
         while let Some(event) = event_loop.next_event() {
             if event.is::<EventsCleared>() {
                 if updates == 3 {
-                    event_loop
-                        .event_sender()
-                        .send_event(Quit)
-                        .unwrap();
+                    event_loop.event_sender().send_event(Quit).unwrap();
                 } else {
                     updates += 1;
                 }
@@ -96,10 +93,7 @@ mod event_loop_tests {
         let mut event_loop = EventLoop::new();
         while let Some(event) = event_loop.next_event() {
             if event.is::<Quit>() || event.is::<EventsCleared>() {
-                event_loop
-                    .event_sender()
-                    .send_event(Quit)
-                    .unwrap();
+                event_loop.event_sender().send_event(Quit).unwrap();
             }
         }
     }
