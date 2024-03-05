@@ -1,13 +1,10 @@
 //! Provides an event system for Wolf Engine.
 //!
-//! This module provides a [FIFO](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
-//! (First-in, First-out) event system based on the sender / receiver / message channel model
-//! found in [std::sync::mpsc].
-//!
 //! # Examples
 //!
-//! All event queues use the same API, so the following examples should work for any type
-//! implementing the Event-Queue traits.  
+//! This module provides a [FIFO](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
+//! (First-in, First-out) event system based on the sender / receiver / message channel found in 
+//! [std::sync::mpsc].
 //!
 //! ## Create an Event Queue
 //!
