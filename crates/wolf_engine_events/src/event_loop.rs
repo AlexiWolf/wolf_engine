@@ -2,6 +2,12 @@ use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::dynamic::EventBox;
 use crate::EventReceiver;
 
+#[derive(Event, Debug)]
+pub struct Quit;
+
+#[derive(Event, Debug)]
+pub struct EventsCleared;
+
 pub struct EventLoop {
     event_receiver: MpscEventReceiver<EventBox>,
     event_sender: MpscEventSender<EventBox>,
