@@ -1,11 +1,11 @@
-use crate::dynamic::{Event, EventBox};
+use crate::dynamic::{DynamicEvent, EventBox};
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::EventReceiver;
 
-#[derive(Event, Debug)]
+#[derive(DynamicEvent, Debug)]
 pub struct Quit;
 
-#[derive(Event, Debug)]
+#[derive(DynamicEvent, Debug)]
 pub struct EventsCleared;
 
 pub struct EventLoop {

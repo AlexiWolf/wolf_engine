@@ -7,15 +7,15 @@ use std::fmt::Debug;
 use crate::EventSender;
 use crate::ReceiverDroppedError;
 
-pub use wolf_engine_codegen::Event;
+pub use wolf_engine_codegen::DynamicEvent;
 
 /// Represents a [`Boxed`](Box) dynamic [`Event`].
-pub type EventBox = Box<dyn Event>;
+pub type EventBox = Box<dyn DynamicEvent>;
 
 /// An [`EventSender`](crate::EventSender) helper which takes a dynamic [`Event`], and
 /// automatically [`Boxes`](Box) it for the caller.
 pub trait DynamicEventSender {
-    fn send_event<T: Event + 'static>(&self, event: T) -> Result<(), ReceiverDroppedError>
+    fn send_event<T: DynamicEvent + 'static>(&self, event: T) -> Result<(), ReceiverDroppedError>
     where
         Self: EventSender<EventBox>,
     {
@@ -28,8 +28,8 @@ impl<T> DynamicEventSender for T where T: EventSender<EventBox> {}
 /// A dynamically-typed event.
 ///
 /// Events can be downcasted back to their original type using the [`Downcast`] trait.
-pub trait Event: Downcast + Debug + 'static {}
-impl_downcast!(Event);
+pub trait DynamicEvent: Downcast + Debug + 'static {}
+impl_downcast!(DynamicEvent);
 
 #[cfg(test)]
 mod event_tests {
@@ -37,11 +37,11 @@ mod event_tests {
 
     use super::*;
 
-    #[derive(Event, Debug)]
+    #[derive(DynamicEvent, Debug)]
     struct TestEvent(&'static str);
 
     #[test_case(&TestEvent("Hello, World!"))]
-    fn should_auto_impl_event(event: &dyn Event) {
+    fn should_auto_impl_event(event: &dyn DynamicEvent) {
         if let Some(event) = event.downcast_ref::<TestEvent>() {
             assert_eq!(event.0, "Hello, World!");
         }
