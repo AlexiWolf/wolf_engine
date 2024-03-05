@@ -50,7 +50,7 @@ impl EventReceiver<EventBox> for EventLoop {
 #[cfg(test)]
 mod event_loop_tests {
     use super::*;
-    use crate::EventSender;
+    use crate::dynamic::DynamicEventSender;
     use ntest::timeout;
 
     #[test]
