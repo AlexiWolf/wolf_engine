@@ -35,6 +35,12 @@ impl EventLoop {
     }
 }
 
+impl Default for EventLoop {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl EventReceiver<DynamicEventBox> for EventLoop {
     fn next_event(&mut self) -> Option<DynamicEventBox> {
         if self.has_quit {
