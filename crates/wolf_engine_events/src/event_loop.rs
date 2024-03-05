@@ -51,6 +51,7 @@ impl EventReceiver<EventBox> for EventLoop {
 mod event_loop_tests {
     use ntest::timeout;
     use super::*;
+    use crate::EventSender;
 
     #[test]
     #[timeout(100)]
