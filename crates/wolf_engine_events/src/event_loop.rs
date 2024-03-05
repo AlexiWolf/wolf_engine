@@ -1,5 +1,5 @@
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
-use crate::dynamic::EventBox;
+use crate::dynamic::{EventBox, Event};
 use crate::EventReceiver;
 
 #[derive(Event, Debug)]
