@@ -1,5 +1,3 @@
-use generic_event_queue::EventSender;
-
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::dynamic::{EventBox, Event};
 use crate::EventReceiver;
