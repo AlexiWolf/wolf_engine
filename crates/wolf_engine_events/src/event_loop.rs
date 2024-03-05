@@ -95,11 +95,8 @@ mod event_loop_tests {
         let mut event_loop = EventLoop::new();
         let event_sender = event_loop.event_sender();
         while let Some(event) = event_loop.next_event() {
-            if let Ok(event) = event.downcast::<Quit>() {
-                event_sender.send_event(Box::from(Quit));
-            }
-            if let Ok(event) = event.downcast::<EventsCleared>() {
-                event_sender.send_event(Box::from(Quit));
+            if event.is::<Quit>() || event.is::<EventsCleared>() {
+                event_loop.event_sender().send_event(Box::from(Quit));
             }
         }
     }
