@@ -4,7 +4,6 @@ use downcast_rs::*;
 
 use std::fmt::Debug;
 
-use crate::mpsc::MpscEventSender;
 use crate::ReceiverDroppedError;
 use crate::EventSender;
 
