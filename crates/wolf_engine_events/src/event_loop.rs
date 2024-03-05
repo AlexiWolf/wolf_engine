@@ -1,5 +1,5 @@
+use crate::dynamic::{Event, EventBox};
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
-use crate::dynamic::{EventBox, Event};
 use crate::EventReceiver;
 
 #[derive(Event, Debug)]
@@ -49,9 +49,9 @@ impl EventReceiver<EventBox> for EventLoop {
 
 #[cfg(test)]
 mod event_loop_tests {
-    use ntest::timeout;
     use super::*;
     use crate::EventSender;
+    use ntest::timeout;
 
     #[test]
     #[timeout(100)]
@@ -62,7 +62,10 @@ mod event_loop_tests {
         while let Some(event) = event_loop.next_event() {
             if event.is::<EventsCleared>() {
                 if updates == 3 {
-                    event_loop.event_sender().send_event(Box::from(Quit)).unwrap();
+                    event_loop
+                        .event_sender()
+                        .send_event(Box::from(Quit))
+                        .unwrap();
                 } else {
                     updates += 1;
                 }
@@ -93,7 +96,10 @@ mod event_loop_tests {
         let mut event_loop = EventLoop::new();
         while let Some(event) = event_loop.next_event() {
             if event.is::<Quit>() || event.is::<EventsCleared>() {
-                event_loop.event_sender().send_event(Box::from(Quit)).unwrap();
+                event_loop
+                    .event_sender()
+                    .send_event(Box::from(Quit))
+                    .unwrap();
             }
         }
     }
