@@ -93,7 +93,6 @@ mod event_loop_tests {
     #[timeout(100)]
     fn should_not_infinite_loop_when_quit_is_emitted_while_handing_a_quit_event() {
         let mut event_loop = EventLoop::new();
-        let event_sender = event_loop.event_sender();
         while let Some(event) = event_loop.next_event() {
             if event.is::<Quit>() || event.is::<EventsCleared>() {
                 event_loop.event_sender().send_event(Box::from(Quit));
