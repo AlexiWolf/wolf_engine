@@ -49,17 +49,24 @@ impl EventReceiver<EventBox> for EventLoop {
 
 #[cfg(test)]
 mod event_loop_tests {
+    use generic_event_queue::EventSender;
     use ntest::timeout;
+    use super::*;
 
     #[test]
     #[timeout(100)]
     fn should_run_and_quit() {
-        let (mut event_loop, mut context) = crate::init().build().unwrap();
+        let mut event_loop = EventLoop::new();
+        let event_sender = event_loop.event_sender();
         let mut updates = 0;
 
         while let Some(event) = event_loop.next_event() {
-            if let Ok(event) = event.downcast::<EngineEvent>() {
-                process_event(*event, &mut context, &mut updates);
+            if let Ok(event) = event.downcast::<EventsCleared>() {
+                if updates == 3 {
+                    event_sender.send_event(Quit);
+                } else {
+                    updates += 1;
+                }
             }
         }
 
@@ -67,30 +74,16 @@ mod event_loop_tests {
         assert_eq!(updates, 3);
     }
 
-    fn process_event(event: EngineEvent, context: &mut Context, updates: &mut i32) {
-        match event {
-            EngineEvent::Quit => (),
-            EngineEvent::EventsCleared => {
-                if *updates == 3 {
-                    context.quit();
-                } else {
-                    *updates += 1;
-                }
-            }
-        }
-    }
-
     #[test]
     fn should_emit_events_cleared_when_event_queue_is_empty() {
-        let (mut event_loop, _context) = crate::init().build().unwrap();
+        let mut event_loop = EventLoop::new();
 
-        assert_eq!(
+        assert!(
             *event_loop
                 .next_event()
                 .unwrap()
-                .downcast::<EngineEvent>()
-                .unwrap(),
-            EngineEvent::EventsCleared,
+                .downcast::<EventsCleared>()
+                .is_ok(),
             "The event-loop did not emit the expected EventsCleared event."
         );
     }
@@ -98,13 +91,14 @@ mod event_loop_tests {
     #[test]
     #[timeout(100)]
     fn should_not_infinite_loop_when_quit_is_emitted_while_handing_a_quit_event() {
-        let (mut event_loop, context) = crate::init().build().unwrap();
+        let mut event_loop = EventLoop::new();
+        let event_sender = event_loop.event_sender();
         while let Some(event) = event_loop.next_event() {
-            if let Some(engine_event) = event.downcast_ref::<EngineEvent>() {
-                match engine_event {
-                    EngineEvent::Quit => context.quit(),
-                    EngineEvent::EventsCleared => context.quit(),
-                }
+            if let Ok(event) = event.downcast::<Quit>() {
+                event_sender.send_event(Quit);
+            }
+            if let Ok(event) = event.downcast::<EventsCleared>() {
+                event_sender.send_event(Quit);
             }
         }
     }
