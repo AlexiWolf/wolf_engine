@@ -5,19 +5,6 @@ use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::EventReceiver;
 use events::*;
 
-/// Provides the basic control events used by the [`EventLoop`].
-pub mod events {
-    use crate::dynamic::DynamicEvent;
-
-    /// Indicates the engine has quit.
-    #[derive(DynamicEvent, Debug)]
-    pub struct Quit;
-    
-    /// Indicates all other events have been cleared, and a new frame / tick is about to begin.
-    #[derive(DynamicEvent, Debug)]
-    pub struct EventsCleared;
-}
-
 /// Provides a dynamic main Event-Loop for the engine.
 ///
 /// The Event-Loop is a specialized type of [`EventReceiver`], but unlike a typical event receiver,

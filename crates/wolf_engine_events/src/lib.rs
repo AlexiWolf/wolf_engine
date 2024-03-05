@@ -3,3 +3,4 @@
 pub use generic_event_queue::*;
 
 pub mod dynamic;
+pub mod events;
