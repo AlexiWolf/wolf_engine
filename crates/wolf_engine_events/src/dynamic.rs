@@ -1,12 +1,19 @@
 //! Provides dynamically-typed events for the engine.
 
 use downcast_rs::*;
+
 use std::fmt::Debug;
+
+use crate::ReceiverDroppedError;
 
 pub use wolf_engine_codegen::Event;
 
 /// Represents a [`Boxed`](Box) dynamic [`Event`].
 pub type EventBox = Box<dyn Event>;
+
+pub trait DynamicEventSender {
+    fn send_event<T: Event + 'static>(&self, event: T) -> Result<(), ReceiverDroppedError>;
+}
 
 /// A dynamically-typed event.
 ///
