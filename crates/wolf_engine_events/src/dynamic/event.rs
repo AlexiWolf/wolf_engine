@@ -5,7 +5,7 @@ use downcast_rs::*;
 use std::fmt::Debug;
 
 /// Represents a [`Boxed`](Box) dynamic [`Event`].
-pub type EventBox = Box<dyn DynamicEvent>;
+pub type DynamicEventBox = Box<dyn DynamicEvent>;
 
 /// A dynamically-typed event.
 ///

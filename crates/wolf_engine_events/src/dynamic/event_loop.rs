@@ -1,4 +1,4 @@
-use crate::dynamic::{DynamicEvent, EventBox};
+use crate::dynamic::{DynamicEvent, DynamicEventBox};
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::EventReceiver;
 
@@ -9,8 +9,8 @@ pub struct Quit;
 pub struct EventsCleared;
 
 pub struct EventLoop {
-    event_receiver: MpscEventReceiver<EventBox>,
-    event_sender: MpscEventSender<EventBox>,
+    event_receiver: MpscEventReceiver<DynamicEventBox>,
+    event_sender: MpscEventSender<DynamicEventBox>,
     has_quit: bool,
 }
 
@@ -24,13 +24,13 @@ impl EventLoop {
         }
     }
 
-    pub fn event_sender(&self) -> &MpscEventSender<EventBox> {
+    pub fn event_sender(&self) -> &MpscEventSender<DynamicEventBox> {
         &self.event_sender
     }
 }
 
-impl EventReceiver<EventBox> for EventLoop {
-    fn next_event(&mut self) -> Option<EventBox> {
+impl EventReceiver<DynamicEventBox> for EventLoop {
+    fn next_event(&mut self) -> Option<DynamicEventBox> {
         if self.has_quit {
             None
         } else {
