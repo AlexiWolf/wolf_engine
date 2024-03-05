@@ -1,3 +1,5 @@
+use generic_event_queue::EventSender;
+
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::dynamic::{EventBox, Event};
 use crate::EventReceiver;
@@ -27,12 +29,6 @@ impl EventLoop {
     pub fn event_sender(&self) -> &MpscEventSender<EventBox> {
         &self.event_sender
     }
-
-    fn handle_event(&mut self, event: &EngineEvent) {
-        if *event == EngineEvent::Quit {
-            self.has_quit = true;
-        }
-    }
 }
 
 impl EventReceiver<EventBox> for EventLoop {
@@ -42,12 +38,12 @@ impl EventReceiver<EventBox> for EventLoop {
         } else {
             match self.event_receiver.next_event() {
                 Some(event) => {
-                    if let Some(downcast) = event.downcast_ref::<EngineEvent>() {
-                        self.handle_event(downcast);
+                    if event.is::<Quit>() {
+                        self.has_quit = true;
                     }
                     Some(event)
                 }
-                None => Some(Box::from(EngineEvent::EventsCleared)),
+                None => Some(Box::from(EventsCleared)),
             }
         }
     }
@@ -55,7 +51,6 @@ impl EventReceiver<EventBox> for EventLoop {
 
 #[cfg(test)]
 mod event_loop_tests {
-    use generic_event_queue::EventSender;
     use ntest::timeout;
     use super::*;
 
