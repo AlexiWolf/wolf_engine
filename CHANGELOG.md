@@ -16,22 +16,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [0.1]
 
 - Added `dynamic` module.
-- Added `dynamic::Event` trait.
+  - Added `event_loop` module.
+    - Added `EventLoop` struct.
+      - Added `EventReceiver` impl.
+      - Added `Default` impl.
+      - Added `event_sender()` method.
+  - Added `DynamicEvent` trait.
+  - Added `DynamicEventSender` trait.
+    - Added auto-impl for `EventSender<DynamicEventBox>` types.
+    - Added a provided `send_event()` method.
+  - Added `DynamicEventBox` type-def of `Box<dyn DynamicEvent>`.
+  - Added `DynamicEvent` derive macro.
+- Added `events` module.
+  - Added `Quit` event.
+  - Added `EventsCleared` event.
 - Added `mpsc` module.
   - Added `MpscEventReceiver` struct.
+    - Added `EventReceiver` impl.
   - Added `MpscEvenSender` struct. 
-  - Added `event_queue` struct.
+    - Added `EventReceiver` impl.
+  - Added `event_queue()` function.
+- Added `ReceiverDroppedError` struct.
 - Added `EventReceiver` trait.
   - Added `next_event()` method.
 - Added `EventSender` trait.
   - Added `send_event()` method.
-- Added `ReceiverDroppedError` struct.
 
 ## [wolf_engine_codegen]
 
 ### [0.1]
 
-- Added `Event` derive macro.
+- Added `DynamicEvent` derive macro.
 
 # [0.1 - 0.25] 2021-08-11 - 2024-03-02
 
