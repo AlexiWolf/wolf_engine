@@ -1,15 +1,20 @@
-use crate::dynamic::{DynamicEvent, DynamicEventBox};
 //! Provides a dynamic main Event-Loop for the engine. 
 
+use crate::dynamic::DynamicEventBox;
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::EventReceiver;
+use events::*;
 
-#[derive(DynamicEvent, Debug)]
-pub struct Quit;
+/// Provides the basic control events used by the [`EventLoop`].
+pub mod events {
     use crate::dynamic::DynamicEvent;
 
-#[derive(DynamicEvent, Debug)]
-pub struct EventsCleared;
+    #[derive(DynamicEvent, Debug)]
+    pub struct Quit;
+
+    #[derive(DynamicEvent, Debug)]
+    pub struct EventsCleared;
+}
 
 /// Provides a dynamic main Event-Loop for the engine.
 ///
