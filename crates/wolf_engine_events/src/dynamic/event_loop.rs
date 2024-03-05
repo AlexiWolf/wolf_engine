@@ -1,17 +1,17 @@
-//! Provides a dynamic main Event-Loop for the engine. 
+//! Provides a dynamic main Event-Loop for the engine.
 
 use crate::dynamic::DynamicEventBox;
+use crate::events::*;
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::EventReceiver;
-use events::*;
 
 /// Provides a dynamic main Event-Loop for the engine.
 ///
 /// The Event-Loop is a specialized type of [`EventReceiver`], but unlike a typical event receiver,
-/// the Event-Loop will continually emit events for as long as it is running, even if there are no 
+/// the Event-Loop will continually emit events for as long as it is running, even if there are no
 /// events currently in the queue.  
 ///
-/// When there are no queued events to emit, an [`EventsCleared`] event is returned instead.  When 
+/// When there are no queued events to emit, an [`EventsCleared`] event is returned instead.  When
 /// [`Quit`] is received, the Event-Loop will return [`None`] for all subsequent calls
 /// to [`next_event()`](EventReceiver::next_event)
 pub struct EventLoop {

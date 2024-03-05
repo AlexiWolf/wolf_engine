@@ -7,4 +7,3 @@ pub mod event_loop;
 
 mod event_sender;
 pub use event_sender::*;
-

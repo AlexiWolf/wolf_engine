@@ -1,5 +1,5 @@
-use crate::{EventSender, ReceiverDroppedError};
 use crate::dynamic::{DynamicEvent, DynamicEventBox};
+use crate::{EventSender, ReceiverDroppedError};
 
 /// An [`EventSender`](crate::EventSender) helper which takes a [`DynamicEvent`], and
 /// automatically [`Boxes`](Box) it for the caller.
