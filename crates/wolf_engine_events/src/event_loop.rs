@@ -1,4 +1,4 @@
-use crate::mpsc::{MpscEventReceiver, MpscEventSender};
+use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::dynamic::EventBox;
 
 pub struct EventLoop {
