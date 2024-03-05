@@ -59,7 +59,7 @@ mod event_loop_tests {
         let mut updates = 0;
 
         while let Some(event) = event_loop.next_event() {
-            if let Ok(event) = event.downcast::<EventsCleared>() {
+            if event.is::<EventsCleared>() {
                 if updates == 3 {
                     event_loop.event_sender().send_event(Box::from(Quit));
                 } else {
