@@ -3,7 +3,7 @@
 //! # Examples
 //!
 //! This module provides a [FIFO](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
-//! (First-in, First-out) event system based on the sender / receiver / message channel found in 
+//! (First-in, First-out) event system based on the sender / receiver / message channel found in
 //! [std::sync::mpsc].
 //!
 //! ## Create an Event Queue
