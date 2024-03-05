@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `event_loop` module.
     - Added `EventLoop` struct.
       - Added `EventReceiver` impl.
+      - Added `Default` impl.
       - Added `event_sender()` method.
   - Added `DynamicEvent` trait.
   - Added `DynamicEventSender` trait.
