@@ -85,7 +85,7 @@ mod event_loop_tests {
         let mut event_loop = EventLoop::new();
 
         assert!(
-            *event_loop
+            event_loop
                 .next_event()
                 .unwrap()
                 .downcast::<EventsCleared>()
