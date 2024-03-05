@@ -17,7 +17,6 @@ pub type EventBox = Box<dyn Event>;
 pub trait DynamicEventSender {
     fn send_event<T: Event + 'static>(&self, event: T) -> Result<(), ReceiverDroppedError>
     where
-        Self: Send + Sync,
         Self: crate::EventSender<EventBox>,
     {
         crate::EventSender::<EventBox>::send_event(self, Box::from(event))
