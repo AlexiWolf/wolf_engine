@@ -64,7 +64,7 @@ mod event_loop_tests {
                 if updates == 3 {
                     event_loop
                         .event_sender()
-                        .send_event(Box::from(Quit))
+                        .send_event(Quit)
                         .unwrap();
                 } else {
                     updates += 1;
@@ -98,7 +98,7 @@ mod event_loop_tests {
             if event.is::<Quit>() || event.is::<EventsCleared>() {
                 event_loop
                     .event_sender()
-                    .send_event(Box::from(Quit))
+                    .send_event(Quit)
                     .unwrap();
             }
         }
