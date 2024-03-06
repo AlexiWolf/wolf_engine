@@ -1,7 +1,7 @@
 //! Provides a dynamic main Event-Loop for the engine.
 
 use crate::dynamic::DynamicEventBox;
-use crate::events::*;
+use crate::dynamic::events::*;
 use crate::mpsc::{self, MpscEventReceiver, MpscEventSender};
 use crate::EventReceiver;
 

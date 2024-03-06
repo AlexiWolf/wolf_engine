@@ -106,6 +106,5 @@
 mod event_queue;
 
 pub mod dynamic;
-pub mod events;
 pub use event_queue::*;
 pub mod mpsc;
