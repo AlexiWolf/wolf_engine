@@ -10,7 +10,6 @@ homepage = "https://github.com/AlexiWolf/wolf_engine"
 
 [dependencies]
 wolf_engine_codegen = {version = "0.1.0", path = "../wolf_engine_codegen"}
-generic_event_queue = "0.2.0"
 
 downcast-rs = {version = "1.2.0", optional = true}
 

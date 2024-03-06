@@ -9,7 +9,7 @@
 //! ## Create an Event Queue
 //!
 //! ```
-//! # use generic_event_queue::*;
+//! # use wolf_engine_events::*;
 //! # enum EventType { Event };
 //! #
 //! let (event_sender, event_receiver) = mpsc::event_queue();
@@ -26,7 +26,7 @@
 //! Event Queue.
 //!
 //! ```
-//! # use generic_event_queue::*;
+//! # use wolf_engine_events::*;
 //! # enum EventType { Event };
 //! #
 //! # let (event_sender, mut event_receiver) = mpsc::event_queue::<EventType>();
@@ -44,7 +44,7 @@
 //! a tunnel, through which you can send data, and it will pop out on the other side.  
 //!
 //! ```
-//! # use generic_event_queue::*;
+//! # use wolf_engine_events::*;
 //! # enum EventType { Event };
 //! # let (event_sender, event_receiver) = mpsc::event_queue();
 //! #
@@ -58,7 +58,7 @@
 //! code that otherwise does not have access to the Event Queue.
 //!
 //! ```
-//! # use generic_event_queue::*;
+//! # use wolf_engine_events::*;
 //! # #[derive(Clone)]
 //! # enum EventType { Event };
 //! #
@@ -89,7 +89,7 @@
 //! Event Senders can be safely sent to other threads.
 //!
 //! ```
-//! # use generic_event_queue::*;
+//! # use wolf_engine_events::*;
 //! # enum EventType { Event };
 //! # let (event_sender, event_receiver) = mpsc::event_queue();
 //! #
