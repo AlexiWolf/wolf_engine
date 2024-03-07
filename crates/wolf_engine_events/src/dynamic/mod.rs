@@ -3,8 +3,8 @@
 mod event;
 pub use event::*;
 
-pub mod events;
 pub mod event_loop;
+pub mod events;
 
 mod event_sender;
 pub use event_sender::*;
