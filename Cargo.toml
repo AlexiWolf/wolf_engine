@@ -15,3 +15,7 @@ members = ["crates/*"]
 
 [dependencies]
 wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events" }
+
+[features]
+default = ["dynamic_events"]
+dynamic_events = ["wolf_engine_events/dynamic"]
