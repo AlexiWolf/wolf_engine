@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [Unreleased]
 
+- Added `dynamic_events` feature corrisponding to the 
+  `wolf_engine_events/dynamic` feature.
 - Added `wolf_engine_events` crate.
   - Added public re-export of `wolf_engine_events` as `events`.
 - Added `wolf_engine_codegen` crate.
@@ -15,21 +17,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [0.1]
 
+- Added `dynamic` feature to enable / disable the `dynamic` module.
 - Added `dynamic` module.
   - Added `event_loop` module.
     - Added `EventLoop` struct.
       - Added `EventReceiver` impl.
       - Added `Default` impl.
       - Added `event_sender()` method.
+  - Added `events` module.
+    - Added `Quit` event.
+    - Added `EventsCleared` event.
   - Added `DynamicEvent` trait.
   - Added `DynamicEventSender` trait.
     - Added auto-impl for `EventSender<DynamicEventBox>` types.
     - Added a provided `send_event()` method.
   - Added `DynamicEventBox` type-def of `Box<dyn DynamicEvent>`.
   - Added `DynamicEvent` derive macro.
-- Added `events` module.
-  - Added `Quit` event.
-  - Added `EventsCleared` event.
 - Added `mpsc` module.
   - Added `MpscEventReceiver` struct.
     - Added `EventReceiver` impl.
