@@ -1,5 +1,8 @@
 # Wolf Engine Events
 
+[![Crates.io](https://img.shields.io/crates/l/wolf_engine_events)](https://github.com/AlexiWolf/wolf_engine#license)
+[![Crates.io](https://img.shields.io/crates/v/wolf_engine_events)](https://crates.io/crates/wolf_engine)
+
 An event system for [Wolf Engine](https://crates.io/crates/wolf_engine).
 
 ## Features
