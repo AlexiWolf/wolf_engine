@@ -5,7 +5,7 @@ An event system for [Wolf Engine](https://crates.io/crates/wolf_engine).
 ## Features
 
 - A simple, Channel-like API.
-- Dynamically-typed Events.
+- A Dynamically-typed Event API.
 
 ## License
 
