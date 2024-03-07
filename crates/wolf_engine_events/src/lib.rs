@@ -103,7 +103,7 @@
 //! }).join();
 //! ```
 
-#[cfg(feature = "dynamic_events")]
+#[cfg(feature = "dynamic")]
 pub mod dynamic;
 
 mod event_queue;
