@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [Unreleased]
 
+- Added `events` feature to enable / disable the `events` module.
 - Added `dynamic_events` feature corrisponding to the 
   `wolf_engine_events/dynamic` feature.
 - Added `wolf_engine_events` crate.
