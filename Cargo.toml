@@ -14,8 +14,9 @@ categories = ["game-development", "game-engines"]
 members = ["crates/*"]
 
 [dependencies]
-wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events" }
+wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events", optional = true }
 
 [features]
-default = ["dynamic_events"]
-dynamic_events = ["wolf_engine_events/dynamic"]
+default = ["events", "dynamic"]
+events = ["wolf_engine_events"]
+dynamic = ["wolf_engine_events?/dynamic"]
