@@ -19,4 +19,4 @@ wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events", op
 [features]
 default = ["dynamic_events"]
 events = ["wolf_engine_events"]
-dynamic_events = ["events", "wolf_engine_events/dynamic"]
+dynamic = ["events", "wolf_engine_events/dynamic"]
