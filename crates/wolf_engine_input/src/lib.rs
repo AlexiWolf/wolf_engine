@@ -15,11 +15,29 @@ pub enum KeyCode {}
 
 #[cfg(feature = "winit")]
 pub mod winit {
-    use crate::Input;
-    use winit::event::Event;
+    use crate::{Input, Key};
+    use winit::{
+        event::{DeviceEvent, ElementState, Event},
+        platform::scancode::PhysicalKeyExtScancode,
+    };
 
     pub fn winit_to_input<UserEvent>(event: Event<UserEvent>) -> Option<Input> {
-        None
+        match event {
+            Event::DeviceEvent {
+                event: DeviceEvent::Key(key_event),
+                ..
+            } => match key_event.state {
+                ElementState::Pressed => Some(Input::KeyDown(Key {
+                    scancode: key_event.physical_key.to_scancode().unwrap_or(0),
+                    keycode: None,
+                })),
+                ElementState::Released => Some(Input::KeyUp(Key {
+                    scancode: key_event.physical_key.to_scancode().unwrap_or(0),
+                    keycode: None,
+                })),
+            },
+            _ => None,
+        }
     }
 
     #[cfg(test)]
