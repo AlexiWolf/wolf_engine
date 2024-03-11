@@ -1,4 +1,6 @@
 pub enum Input {
+    KeyDown(Key),
+    KeyUp(Key),
 }
 
 
