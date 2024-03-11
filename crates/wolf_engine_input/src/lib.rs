@@ -98,8 +98,8 @@ pub mod winit {
         use super::*;
         use crate::*;
 
-        #[test_case(WinitKeyCode::KeyA, ElementState::Pressed, None)]
-        #[test_case(WinitKeyCode::KeyA, ElementState::Released, None)]
+        #[test_case(WinitKeyCode::KeyA, ElementState::Pressed, Some(KeyCode::A))]
+        #[test_case(WinitKeyCode::KeyA, ElementState::Released, Some(KeyCode::A))]
         fn should_convert_key_events(
             key_code: WinitKeyCode,
             state: ElementState,
