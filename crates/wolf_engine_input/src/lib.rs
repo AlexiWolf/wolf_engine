@@ -11,7 +11,44 @@ pub struct Key {
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum KeyCode {}
+pub enum KeyCode {
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+    H,
+    I,
+    J,
+    K,
+    L,
+    M,
+    N,
+    O,
+    P,
+    Q,
+    R,
+    S,
+    T,
+    U,
+    V,
+    W,
+    X,
+    Y,
+    Z,
+    Key0,
+    Key1,
+    Key2,
+    Key3,
+    Key4,
+    Key5,
+    Key6,
+    Key7,
+    Key8,
+    Key9,
+}
 
 #[cfg(feature = "winit")]
 pub mod winit {
