@@ -44,16 +44,20 @@ pub mod winit {
     mod winit_conversion_tests {
         use ::winit::{
             event::{DeviceEvent, DeviceId, ElementState, Event, RawKeyEvent},
-            keyboard::{KeyCode, PhysicalKey},
+            keyboard::{KeyCode as WinitKeyCode, PhysicalKey},
         };
         use test_case::test_case;
 
         use super::*;
         use crate::*;
 
-        #[test_case(KeyCode::KeyA, ElementState::Pressed => Some(Input::KeyDown(Key { scancode: 0, keycode: None })))]
-        #[test_case(KeyCode::KeyA, ElementState::Released=> Some(Input::KeyUp(Key { scancode: 0, keycode: None })))]
-        fn should_convert_key_events(key_code: KeyCode, state: ElementState) -> Option<Input> {
+        #[test_case(WinitKeyCode::KeyA, ElementState::Pressed, None)]
+        #[test_case(WinitKeyCode::KeyA, ElementState::Released, None)]
+        fn should_convert_key_events(
+            key_code: WinitKeyCode,
+            state: ElementState,
+            expected_keycode: Option<crate::KeyCode>,
+        ) {
             let var_name = RawKeyEvent {
                 physical_key: PhysicalKey::Code(key_code),
                 state,
@@ -64,7 +68,31 @@ pub mod winit {
                 event: DeviceEvent::Key(var_name),
             };
 
-            winit_to_input(event)
+            let input = winit_to_input(event).expect("Input was not converted");
+            match input {
+                Input::KeyDown(key) => {
+                    assert!(
+                        state.is_pressed(),
+                        "The key was not pressed, so this should be a KeyUp event"
+                    );
+                    assert_ne!(key.scancode, 0, "The converted scancode should not be 0");
+                    assert_eq!(
+                        key.keycode, expected_keycode,
+                        "The keycode did not match what was expected"
+                    );
+                }
+                Input::KeyUp(key) => {
+                    assert!(
+                        !state.is_pressed(),
+                        "The key was pressed, so this should be a KeyDown event"
+                    );
+                    assert_ne!(key.scancode, 0, "The converted scancode should not be 0");
+                    assert_eq!(
+                        key.keycode, expected_keycode,
+                        "The keycode did not match what was expected"
+                    );
+                }
+            }
         }
     }
 }
