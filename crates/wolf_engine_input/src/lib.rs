@@ -1,13 +1,16 @@
+#[derive(Debug, PartialEq, Eq)]
 pub enum Input {
     KeyDown(Key),
     KeyUp(Key),
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct Key {
     pub scancode: u32,
     pub keycode: Option<KeyCode>,
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum KeyCode {}
 
 #[cfg(feature = "winit")]
