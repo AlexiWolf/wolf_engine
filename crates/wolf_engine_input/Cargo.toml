@@ -10,6 +10,7 @@ keywords = ["wolf-engine", "gamedev", "input"]
 categories = ["game-development", "game-engines"]
 
 [dependencies]
+wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
 winit = { version = "0.29.14", optional = true }
 
 [dev-dependencies]
