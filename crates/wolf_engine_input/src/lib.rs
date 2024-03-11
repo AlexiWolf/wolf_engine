@@ -3,6 +3,10 @@ pub enum Input {
     KeyUp(Key),
 }
 
+pub struct Key {
+    pub scancode: u32,
+    pub keycode: Option<KeyCode>,
+}
 
 #[cfg(feature = "winit")]
 pub mod winit {
