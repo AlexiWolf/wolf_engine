@@ -1,3 +1,5 @@
+pub enum Input {
+}
 
 
 #[cfg(feature = "winit")]
