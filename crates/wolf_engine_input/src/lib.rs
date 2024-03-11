@@ -8,6 +8,8 @@ pub struct Key {
     pub keycode: Option<KeyCode>,
 }
 
+pub enum KeyCode {}
+
 #[cfg(feature = "winit")]
 pub mod winit {
     #[cfg(test)]
