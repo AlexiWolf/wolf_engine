@@ -15,6 +15,13 @@ pub enum KeyCode {}
 
 #[cfg(feature = "winit")]
 pub mod winit {
+    use crate::Input;
+    use winit::event::Event;
+
+    pub fn winit_to_input<UserEvent>(event: Event<UserEvent>) -> Option<Input> {
+        None
+    }
+
     #[cfg(test)]
     mod winit_conversion_tests {
         use ::winit::{
