@@ -62,14 +62,34 @@ pub enum KeyCode {
 
 #[cfg(feature = "winit")]
 pub mod winit {
-    use crate::Input;
-    use winit::event::{DeviceEvent, ElementState, Event, RawKeyEvent};
+    use crate::{Input, Key};
+    use winit::{
+        event::{DeviceEvent, ElementState, Event, RawKeyEvent},
+        keyboard::PhysicalKey,
+        platform::scancode::PhysicalKeyExtScancode,
+    };
 
     impl Into<Input> for RawKeyEvent {
         fn into(self) -> Input {
             match self.state {
                 ElementState::Pressed => Input::KeyDown(self.physical_key.into()),
                 ElementState::Released => Input::KeyUp(self.physical_key.into()),
+            }
+        }
+    }
+
+    impl Into<Key> for PhysicalKey {
+        fn into(self) -> Key {
+            let scancode = self.to_scancode().unwrap_or(0);
+            match self {
+                PhysicalKey::Code(keycode) => Key {
+                    scancode,
+                    keycode: keycode.into(),
+                },
+                PhysicalKey::Unidentified(_) => Key {
+                    scancode,
+                    keycode: None,
+                },
             }
         }
     }
