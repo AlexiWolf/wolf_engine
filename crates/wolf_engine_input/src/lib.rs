@@ -66,7 +66,7 @@ pub mod winit {
     use crate::{Input, Key, KeyCode};
     use winit::{
         event::{DeviceEvent, ElementState, Event, RawKeyEvent},
-        keyboard::PhysicalKey,
+        keyboard::{KeyCode as WinitKeyCode, PhysicalKey},
         platform::scancode::PhysicalKeyExtScancode,
     };
 
@@ -95,10 +95,36 @@ pub mod winit {
         }
     }
 
-    impl Into<KeyCode> for winit::keyboard::KeyCode {
+    impl Into<KeyCode> for WinitKeyCode {
         fn into(self) -> KeyCode {
             match self {
-                _ => todo!(),
+                WinitKeyCode::KeyA => KeyCode::A,
+                WinitKeyCode::KeyB => KeyCode::B,
+                WinitKeyCode::KeyC => KeyCode::C,
+                WinitKeyCode::KeyD => KeyCode::D,
+                WinitKeyCode::KeyE => KeyCode::E,
+                WinitKeyCode::KeyF => KeyCode::F,
+                WinitKeyCode::KeyG => KeyCode::G,
+                WinitKeyCode::KeyH => KeyCode::H,
+                WinitKeyCode::KeyI => KeyCode::I,
+                WinitKeyCode::KeyJ => KeyCode::J,
+                WinitKeyCode::KeyK => KeyCode::K,
+                WinitKeyCode::KeyL => KeyCode::L,
+                WinitKeyCode::KeyM => KeyCode::M,
+                WinitKeyCode::KeyN => KeyCode::N,
+                WinitKeyCode::KeyO => KeyCode::O,
+                WinitKeyCode::KeyP => KeyCode::P,
+                WinitKeyCode::KeyQ => KeyCode::Q,
+                WinitKeyCode::KeyR => KeyCode::R,
+                WinitKeyCode::KeyS => KeyCode::S,
+                WinitKeyCode::KeyT => KeyCode::T,
+                WinitKeyCode::KeyU => KeyCode::U,
+                WinitKeyCode::KeyV => KeyCode::V,
+                WinitKeyCode::KeyW => KeyCode::W,
+                WinitKeyCode::KeyX => KeyCode::X,
+                WinitKeyCode::KeyY => KeyCode::Y,
+                WinitKeyCode::KeyZ => KeyCode::Z,
+                _ => KeyCode::Unknown,
             }
         }
     }
