@@ -58,6 +58,7 @@ pub enum KeyCode {
     Numpad7,
     Numpad8,
     Numpad9,
+    Unknown,
 }
 
 #[cfg(feature = "winit")]
