@@ -62,7 +62,7 @@ pub enum KeyCode {
 
 #[cfg(feature = "winit")]
 pub mod winit {
-    use crate::{Input, Key};
+    use crate::{Input, Key, KeyCode};
     use winit::{
         event::{DeviceEvent, ElementState, Event, RawKeyEvent},
         keyboard::PhysicalKey,
@@ -90,6 +90,14 @@ pub mod winit {
                     scancode,
                     keycode: None,
                 },
+            }
+        }
+    }
+
+    impl Into<KeyCode> for winit::keyboard::KeyCode {
+        fn into(self) -> KeyCode {
+            match self {
+                _ => todo!(),
             }
         }
     }
