@@ -144,14 +144,14 @@ mod winit_conversion_tests {
         state: ElementState,
         expected_keycode: Option<KeyCode>,
     ) {
-        let var_name = RawKeyEvent {
+        let raw_key_event = RawKeyEvent {
             physical_key: PhysicalKey::Code(key_code),
             state,
         };
         let event = Event::DeviceEvent::<()> {
             // SAFETY: Don't pass this to any winit functions.
             device_id: unsafe { DeviceId::dummy() },
-            event: DeviceEvent::Key(var_name),
+            event: DeviceEvent::Key(raw_key_event),
         };
 
         let input = winit_to_input(event).expect("Input was not converted");
