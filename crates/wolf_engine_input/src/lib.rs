@@ -84,7 +84,7 @@ pub mod winit {
             match self {
                 PhysicalKey::Code(keycode) => Key {
                     scancode,
-                    keycode: keycode.into(),
+                    keycode: Some(keycode.into()),
                 },
                 PhysicalKey::Unidentified(_) => Key {
                     scancode,
