@@ -1,7 +1,7 @@
 pub mod keyboard;
 
 #[cfg(feature = "winit")]
-pub mod winit;
+mod winit;
 
 use keyboard::Key;
 
