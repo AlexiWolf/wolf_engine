@@ -11,10 +11,7 @@ use winit::{
 impl<T> ToInput for winit::event::Event<T> {
     fn to_input(&self) -> Option<Input> {
         match self {
-            Event::DeviceEvent {
-                event: DeviceEvent::Key(key_event),
-                ..
-            } => Some(key_event.clone().into()),
+            Event::DeviceEvent { event, .. } => event.to_input(),
             Event::WindowEvent { event, .. } => event.to_input(),
             _ => None,
         }
