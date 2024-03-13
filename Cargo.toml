@@ -22,3 +22,12 @@ default = ["events", "dynamic"]
 events = ["wolf_engine_events"]
 input = ["wolf_engine_input"]
 dynamic = ["wolf_engine_events?/dynamic"]
+winit = ["wolf_engine_input/winit"]
+
+[dev-dependencies]
+winit = "0.29.14"
+
+[[example]]
+name = "keyboard_input"
+required-features = ["input", "winit"]
+
