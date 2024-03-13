@@ -30,6 +30,15 @@ impl ToInput for WindowEvent {
     }
 }
 
+impl ToInput for DeviceEvent {
+    fn to_input(&self) -> Option<Input> {
+        match self {
+            DeviceEvent::Key(event) => Some(event.clone().into()),
+            _ => None,
+        }
+    }
+}
+
 impl Into<Input> for RawKeyEvent {
     fn into(self) -> Input {
         match self.state {
