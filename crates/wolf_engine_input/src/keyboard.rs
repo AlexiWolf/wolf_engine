@@ -1,9 +1,15 @@
+//! Provides types related to keyboard input.
+
+/// Provides information about keyboard button.
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Key {
+    /// The platform / hardware-specific numeric scancode of the key.
     pub scancode: u32,
+    /// The named value, if it's known, of the key.
     pub keycode: Option<KeyCode>,
 }
 
+/// Provides a set of named keys based on a US 104-key QWERTY keyboard.
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 #[non_exhaustive]
 pub enum KeyCode {
