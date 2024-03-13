@@ -7,16 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [Unreleased]
 
-- Added `events` feature to enable / disable the `events` module.
-- Added `dynamic` feature to enable / disable dynamic type features
-  engine-wide.
+- Added `wolf_engine_input` crate.
+  - Added public re-export of `wolf_engine_input` as `input`.
+  - Added `input` feature to enable / disable the `input` module.
+    - Added `input` feature to the default feature-set.
+  - Added `winit` feature to enable / disable Winit integration engine-wide.
 - Added `wolf_engine_events` crate.
   - Added public re-export of `wolf_engine_events` as `events`.
+  - Added `events` feature to enable / disable the `events` module.
+    - Added `events` feature to the default feature-set.
+  - Added `dynamic` feature to enable / disable dynamic type features
+    engine-wide.
+    - Added `dynamic` feature to the default feature-set.
 - Added `wolf_engine_codegen` crate.
+
+## [wolf_engine_input]
+
+### [Unreleased]
+
+- Added `Input` enum.
+  - Added `KeyDown` variant.
+    - Added `key` field.
+    - Added `is_repeat` field.
+  - Added `KeyUp` variant.
+    - Added `key` field.
+  - Added `RawKeyDown` variant.
+    - Added `key` field.
+  - Added `RawKeyUp` variant.
+    - Added `key` field.
+- Added `ToInput` trait.
+  - Added `to_input()` method.
+- Added `keyboard` module.
+  - Added `Key` struct.
+    - Added `scancode` field. 
+    - Added `keycode` field.
+  - Added `KeyCode` enum.
+    - Added keys corrisponding to a 104-key US QWERTY keyboard.
+      - No, I will not list them all out.
 
 ## [wolf_engine_events]
 
-### [0.1]
+### [0.1] - 2024-03-07
 
 - Added `dynamic` feature to enable / disable the `dynamic` module.
 - Added `dynamic` module.
@@ -48,11 +79,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_codegen]
 
-### [0.1]
+### [0.1] - 2024-03-07
 
 - Added `DynamicEvent` derive macro.
 
-# [0.1 - 0.25] 2021-08-11 - 2024-03-02
+# [0.1 - 0.25] - 2021-08-11 - 2024-03-02
 
 These are the old, prototype versions of Wolf Engine, and changes to them
 are mostly undocumented.  You can find these versions in the

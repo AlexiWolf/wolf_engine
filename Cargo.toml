@@ -15,8 +15,19 @@ members = ["crates/*"]
 
 [dependencies]
 wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events", optional = true }
+wolf_engine_input = { version = "0.1.0", path = "crates/wolf_engine_input", optional = true }
 
 [features]
-default = ["events", "dynamic"]
+default = ["events", "dynamic", "input"]
 events = ["wolf_engine_events"]
+input = ["wolf_engine_input"]
 dynamic = ["wolf_engine_events?/dynamic"]
+winit = ["wolf_engine_input/winit"]
+
+[dev-dependencies]
+winit = "0.29.14"
+
+[[example]]
+name = "keyboard_input"
+required-features = ["input", "winit"]
+
