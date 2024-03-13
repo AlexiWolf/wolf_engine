@@ -27,6 +27,15 @@ impl ToInput for WindowEvent {
     }
 }
 
+impl Into<Input> for KeyEvent {
+    fn into(self) -> Input {
+        match self.state {
+            ElementState::Pressed => Input::KeyDown(self.physical_key.into()),
+            ElementState::Released => Input::KeyUp(self.physical_key.into()),
+        }
+    }
+}
+
 impl ToInput for DeviceEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
@@ -41,15 +50,6 @@ impl Into<Input> for RawKeyEvent {
         match self.state {
             ElementState::Pressed => Input::RawKeyDown(self.physical_key.into()),
             ElementState::Released => Input::RawKeyUp(self.physical_key.into()),
-        }
-    }
-}
-
-impl Into<Input> for KeyEvent {
-    fn into(self) -> Input {
-        match self.state {
-            ElementState::Pressed => Input::KeyDown(self.physical_key.into()),
-            ElementState::Released => Input::KeyUp(self.physical_key.into()),
         }
     }
 }
