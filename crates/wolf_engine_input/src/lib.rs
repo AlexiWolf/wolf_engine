@@ -10,3 +10,7 @@ pub enum Input {
     KeyDown(Key),
     KeyUp(Key),
 }
+
+pub trait InputConversion {
+    fn as_input(&self) -> Option<Input>;
+}
