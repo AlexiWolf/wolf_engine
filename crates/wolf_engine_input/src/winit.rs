@@ -30,7 +30,9 @@ impl ToInput for WindowEvent {
 impl Into<Input> for KeyEvent {
     fn into(self) -> Input {
         match self.state {
-            ElementState::Pressed => Input::KeyDown(self.physical_key.into()),
+            ElementState::Pressed => Input::KeyDown{
+                key: self.physical_key.into(),
+            }
             ElementState::Released => Input::KeyUp(self.physical_key.into()),
         }
     }
