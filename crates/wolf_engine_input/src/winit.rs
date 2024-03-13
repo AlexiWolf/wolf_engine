@@ -144,17 +144,8 @@ mod winit_conversion_tests {
         state: ElementState,
         expected_keycode: Option<KeyCode>,
     ) {
-        let raw_key_event = RawKeyEvent {
-            physical_key: PhysicalKey::Code(key_code),
-            state,
-        };
-        let event = Event::DeviceEvent::<()> {
-            // SAFETY: Don't pass this to any winit functions.
-            device_id: unsafe { DeviceId::dummy() },
-            event: DeviceEvent::Key(raw_key_event),
-        };
-
         let input = winit_to_input(event).expect("Input was not converted");
+        let event = create_winit_event(key_code, state);
         match input {
             Input::KeyDown(key) => {
                 assert!(
@@ -178,6 +169,18 @@ mod winit_conversion_tests {
                     "The keycode did not match what was expected"
                 );
             }
+        }
+    }
+
+    fn create_winit_event(key_code: WinitKeyCode, state: ElementState) -> winit::Event<()> {
+        let raw_key_event = RawKeyEvent {
+            physical_key: PhysicalKey::Code(key_code),
+            state,
+        };
+        Event::DeviceEvent::<()> {
+            // SAFETY: Don't pass this to any winit functions.
+            device_id: unsafe { DeviceId::dummy() },
+            event: DeviceEvent::Key(raw_key_event),
         }
     }
 }
