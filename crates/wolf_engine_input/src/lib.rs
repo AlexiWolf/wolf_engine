@@ -7,8 +7,8 @@ use keyboard::Key;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Input {
-    KeyDown(Key),
-    KeyUp(Key),
+    KeyDown { key: Key },
+    KeyUp { key: Key },
 
     RawKeyDown(Key),
     RawKeyUp(Key),
