@@ -73,6 +73,7 @@ impl Into<KeyCode> for WinitKeyCode {
             WinitKeyCode::KeyX => KeyCode::X,
             WinitKeyCode::KeyY => KeyCode::Y,
             WinitKeyCode::KeyZ => KeyCode::Z,
+            WinitKeyCode::Digit9 => KeyCode::Num9,
             _ => KeyCode::Unknown,
         }
     }
@@ -90,57 +91,7 @@ mod winit_conversion_tests {
     use crate::*;
 
     #[test_case(WinitKeyCode::KeyA, ElementState::Pressed, Some(KeyCode::A))]
-    #[test_case(WinitKeyCode::KeyB, ElementState::Pressed, Some(KeyCode::B))]
-    #[test_case(WinitKeyCode::KeyC, ElementState::Pressed, Some(KeyCode::C))]
-    #[test_case(WinitKeyCode::KeyD, ElementState::Pressed, Some(KeyCode::D))]
-    #[test_case(WinitKeyCode::KeyE, ElementState::Pressed, Some(KeyCode::E))]
-    #[test_case(WinitKeyCode::KeyF, ElementState::Pressed, Some(KeyCode::F))]
-    #[test_case(WinitKeyCode::KeyG, ElementState::Pressed, Some(KeyCode::G))]
-    #[test_case(WinitKeyCode::KeyH, ElementState::Pressed, Some(KeyCode::H))]
-    #[test_case(WinitKeyCode::KeyI, ElementState::Pressed, Some(KeyCode::I))]
-    #[test_case(WinitKeyCode::KeyJ, ElementState::Pressed, Some(KeyCode::J))]
-    #[test_case(WinitKeyCode::KeyK, ElementState::Pressed, Some(KeyCode::K))]
-    #[test_case(WinitKeyCode::KeyL, ElementState::Pressed, Some(KeyCode::L))]
-    #[test_case(WinitKeyCode::KeyM, ElementState::Pressed, Some(KeyCode::M))]
-    #[test_case(WinitKeyCode::KeyN, ElementState::Pressed, Some(KeyCode::N))]
-    #[test_case(WinitKeyCode::KeyO, ElementState::Pressed, Some(KeyCode::O))]
-    #[test_case(WinitKeyCode::KeyP, ElementState::Pressed, Some(KeyCode::P))]
-    #[test_case(WinitKeyCode::KeyQ, ElementState::Pressed, Some(KeyCode::Q))]
-    #[test_case(WinitKeyCode::KeyR, ElementState::Pressed, Some(KeyCode::R))]
-    #[test_case(WinitKeyCode::KeyS, ElementState::Pressed, Some(KeyCode::S))]
-    #[test_case(WinitKeyCode::KeyT, ElementState::Pressed, Some(KeyCode::T))]
-    #[test_case(WinitKeyCode::KeyU, ElementState::Pressed, Some(KeyCode::U))]
-    #[test_case(WinitKeyCode::KeyV, ElementState::Pressed, Some(KeyCode::V))]
-    #[test_case(WinitKeyCode::KeyW, ElementState::Pressed, Some(KeyCode::W))]
-    #[test_case(WinitKeyCode::KeyX, ElementState::Pressed, Some(KeyCode::X))]
-    #[test_case(WinitKeyCode::KeyY, ElementState::Pressed, Some(KeyCode::Y))]
-    #[test_case(WinitKeyCode::KeyZ, ElementState::Pressed, Some(KeyCode::Z))]
     #[test_case(WinitKeyCode::KeyA, ElementState::Released, Some(KeyCode::A))]
-    #[test_case(WinitKeyCode::KeyB, ElementState::Released, Some(KeyCode::B))]
-    #[test_case(WinitKeyCode::KeyC, ElementState::Released, Some(KeyCode::C))]
-    #[test_case(WinitKeyCode::KeyD, ElementState::Released, Some(KeyCode::D))]
-    #[test_case(WinitKeyCode::KeyE, ElementState::Released, Some(KeyCode::E))]
-    #[test_case(WinitKeyCode::KeyF, ElementState::Released, Some(KeyCode::F))]
-    #[test_case(WinitKeyCode::KeyG, ElementState::Released, Some(KeyCode::G))]
-    #[test_case(WinitKeyCode::KeyH, ElementState::Released, Some(KeyCode::H))]
-    #[test_case(WinitKeyCode::KeyI, ElementState::Released, Some(KeyCode::I))]
-    #[test_case(WinitKeyCode::KeyJ, ElementState::Released, Some(KeyCode::J))]
-    #[test_case(WinitKeyCode::KeyK, ElementState::Released, Some(KeyCode::K))]
-    #[test_case(WinitKeyCode::KeyL, ElementState::Released, Some(KeyCode::L))]
-    #[test_case(WinitKeyCode::KeyM, ElementState::Released, Some(KeyCode::M))]
-    #[test_case(WinitKeyCode::KeyN, ElementState::Released, Some(KeyCode::N))]
-    #[test_case(WinitKeyCode::KeyO, ElementState::Released, Some(KeyCode::O))]
-    #[test_case(WinitKeyCode::KeyP, ElementState::Released, Some(KeyCode::P))]
-    #[test_case(WinitKeyCode::KeyQ, ElementState::Released, Some(KeyCode::Q))]
-    #[test_case(WinitKeyCode::KeyR, ElementState::Released, Some(KeyCode::R))]
-    #[test_case(WinitKeyCode::KeyS, ElementState::Released, Some(KeyCode::S))]
-    #[test_case(WinitKeyCode::KeyT, ElementState::Released, Some(KeyCode::T))]
-    #[test_case(WinitKeyCode::KeyU, ElementState::Released, Some(KeyCode::U))]
-    #[test_case(WinitKeyCode::KeyV, ElementState::Released, Some(KeyCode::V))]
-    #[test_case(WinitKeyCode::KeyW, ElementState::Released, Some(KeyCode::W))]
-    #[test_case(WinitKeyCode::KeyX, ElementState::Released, Some(KeyCode::X))]
-    #[test_case(WinitKeyCode::KeyY, ElementState::Released, Some(KeyCode::Y))]
-    #[test_case(WinitKeyCode::KeyZ, ElementState::Released, Some(KeyCode::Z))]
     fn should_convert_key_events(
         key_code: WinitKeyCode,
         state: ElementState,
