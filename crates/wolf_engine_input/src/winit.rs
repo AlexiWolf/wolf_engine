@@ -1,11 +1,23 @@
 use crate::keyboard::{Key, KeyCode};
-use crate::Input;
+use crate::{Input, InputConversion};
 
 use winit::{
     event::{DeviceEvent, ElementState, Event, RawKeyEvent},
     keyboard::{KeyCode as WinitKeyCode, PhysicalKey},
     platform::scancode::PhysicalKeyExtScancode,
 };
+
+impl<T> InputConversion for winit::event::Event<T> {
+    fn as_input(&self) -> Option<Input> {
+        match self {
+            Event::DeviceEvent {
+                event: DeviceEvent::Key(key_event),
+                ..
+            } => Some(key_event.clone().into()),
+            _ => None,
+        }
+    }
+}
 
 impl Into<Input> for RawKeyEvent {
     fn into(self) -> Input {
@@ -63,16 +75,6 @@ impl Into<KeyCode> for WinitKeyCode {
             WinitKeyCode::KeyZ => KeyCode::Z,
             _ => KeyCode::Unknown,
         }
-    }
-}
-
-pub fn winit_to_input<UserEvent>(event: Event<UserEvent>) -> Option<Input> {
-    match event {
-        Event::DeviceEvent {
-            event: DeviceEvent::Key(key_event),
-            ..
-        } => Some(key_event.into()),
-        _ => None,
     }
 }
 
