@@ -5,6 +5,7 @@ pub struct Key {
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[non_exhaustive]
 pub enum KeyCode {
     Escape,
     F1,
