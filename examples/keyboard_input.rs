@@ -19,7 +19,7 @@ pub fn main() {
             event: WindowEvent::CloseRequested,
             ..
         } => window_target.exit(),
-        Event::WindowEvent { .. } => {
+        Event::WindowEvent { event, .. } => {
             if let Some(input) = event.to_input() {
                 println!("{:?}", input);
             }
