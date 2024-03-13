@@ -9,6 +9,9 @@ use keyboard::Key;
 pub enum Input {
     KeyDown(Key),
     KeyUp(Key),
+
+    RawKeyDown(Key),
+    RawKeyUp(Key),
 }
 
 pub trait ToInput {
