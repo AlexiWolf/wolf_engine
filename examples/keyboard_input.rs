@@ -14,7 +14,7 @@ pub fn main() {
         .with_resizable(false)
         .build(&event_loop)
         .unwrap();
-    let _ = event_loop.run(|event, window_target| match &event {
+    let _ = event_loop.run(|event, window_target| match event {
         Event::WindowEvent {
             event: WindowEvent::CloseRequested,
             ..
