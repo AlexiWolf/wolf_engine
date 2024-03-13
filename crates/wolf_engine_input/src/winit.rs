@@ -118,7 +118,7 @@ impl Into<KeyCode> for WinitKeyCode {
             WinitKeyCode::KeyK => KeyCode::K,
             WinitKeyCode::KeyL => KeyCode::L,
             WinitKeyCode::Semicolon => KeyCode::Semicolon,
-            WinitKeyCode::Comma => KeyCode::Comma,
+            WinitKeyCode::Quote => KeyCode::Quote,
             WinitKeyCode::Enter => KeyCode::Enter,
             WinitKeyCode::Numpad4 => KeyCode::Numpad4,
             WinitKeyCode::Numpad5 => KeyCode::Numpad5,
