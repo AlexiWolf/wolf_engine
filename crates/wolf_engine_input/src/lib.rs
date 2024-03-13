@@ -10,8 +10,8 @@ pub enum Input {
     KeyDown { key: Key },
     KeyUp { key: Key },
 
-    RawKeyDown(Key),
-    RawKeyUp(Key),
+    RawKeyDown { key: Key },
+    RawKeyUp { key: Key },
 }
 
 pub trait ToInput {

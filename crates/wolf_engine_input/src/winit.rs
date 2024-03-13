@@ -52,8 +52,12 @@ impl ToInput for DeviceEvent {
 impl Into<Input> for RawKeyEvent {
     fn into(self) -> Input {
         match self.state {
-            ElementState::Pressed => Input::RawKeyDown(self.physical_key.into()),
-            ElementState::Released => Input::RawKeyUp(self.physical_key.into()),
+            ElementState::Pressed => Input::RawKeyDown {
+                key: self.physical_key.into(),
+            },
+            ElementState::Released => Input::RawKeyUp {
+                key: self.physical_key.into(),
+            },
         }
     }
 }
