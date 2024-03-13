@@ -144,8 +144,8 @@ mod winit_conversion_tests {
         state: ElementState,
         expected_keycode: Option<KeyCode>,
     ) {
-        let input = winit_to_input(event).expect("Input was not converted");
         let event = create_winit_event(key_code, state);
+        let input = event.as_input().expect("Input was not converted");
         match input {
             Input::KeyDown(key) => {
                 assert!(
