@@ -15,6 +15,9 @@ pub fn main() {
         .build(&event_loop)
         .unwrap();
     let _ = event_loop.run(|event, window_target| match event {
+        Event::AboutToWait => {
+            window_target.listen_device_events(winit::event_loop::DeviceEvents::Always)
+        }
         Event::WindowEvent {
             event: WindowEvent::CloseRequested,
             ..
