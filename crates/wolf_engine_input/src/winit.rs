@@ -83,6 +83,16 @@ impl Into<KeyCode> for WinitKeyCode {
             WinitKeyCode::Digit7 => KeyCode::Num7,
             WinitKeyCode::Digit8 => KeyCode::Num8,
             WinitKeyCode::Digit9 => KeyCode::Num9,
+            WinitKeyCode::Numpad0 => KeyCode::Numpad0,
+            WinitKeyCode::Numpad1 => KeyCode::Numpad1,
+            WinitKeyCode::Numpad2 => KeyCode::Numpad2,
+            WinitKeyCode::Numpad3 => KeyCode::Numpad3,
+            WinitKeyCode::Numpad4 => KeyCode::Numpad4,
+            WinitKeyCode::Numpad5 => KeyCode::Numpad5,
+            WinitKeyCode::Numpad6 => KeyCode::Numpad6,
+            WinitKeyCode::Numpad7 => KeyCode::Numpad7,
+            WinitKeyCode::Numpad8 => KeyCode::Numpad8,
+            WinitKeyCode::Numpad9 => KeyCode::Numpad9,
             _ => KeyCode::Unknown,
         }
     }
