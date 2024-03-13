@@ -8,7 +8,7 @@ use winit::{
 };
 
 impl<T> InputConversion for winit::event::Event<T> {
-    fn as_input(&self) -> Option<Input> {
+    fn to_input(&self) -> Option<Input> {
         match self {
             Event::DeviceEvent {
                 event: DeviceEvent::Key(key_event),
@@ -117,7 +117,7 @@ mod winit_conversion_tests {
         expected_keycode: Option<KeyCode>,
     ) {
         let event = create_winit_event(key_code, state);
-        let input = event.as_input().expect("Input was not converted");
+        let input = event.to_input().expect("Input was not converted");
         match input {
             Input::KeyDown(key) => {
                 assert!(

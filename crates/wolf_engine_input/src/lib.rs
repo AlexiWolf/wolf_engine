@@ -12,5 +12,5 @@ pub enum Input {
 }
 
 pub trait InputConversion {
-    fn as_input(&self) -> Option<Input>;
+    fn to_input(&self) -> Option<Input>;
 }
