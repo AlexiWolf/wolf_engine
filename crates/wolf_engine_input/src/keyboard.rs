@@ -114,4 +114,6 @@ pub enum KeyCode {
     RightArrow,
     Numpad0,
     NumpadDecimal,
+
+    Unknown,
 }
