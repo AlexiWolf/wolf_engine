@@ -24,6 +24,11 @@ pub fn main() {
                 println!("{:?}", input);
             }
         }
+        Event::DeviceEvent { event, .. } => {
+            if let Some(input) = event.to_input() {
+                println!("{:?}", input);
+            }
+        }
         _ => (),
     });
 }
