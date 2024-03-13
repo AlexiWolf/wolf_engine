@@ -1,5 +1,5 @@
 use crate::keyboard::{Key, KeyCode};
-use crate::{Input, InputConversion};
+use crate::{Input, ToInput};
 
 use winit::event::{KeyEvent, WindowEvent};
 use winit::{
@@ -8,7 +8,7 @@ use winit::{
     platform::scancode::PhysicalKeyExtScancode,
 };
 
-impl<T> InputConversion for winit::event::Event<T> {
+impl<T> ToInput for winit::event::Event<T> {
     fn to_input(&self) -> Option<Input> {
         match self {
             Event::DeviceEvent {
@@ -21,7 +21,7 @@ impl<T> InputConversion for winit::event::Event<T> {
     }
 }
 
-impl InputConversion for WindowEvent {
+impl ToInput for WindowEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             WindowEvent::KeyboardInput { event, .. } => Some(event.clone().into()),

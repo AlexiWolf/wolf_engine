@@ -11,6 +11,6 @@ pub enum Input {
     KeyUp(Key),
 }
 
-pub trait InputConversion {
+pub trait ToInput {
     fn to_input(&self) -> Option<Input>;
 }

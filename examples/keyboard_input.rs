@@ -4,7 +4,7 @@ use winit::{
     event_loop::EventLoop,
     window::WindowBuilder,
 };
-use wolf_engine::input::InputConversion;
+use wolf_engine::input::ToInput;
 
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
