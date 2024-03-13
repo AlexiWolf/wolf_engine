@@ -107,7 +107,7 @@ impl Into<KeyCode> for WinitKeyCode {
             WinitKeyCode::Numpad8 => KeyCode::Numpad8,
             WinitKeyCode::Numpad9 => KeyCode::Numpad9,
 
-            WinitKeyCode::CapsLock => KeyCode::Numpad9,
+            WinitKeyCode::CapsLock => KeyCode::CapsLock,
             WinitKeyCode::KeyA => KeyCode::A,
             WinitKeyCode::KeyS => KeyCode::S,
             WinitKeyCode::KeyD => KeyCode::D,
@@ -124,7 +124,7 @@ impl Into<KeyCode> for WinitKeyCode {
             WinitKeyCode::Numpad5 => KeyCode::Numpad5,
             WinitKeyCode::Numpad6 => KeyCode::Numpad6,
 
-            WinitKeyCode::ShiftLeft => KeyCode::Numpad6,
+            WinitKeyCode::ShiftLeft => KeyCode::RightShift,
             WinitKeyCode::KeyZ => KeyCode::Z,
             WinitKeyCode::KeyX => KeyCode::X,
             WinitKeyCode::KeyC => KeyCode::C,
