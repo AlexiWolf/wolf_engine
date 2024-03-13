@@ -27,15 +27,15 @@ impl ToInput for WindowEvent {
     }
 }
 
-impl Into<Input> for KeyEvent {
-    fn into(self) -> Input {
-        match self.state {
+impl From<KeyEvent> for Input {
+    fn from(event: KeyEvent) -> Input {
+        match event.state {
             ElementState::Pressed => Input::KeyDown {
-                key: self.physical_key.into(),
-                is_repeat: self.repeat,
+                key: event.physical_key.into(),
+                is_repeat: event.repeat,
             },
             ElementState::Released => Input::KeyUp {
-                key: self.physical_key.into(),
+                key: event.physical_key.into(),
             },
         }
     }
@@ -50,23 +50,23 @@ impl ToInput for DeviceEvent {
     }
 }
 
-impl Into<Input> for RawKeyEvent {
-    fn into(self) -> Input {
-        match self.state {
+impl From<RawKeyEvent> for Input {
+    fn from(event: RawKeyEvent) -> Input {
+        match event.state {
             ElementState::Pressed => Input::RawKeyDown {
-                key: self.physical_key.into(),
+                key: event.physical_key.into(),
             },
             ElementState::Released => Input::RawKeyUp {
-                key: self.physical_key.into(),
+                key: event.physical_key.into(),
             },
         }
     }
 }
 
-impl Into<Key> for PhysicalKey {
-    fn into(self) -> Key {
-        let scancode = self.to_scancode().unwrap_or(0);
-        match self {
+impl From<PhysicalKey> for Key {
+    fn from(key: PhysicalKey) -> Key {
+        let scancode = key.to_scancode().unwrap_or(0);
+        match key {
             PhysicalKey::Code(keycode) => Key {
                 scancode,
                 keycode: Some(keycode.into()),
@@ -79,9 +79,9 @@ impl Into<Key> for PhysicalKey {
     }
 }
 
-impl Into<KeyCode> for WinitKeyCode {
-    fn into(self) -> KeyCode {
-        match self {
+impl From<WinitKeyCode> for KeyCode {
+    fn from(keycode: WinitKeyCode) -> Self {
+        match keycode {
             WinitKeyCode::Escape => KeyCode::Escape,
             WinitKeyCode::F1 => KeyCode::F1,
             WinitKeyCode::F2 => KeyCode::F2,
