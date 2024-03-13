@@ -32,6 +32,7 @@ impl Into<Input> for KeyEvent {
         match self.state {
             ElementState::Pressed => Input::KeyDown {
                 key: self.physical_key.into(),
+                is_repeat: self.repeat,
             },
             ElementState::Released => Input::KeyUp {
                 key: self.physical_key.into(),
