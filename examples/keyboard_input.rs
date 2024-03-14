@@ -33,4 +33,14 @@ pub fn main() {
 }
 
 fn process_input(input: &Input) {
+    match input {
+        Input::KeyDown {
+            scancode,
+            keycode,
+            is_repeat,
+        } => todo!(),
+        Input::KeyUp { scancode, keycode } => todo!(),
+        Input::RawKeyDown { scancode, keycode } => todo!(),
+        Input::RawKeyUp { scancode, keycode } => todo!(),
+    }
 }
