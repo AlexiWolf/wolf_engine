@@ -5,6 +5,7 @@ use winit::{
     window::WindowBuilder,
 };
 use wolf_engine::input::ToInput;
+use wolf_engine_input::Input;
 
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
@@ -14,24 +15,22 @@ pub fn main() {
         .with_resizable(false)
         .build(&event_loop)
         .unwrap();
-    let _ = event_loop.run(|event, window_target| match event {
-        Event::AboutToWait => {
-            window_target.listen_device_events(winit::event_loop::DeviceEvents::Always)
+    let _ = event_loop.run(|event, window_target| {
+        if let Some(input) = event.to_input() {
+            process_input(&input);
         }
-        Event::WindowEvent {
-            event: WindowEvent::CloseRequested,
-            ..
-        } => window_target.exit(),
-        Event::WindowEvent { event, .. } => {
-            if let Some(input) = event.to_input() {
-                println!("{:?}", input);
+        match event {
+            Event::AboutToWait => {
+                window_target.listen_device_events(winit::event_loop::DeviceEvents::Always)
             }
+            Event::WindowEvent {
+                event: WindowEvent::CloseRequested,
+                ..
+            } => window_target.exit(),
+            _ => (),
         }
-        Event::DeviceEvent { event, .. } => {
-            if let Some(input) = event.to_input() {
-                println!("{:?}", input);
-            }
-        }
-        _ => (),
     });
+}
+
+fn process_input(input: &Input) {
 }
