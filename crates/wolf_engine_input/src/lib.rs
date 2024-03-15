@@ -21,6 +21,7 @@ pub enum Input {
     /// Generally, this event is emitted by the window system, when a key is pressed while the
     /// window is in focus.
     Keyboard {
+        state: ButtonState,
         scancode: u32,
         keycode: Option<KeyCode>,
 
@@ -37,6 +38,7 @@ pub enum Input {
     /// alongside a normal `KeyDown` event.  Some window systems may filter out when the window is
     /// not in-focus.
     RawKeyboard {
+        state: ButtonState,
         scancode: u32,
         keycode: Option<KeyCode>,
     },
