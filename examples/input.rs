@@ -5,7 +5,6 @@ use winit::{
     window::WindowBuilder,
 };
 use wolf_engine::input::ToInput;
-use wolf_engine_input::Input;
 
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
