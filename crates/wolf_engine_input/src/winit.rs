@@ -70,7 +70,6 @@ impl From<RawKeyEvent> for Input {
 
 impl From<PhysicalKey> for KeyCode {
     fn from(key: PhysicalKey) -> KeyCode {
-        let scancode = key.to_scancode().unwrap_or(0);
         match key {
             PhysicalKey::Code(keycode) => keycode.into(),
             PhysicalKey::Unidentified(_) => KeyCode::Unknown,
