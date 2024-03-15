@@ -20,7 +20,7 @@ pub enum Input {
     ///
     /// Generally, this event is emitted by the window system, when a key is pressed while the
     /// window is in focus.
-    KeyDown {
+    Keyboard {
         scancode: u32,
         keycode: Option<KeyCode>,
 
@@ -31,33 +31,20 @@ pub enum Input {
         is_repeat: bool,
     },
 
-    /// A keyboard button was released.
+    /// A keyboard button was pressed.
     ///
-    /// Generally, this event is emitted by the window system, when a key is pressed while the
-    /// window is in focus.
-    KeyUp {
+    /// This event is emitted by the OS, and is not associated with a window.  It may be emitted
+    /// alongside a normal `KeyDown` event.  Some window systems may filter out when the window is
+    /// not in-focus.
+    RawKeyboard {
         scancode: u32,
         keycode: Option<KeyCode>,
     },
+}
 
-    /// A keyboard button was pressed.
-    ///
-    /// This event is emitted by the OS, and is not associated with a window.  It may be emitted
-    /// alongside a normal `KeyDown` event.  Some window systems may filter out when the window is
-    /// not in-focus.
-    RawKeyDown {
-        scancode: u32,
-        keycode: Option<KeyCode>,
-    },
-    /// A keyboard button was pressed.
-    ///
-    /// This event is emitted by the OS, and is not associated with a window.  It may be emitted
-    /// alongside a normal `KeyDown` event.  Some window systems may filter out when the window is
-    /// not in-focus.
-    RawKeyUp {
-        scancode: u32,
-        keycode: Option<KeyCode>,
-    },
+pub struct ButtonState {
+    Pressed,
+    Released,
 }
 
 /// Provides an adapter to convert external input events to an [`Input`].
