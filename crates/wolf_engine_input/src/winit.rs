@@ -1,4 +1,4 @@
-use crate::keyboard::{Key, KeyCode};
+use crate::keyboard::KeyCode;
 use crate::{Input, ToInput};
 
 use winit::event::{KeyEvent, WindowEvent};
@@ -29,14 +29,18 @@ impl ToInput for WindowEvent {
 
 impl From<KeyEvent> for Input {
     fn from(event: KeyEvent) -> Input {
+        let scancode = event.physical_key.to_scancode().unwrap_or(0);
+        let keycode = match event.physical_key.into() {
+            KeyCode::Unknown => None,
+            keycode => Some(keycode),
+        };
         match event.state {
             ElementState::Pressed => Input::KeyDown {
-                key: event.physical_key.into(),
+                scancode,
+                keycode,
                 is_repeat: event.repeat,
             },
-            ElementState::Released => Input::KeyUp {
-                key: event.physical_key.into(),
-            },
+            ElementState::Released => Input::KeyUp { scancode, keycode },
         }
     }
 }
@@ -52,29 +56,24 @@ impl ToInput for DeviceEvent {
 
 impl From<RawKeyEvent> for Input {
     fn from(event: RawKeyEvent) -> Input {
+        let scancode = event.physical_key.to_scancode().unwrap_or(0);
+        let keycode = match event.physical_key.into() {
+            KeyCode::Unknown => None,
+            keycode => Some(keycode),
+        };
         match event.state {
-            ElementState::Pressed => Input::RawKeyDown {
-                key: event.physical_key.into(),
-            },
-            ElementState::Released => Input::RawKeyUp {
-                key: event.physical_key.into(),
-            },
+            ElementState::Pressed => Input::RawKeyDown { scancode, keycode },
+            ElementState::Released => Input::RawKeyUp { scancode, keycode },
         }
     }
 }
 
-impl From<PhysicalKey> for Key {
-    fn from(key: PhysicalKey) -> Key {
+impl From<PhysicalKey> for KeyCode {
+    fn from(key: PhysicalKey) -> KeyCode {
         let scancode = key.to_scancode().unwrap_or(0);
         match key {
-            PhysicalKey::Code(keycode) => Key {
-                scancode,
-                keycode: Some(keycode.into()),
-            },
-            PhysicalKey::Unidentified(_) => Key {
-                scancode,
-                keycode: None,
-            },
+            PhysicalKey::Code(keycode) => keycode.into(),
+            PhysicalKey::Unidentified(_) => KeyCode::Unknown,
         }
     }
 }
