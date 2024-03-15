@@ -44,6 +44,7 @@ pub enum Input {
     },
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ButtonState {
     Pressed,
     Released,
