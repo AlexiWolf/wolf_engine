@@ -11,7 +11,7 @@ pub mod keyboard;
 #[cfg(feature = "winit")]
 mod winit;
 
-use keyboard::Key;
+use keyboard::KeyCode;
 
 /// Provides a set of common input events.
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -21,7 +21,8 @@ pub enum Input {
     /// Generally, this event is emitted by the window system, when a key is pressed while the
     /// window is in focus.
     KeyDown {
-        key: Key,
+        scancode: u32,
+        keycode: Option<KeyCode>,
 
         /// Indicates if this is a repeat key press.
         ///
@@ -34,21 +35,29 @@ pub enum Input {
     ///
     /// Generally, this event is emitted by the window system, when a key is pressed while the
     /// window is in focus.
-    KeyUp { key: Key },
+    KeyUp {
+        scancode: u32,
+        keycode: Option<KeyCode>,
+    },
 
     /// A keyboard button was pressed.
     ///
     /// This event is emitted by the OS, and is not associated with a window.  It may be emitted
     /// alongside a normal `KeyDown` event.  Some window systems may filter out when the window is
     /// not in-focus.
-    RawKeyDown { key: Key },
-
+    RawKeyDown {
+        scancode: u32,
+        keycode: Option<KeyCode>,
+    },
     /// A keyboard button was pressed.
     ///
     /// This event is emitted by the OS, and is not associated with a window.  It may be emitted
     /// alongside a normal `KeyDown` event.  Some window systems may filter out when the window is
     /// not in-focus.
-    RawKeyUp { key: Key },
+    RawKeyUp {
+        scancode: u32,
+        keycode: Option<KeyCode>,
+    },
 }
 
 /// Provides an adapter to convert external input events to an [`Input`].
