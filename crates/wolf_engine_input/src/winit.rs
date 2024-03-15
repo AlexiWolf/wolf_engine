@@ -1,5 +1,5 @@
 use crate::keyboard::KeyCode;
-use crate::{Input, ToInput};
+use crate::{ButtonState, Input, ToInput};
 
 use winit::event::{KeyEvent, WindowEvent};
 use winit::{
@@ -64,6 +64,15 @@ impl From<RawKeyEvent> for Input {
         match event.state {
             ElementState::Pressed => Input::RawKeyDown { scancode, keycode },
             ElementState::Released => Input::RawKeyUp { scancode, keycode },
+        }
+    }
+}
+
+impl From<ElementState> for ButtonState {
+    fn from(state: ElementState) -> Self {
+        match state {
+            ElementState::Pressed => ButtonState::Pressed,
+            ElementState::Released => ButtonState::Released,
         }
     }
 }
