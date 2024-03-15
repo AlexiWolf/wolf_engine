@@ -5,6 +5,7 @@ use winit::{
     window::WindowBuilder,
 };
 use wolf_engine::input::ToInput;
+use wolf_engine_input::Input;
 
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
@@ -16,7 +17,7 @@ pub fn main() {
         .unwrap();
     let _ = event_loop.run(|event, window_target| {
         if let Some(input) = event.to_input() {
-            println!("{input:?}");
+            process_input(&input);
         }
         match event {
             Event::AboutToWait => {
@@ -29,4 +30,20 @@ pub fn main() {
             _ => (),
         }
     });
+}
+
+fn process_input(input: &Input) {
+    match input {
+        Input::Keyboard {
+            state,
+            scancode,
+            keycode,
+            is_repeat,
+        } => println!("Key: {state}, {scancode}, {keycode}, {is_repeat}"),
+        Input::RawKeyboard {
+            state,
+            scancode,
+            keycode,
+        } => println!("Raw Key: {state}, {scancode}, {keycode}"),
+    }
 }
