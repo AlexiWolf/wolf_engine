@@ -42,7 +42,7 @@ pub enum Input {
     },
 }
 
-pub struct ButtonState {
+pub enum ButtonState {
     Pressed,
     Released,
 }
