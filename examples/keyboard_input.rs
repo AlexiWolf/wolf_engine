@@ -17,7 +17,7 @@ pub fn main() {
         .unwrap();
     let _ = event_loop.run(|event, window_target| {
         if let Some(input) = event.to_input() {
-            process_input(&input);
+            println!("{input:?}");
         }
         match event {
             Event::AboutToWait => {
@@ -30,17 +30,4 @@ pub fn main() {
             _ => (),
         }
     });
-}
-
-fn process_input(input: &Input) {
-    match input {
-        Input::KeyDown {
-            scancode,
-            keycode,
-            is_repeat,
-        } => todo!(),
-        Input::KeyUp { scancode, keycode } => todo!(),
-        Input::RawKeyDown { scancode, keycode } => todo!(),
-        Input::RawKeyUp { scancode, keycode } => todo!(),
-    }
 }
