@@ -16,10 +16,7 @@ use keyboard::KeyCode;
 /// Provides a set of common input events.
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Input {
-    /// A keyboard button was pressed.
-    ///
-    /// Generally, this event is emitted by the window system, when a key is pressed while the
-    /// window is in focus.
+    /// A keyboard button was pressed / released.
     Keyboard {
         state: ButtonState,
         scancode: u32,
@@ -32,11 +29,11 @@ pub enum Input {
         is_repeat: bool,
     },
 
-    /// A keyboard button was pressed.
+    /// A keyboard button was pressed / released.
     ///
     /// This event is emitted by the OS, and is not associated with a window.  It may be emitted
-    /// alongside a normal `KeyDown` event.  Some window systems may filter out when the window is
-    /// not in-focus.
+    /// alongside a normal [`Keyboard`](Input::Keyboard) event.  Some window systems may filter
+    /// out raw events when the window is not in-focus.
     RawKeyboard {
         state: ButtonState,
         scancode: u32,
