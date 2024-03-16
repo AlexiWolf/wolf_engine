@@ -25,16 +25,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
+- Added `ButtonState` enum.
+  - Added `Down` variant.
+  - Added `Up` variant.
 - Added `Input` enum.
-  - Added `KeyDown` variant.
-    - Added `key` field.
+  - Added `Keyboard` variant.
+    - Added `state` field.
+    - Added `scancode` field.
+    - Added `keycode` field.
     - Added `is_repeat` field.
-  - Added `KeyUp` variant.
-    - Added `key` field.
-  - Added `RawKeyDown` variant.
-    - Added `key` field.
-  - Added `RawKeyUp` variant.
-    - Added `key` field.
+  - Added `RawKeyboard` variant.
+    - Added `state` field.
+    - Added `scancode` field.
+    - Added `keycode` field.
 - Added `ToInput` trait.
   - Added `to_input()` method.
 - Added `keyboard` module.
