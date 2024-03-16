@@ -44,6 +44,7 @@ pub enum Input {
     },
 }
 
+/// Indicates the current state of a button input.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ButtonState {
     Pressed,
