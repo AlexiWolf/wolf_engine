@@ -43,6 +43,10 @@ pub enum Input {
         x: f32,
         y: f32,
     },
+    RawMouseMoved {
+        delta_x: f32,
+        delta_y: f32,
+    },
 }
 
 /// Indicates the current state of a button input.
