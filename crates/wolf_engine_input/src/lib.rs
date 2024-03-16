@@ -44,8 +44,8 @@ pub enum Input {
 /// Indicates the current state of a button input.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ButtonState {
-    Pressed,
-    Released,
+    Down,
+    Up,
 }
 
 /// Provides an adapter to convert external input events to an [`Input`].

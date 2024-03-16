@@ -73,8 +73,8 @@ impl From<RawKeyEvent> for Input {
 impl From<ElementState> for ButtonState {
     fn from(state: ElementState) -> Self {
         match state {
-            ElementState::Pressed => ButtonState::Pressed,
-            ElementState::Released => ButtonState::Released,
+            ElementState::Pressed => ButtonState::Down,
+            ElementState::Released => ButtonState::Up,
         }
     }
 }
