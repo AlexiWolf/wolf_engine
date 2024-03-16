@@ -14,7 +14,7 @@ mod winit;
 use keyboard::KeyCode;
 
 /// Provides a set of common input events.
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Input {
     /// A keyboard button was pressed / released.
     Keyboard {
