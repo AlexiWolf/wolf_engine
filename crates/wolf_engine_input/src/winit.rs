@@ -22,6 +22,10 @@ impl ToInput for WindowEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             WindowEvent::KeyboardInput { event, .. } => Some(event.clone().into()),
+            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMoved {
+                x: position.x.trunc() as f32,
+                y: position.y.trunc() as f32,
+            }),
             _ => None,
         }
     }
