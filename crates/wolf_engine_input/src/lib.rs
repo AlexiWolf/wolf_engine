@@ -39,6 +39,10 @@ pub enum Input {
         scancode: u32,
         keycode: Option<KeyCode>,
     },
+    MouseMoved {
+        x: f32,
+        y: f32,
+    },
 }
 
 /// Indicates the current state of a button input.
