@@ -28,6 +28,6 @@ winit = ["wolf_engine_input/winit"]
 winit = "0.29.14"
 
 [[example]]
-name = "keyboard_input"
-required-features = ["input", "winit"]
+name = "input"
+required-features = ["winit"]
 
