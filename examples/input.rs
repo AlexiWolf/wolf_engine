@@ -50,5 +50,6 @@ fn process_input(input: &Input) {
             scancode,
             keycode,
         } => println!("Raw Key: {state:?}, {scancode:?}, {keycode:?}"),
+        Input::MouseMoved { x, y } => println!("Mouse Moved: {x}, {y}"),
     }
 }
