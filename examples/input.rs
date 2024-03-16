@@ -39,11 +39,11 @@ fn process_input(input: &Input) {
             scancode,
             keycode,
             is_repeat,
-        } => println!("Key: {state}, {scancode}, {keycode}, {is_repeat}"),
+        } => println!("Key: {state:?}, {scancode:?}, {keycode:?}, {is_repeat:?}"),
         Input::RawKeyboard {
             state,
             scancode,
             keycode,
-        } => println!("Raw Key: {state}, {scancode}, {keycode}"),
+        } => println!("Raw Key: {state:?}, {scancode:?}, {keycode:?}"),
     }
 }
