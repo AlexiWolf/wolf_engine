@@ -29,18 +29,18 @@ impl ToInput for WindowEvent {
 
 impl From<KeyEvent> for Input {
     fn from(event: KeyEvent) -> Input {
+        let state = event.state.into();
         let scancode = event.physical_key.to_scancode().unwrap_or(0);
         let keycode = match event.physical_key.into() {
             KeyCode::Unknown => None,
             keycode => Some(keycode),
         };
-        match event.state {
-            ElementState::Pressed => Input::KeyDown {
-                scancode,
-                keycode,
-                is_repeat: event.repeat,
-            },
-            ElementState::Released => Input::KeyUp { scancode, keycode },
+        let is_repeat = event.repeat;
+        Input::Keyboard {
+            state,
+            scancode,
+            keycode,
+            is_repeat,
         }
     }
 }
@@ -56,14 +56,16 @@ impl ToInput for DeviceEvent {
 
 impl From<RawKeyEvent> for Input {
     fn from(event: RawKeyEvent) -> Input {
+        let state = event.state.into();
         let scancode = event.physical_key.to_scancode().unwrap_or(0);
         let keycode = match event.physical_key.into() {
             KeyCode::Unknown => None,
             keycode => Some(keycode),
         };
-        match event.state {
-            ElementState::Pressed => Input::RawKeyDown { scancode, keycode },
-            ElementState::Released => Input::RawKeyUp { scancode, keycode },
+        Input::RawKeyboard {
+            state,
+            scancode,
+            keycode,
         }
     }
 }
