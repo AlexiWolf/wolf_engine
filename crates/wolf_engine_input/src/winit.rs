@@ -53,6 +53,10 @@ impl ToInput for DeviceEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             DeviceEvent::Key(event) => Some(event.clone().into()),
+            DeviceEvent::MouseMotion { delta } => Some(Input::RawMouseMoved {
+                delta_x: delta.0 as f32,
+                delta_y: delta.1 as f32,
+            }),
             _ => None,
         }
     }
