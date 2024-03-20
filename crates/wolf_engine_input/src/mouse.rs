@@ -1,6 +1,6 @@
 //! Provides types related to mouse input.
 
-/// Represents a mouse button.
+/// Identifies a mouse button.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum MouseButton {
     Left,
