@@ -54,5 +54,6 @@ fn process_input(input: &Input) {
         Input::RawMouseMoved { delta_x, delta_y } => {
             println!("Raw Mouse Moved: {delta_x}, {delta_y}")
         }
+        Input::MouseButton { state, button } => println!("Mouse Button: {button:?} {state:?}"),
     }
 }
