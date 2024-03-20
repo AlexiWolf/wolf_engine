@@ -3,5 +3,7 @@ pub enum MouseButton {
     Left,
     Middle,
     Right,
+    Forward,
+    Back,
     Other(u32),
 }
