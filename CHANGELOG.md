@@ -38,6 +38,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Added `state` field.
     - Added `scancode` field.
     - Added `keycode` field.
+  - Added `MouseMoved` variant.
+    - Added `x` field.
+    - Added `y` field.
+  - Added `RawMouseMoved` variant.
+    - Added `delta_x` field.
+    - Added `delta_y` field.
+  - Added `MouseButton` variant.
+    - Added `state` field.
+    - Added `button` field.
 - Added `ToInput` trait.
   - Added `to_input()` method.
 - Added `keyboard` module.
@@ -47,6 +56,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `KeyCode` enum.
     - Added keys corrisponding to a 104-key US QWERTY keyboard.
       - No, I will not list them all out.
+ - Added `mouse` module.
+    - Added `Mousebutton` enum.
+      - Added `Left` variant.
+      - Added `Middle` variant.
+      - Added `Right` variant.
+      - Added `Forward` variant.
+      - Added `Back` variant.
+      - Added `Other` variant.
+        - Added `u32` value.
 
 ## [wolf_engine_events]
 

@@ -1,9 +1,10 @@
 use crate::keyboard::KeyCode;
+use crate::mouse::MouseButton;
 use crate::{ButtonState, Input, ToInput};
 
 use winit::event::{KeyEvent, WindowEvent};
 use winit::{
-    event::{DeviceEvent, ElementState, Event, RawKeyEvent},
+    event::{DeviceEvent, ElementState, Event, MouseButton as WinitMouseButton, RawKeyEvent},
     keyboard::{KeyCode as WinitKeyCode, PhysicalKey},
     platform::scancode::PhysicalKeyExtScancode,
 };
@@ -22,6 +23,14 @@ impl ToInput for WindowEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             WindowEvent::KeyboardInput { event, .. } => Some(event.clone().into()),
+            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMoved {
+                x: position.x.trunc() as f32,
+                y: position.y.trunc() as f32,
+            }),
+            WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButton {
+                state: (*state).into(),
+                button: (*button).into(),
+            }),
             _ => None,
         }
     }
@@ -49,6 +58,10 @@ impl ToInput for DeviceEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             DeviceEvent::Key(event) => Some(event.clone().into()),
+            DeviceEvent::MouseMotion { delta } => Some(Input::RawMouseMoved {
+                delta_x: delta.0 as f32,
+                delta_y: delta.1 as f32,
+            }),
             _ => None,
         }
     }
@@ -75,6 +88,19 @@ impl From<ElementState> for ButtonState {
         match state {
             ElementState::Pressed => ButtonState::Down,
             ElementState::Released => ButtonState::Up,
+        }
+    }
+}
+
+impl From<WinitMouseButton> for MouseButton {
+    fn from(button: WinitMouseButton) -> Self {
+        match button {
+            WinitMouseButton::Left => MouseButton::Left,
+            WinitMouseButton::Right => MouseButton::Right,
+            WinitMouseButton::Middle => MouseButton::Middle,
+            WinitMouseButton::Back => MouseButton::Back,
+            WinitMouseButton::Forward => MouseButton::Forward,
+            WinitMouseButton::Other(num) => MouseButton::Other(num as u32),
         }
     }
 }

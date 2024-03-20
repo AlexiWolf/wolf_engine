@@ -1,4 +1,4 @@
-//! Provides the event system for Wolf Engine.
+//! Provides an input for Wolf Engine.
 //!
 //! The main job of this crate is to provide a single set of common input events to make
 //! input-handling in games / other applications easier.
@@ -7,14 +7,16 @@
 //! enabled through their respective feature flags.
 
 pub mod keyboard;
+pub mod mouse;
 
 #[cfg(feature = "winit")]
 mod winit;
 
 use keyboard::KeyCode;
+use mouse::MouseButton;
 
 /// Provides a set of common input events.
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Input {
     /// A keyboard button was pressed / released.
     Keyboard {
@@ -31,13 +33,32 @@ pub enum Input {
 
     /// A keyboard button was pressed / released.
     ///
-    /// This event is emitted by the OS, and is not associated with a window.  It may be emitted
-    /// alongside a normal [`Keyboard`](Input::Keyboard) event.  Some window systems may filter
-    /// out raw events when the window is not in-focus.
+    /// This event is is not associated with a window.  It may be emitted alongside a normal
+    /// [`Keyboard`](Input::Keyboard) event.  Some window systems may filter out raw events when
+    /// the window is not in-focus.
     RawKeyboard {
         state: ButtonState,
         scancode: u32,
         keycode: Option<KeyCode>,
+    },
+
+    /// The mouse has moved.
+    ///
+    /// This event indicates the mouse has moved to a specific point in the window.
+    MouseMoved { x: f32, y: f32 },
+
+    /// The mouse has moved.
+    ///
+    /// This event indicates the mouse has moved, and by how much.  It's most useful to games with
+    /// FPS-like camera controls.
+    ///
+    /// This event is not associated with a window.  It may be emitted alongside a normal
+    /// [`MouseMoved`](Input::MouseMoved) events.  Some window systems may filter out raw events
+    /// when the window is not in-focus.
+    RawMouseMoved { delta_x: f32, delta_y: f32 },
+    MouseButton {
+        state: ButtonState,
+        button: MouseButton,
     },
 }
 
