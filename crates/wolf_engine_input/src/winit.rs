@@ -98,8 +98,8 @@ impl From<WinitMouseButton> for MouseButton {
             WinitMouseButton::Left => MouseButton::Left,
             WinitMouseButton::Right => MouseButton::Right,
             WinitMouseButton::Middle => MouseButton::Middle,
-            WinitMouseButton::Back => todo!(),
-            WinitMouseButton::Forward => todo!(),
+            WinitMouseButton::Back => MouseButton::Back,
+            WinitMouseButton::Forward => MouseButton::Forward,
             WinitMouseButton::Other(num) => MouseButton::Other(num as u32),
         }
     }
