@@ -13,6 +13,7 @@ pub mod mouse;
 mod winit;
 
 use keyboard::KeyCode;
+use mouse::MouseButton;
 
 /// Provides a set of common input events.
 #[derive(Debug, PartialEq, Clone, Copy)]
