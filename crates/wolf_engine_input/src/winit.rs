@@ -3,7 +3,7 @@ use crate::{ButtonState, Input, ToInput};
 
 use winit::event::{KeyEvent, WindowEvent};
 use winit::{
-    event::{DeviceEvent, ElementState, Event, RawKeyEvent},
+    event::{DeviceEvent, ElementState, Event, MouseButton as WinitMouseButton, RawKeyEvent},
     keyboard::{KeyCode as WinitKeyCode, PhysicalKey},
     platform::scancode::PhysicalKeyExtScancode,
 };
@@ -25,6 +25,10 @@ impl ToInput for WindowEvent {
             WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMoved {
                 x: position.x.trunc() as f32,
                 y: position.y.trunc() as f32,
+            }),
+            WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButton {
+                state: (*state).into(),
+                button: (*button).into(),
             }),
             _ => None,
         }
