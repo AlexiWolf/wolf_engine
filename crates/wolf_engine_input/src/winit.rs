@@ -87,6 +87,19 @@ impl From<ElementState> for ButtonState {
     }
 }
 
+impl From<WinitMouseButton> for MouseButton {
+    fn from(button: WinitMouseButton) -> Self {
+        match button {
+            WinitMouseButton::Left => MouseButton::Left,
+            WinitMouseButton::Right => MouseButton::Right,
+            WinitMouseButton::Middle => MouseButton::Middle,
+            WinitMouseButton::Back => todo!(),
+            WinitMouseButton::Forward => todo!(),
+            WinitMouseButton::Other(num) => MouseButton::Other(num as u32),
+        }
+    }
+}
+
 impl From<PhysicalKey> for KeyCode {
     fn from(key: PhysicalKey) -> KeyCode {
         match key {
