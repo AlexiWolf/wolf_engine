@@ -1,4 +1,5 @@
 use crate::keyboard::KeyCode;
+use crate::mouse::MouseButton;
 use crate::{ButtonState, Input, ToInput};
 
 use winit::event::{KeyEvent, WindowEvent};
