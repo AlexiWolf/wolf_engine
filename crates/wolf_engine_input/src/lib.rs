@@ -1,4 +1,4 @@
-//! Provides the event system for Wolf Engine.
+//! Provides an input for Wolf Engine.
 //!
 //! The main job of this crate is to provide a single set of common input events to make
 //! input-handling in games / other applications easier.
