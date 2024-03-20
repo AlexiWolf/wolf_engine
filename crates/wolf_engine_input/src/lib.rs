@@ -7,6 +7,7 @@
 //! enabled through their respective feature flags.
 
 pub mod keyboard;
+pub mod mouse;
 
 #[cfg(feature = "winit")]
 mod winit;
@@ -46,6 +47,10 @@ pub enum Input {
     RawMouseMoved {
         delta_x: f32,
         delta_y: f32,
+    },
+    MouseButton {
+        state: ButtonState,
+        button: MouseButton,
     },
 }
 
