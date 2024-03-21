@@ -5,6 +5,12 @@
 
 An input system for [Wolf Engine](https://crates.io/crates/wolf_engine).
 
+The main job of this crate is to provide a single set of common input events 
+to make input-handling in games / other applications easier.:w
+
+Adaptors for commonly-used APIs, such as winit, are provided, and can be 
+enabled through their respective feature flags.
+
 ## License
 
 Wolf Engine Input is licensed under either:
