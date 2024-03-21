@@ -2,7 +2,7 @@ use crate::keyboard::KeyCode;
 use crate::mouse::MouseButton;
 use crate::{ButtonState, Input, ToInput};
 
-use winit::event::{KeyEvent, WindowEvent};
+use winit::event::{KeyEvent, MouseScrollDelta, WindowEvent};
 use winit::{
     event::{DeviceEvent, ElementState, Event, MouseButton as WinitMouseButton, RawKeyEvent},
     keyboard::{KeyCode as WinitKeyCode, PhysicalKey},
@@ -23,13 +23,20 @@ impl ToInput for WindowEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             WindowEvent::KeyboardInput { event, .. } => Some(event.clone().into()),
-            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMoved {
+            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMove {
                 x: position.x.trunc() as f32,
                 y: position.y.trunc() as f32,
             }),
             WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButton {
                 state: (*state).into(),
                 button: (*button).into(),
+            }),
+            WindowEvent::MouseWheel {
+                delta: MouseScrollDelta::LineDelta(x, y),
+                ..
+            } => Some(Input::MouseScroll {
+                delta_x: *x,
+                delta_y: *y,
             }),
             _ => None,
         }
@@ -58,7 +65,7 @@ impl ToInput for DeviceEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             DeviceEvent::Key(event) => Some(event.clone().into()),
-            DeviceEvent::MouseMotion { delta } => Some(Input::RawMouseMoved {
+            DeviceEvent::MouseMotion { delta } => Some(Input::RawMouseMove {
                 delta_x: delta.0 as f32,
                 delta_y: delta.1 as f32,
             }),

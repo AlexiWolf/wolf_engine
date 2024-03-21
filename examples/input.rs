@@ -50,10 +50,11 @@ fn process_input(input: &Input) {
             scancode,
             keycode,
         } => println!("Raw Key: {state:?}, {scancode:?}, {keycode:?}"),
-        Input::MouseMoved { x, y } => println!("Mouse Moved: {x}, {y}"),
-        Input::RawMouseMoved { delta_x, delta_y } => {
+        Input::MouseMove { x, y } => println!("Mouse Moved: {x}, {y}"),
+        Input::RawMouseMove { delta_x, delta_y } => {
             println!("Raw Mouse Moved: {delta_x}, {delta_y}")
         }
         Input::MouseButton { state, button } => println!("Mouse Button: {button:?} {state:?}"),
+        Input::MouseScroll { delta_x, delta_y } => println!("Mouse Scrolled: {delta_x} {delta_y}"),
     }
 }
