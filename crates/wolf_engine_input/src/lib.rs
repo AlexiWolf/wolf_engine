@@ -45,10 +45,7 @@ pub enum Input {
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved to a specific point in the window.
-    MouseMoved {
-        x: f32,
-        y: f32,
-    },
+    MouseMoved { x: f32, y: f32 },
 
     /// The mouse has moved.
     ///
@@ -58,18 +55,16 @@ pub enum Input {
     /// This event is not associated with a window.  It may be emitted alongside a normal
     /// [`MouseMoved`](Input::MouseMoved) events.  Some window systems may filter out raw events
     /// when the window is not in-focus.
-    RawMouseMoved {
-        delta_x: f32,
-        delta_y: f32,
-    },
+    RawMouseMoved { delta_x: f32, delta_y: f32 },
+
+    /// A mouse button was pressed / released.
     MouseButton {
         state: ButtonState,
         button: MouseButton,
     },
-    MouseScroll {
-        delta_x: f32,
-        delta_y: f32,
-    },
+
+    /// The mouse was scrolled.
+    MouseScroll { delta_x: f32, delta_y: f32 },
 }
 
 /// Indicates the current state of a button input.
