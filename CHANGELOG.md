@@ -47,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `MouseButton` variant.
     - Added `state` field.
     - Added `button` field.
+  - Added `MouseScroll` variant.
+    - Added `delta_x` field.
+    - Added `delta_y` field.
 - Added `ToInput` trait.
   - Added `to_input()` method.
 - Added `keyboard` module.
