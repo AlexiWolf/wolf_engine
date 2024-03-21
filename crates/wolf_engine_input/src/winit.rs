@@ -23,7 +23,7 @@ impl ToInput for WindowEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             WindowEvent::KeyboardInput { event, .. } => Some(event.clone().into()),
-            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMoved {
+            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMove {
                 x: position.x.trunc() as f32,
                 y: position.y.trunc() as f32,
             }),
@@ -65,7 +65,7 @@ impl ToInput for DeviceEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             DeviceEvent::Key(event) => Some(event.clone().into()),
-            DeviceEvent::MouseMotion { delta } => Some(Input::RawMouseMoved {
+            DeviceEvent::MouseMotion { delta } => Some(Input::RawMouseMove {
                 delta_x: delta.0 as f32,
                 delta_y: delta.1 as f32,
             }),

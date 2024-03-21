@@ -38,10 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Added `state` field.
     - Added `scancode` field.
     - Added `keycode` field.
-  - Added `MouseMoved` variant.
+  - Added `MouseMove` variant.
     - Added `x` field.
     - Added `y` field.
-  - Added `RawMouseMoved` variant.
+  - Added `RawMouseMove` variant.
     - Added `delta_x` field.
     - Added `delta_y` field.
   - Added `MouseButton` variant.
