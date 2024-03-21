@@ -2,7 +2,7 @@ use crate::keyboard::KeyCode;
 use crate::mouse::MouseButton;
 use crate::{ButtonState, Input, ToInput};
 
-use winit::event::{KeyEvent, WindowEvent};
+use winit::event::{KeyEvent, MouseScrollDelta, WindowEvent};
 use winit::{
     event::{DeviceEvent, ElementState, Event, MouseButton as WinitMouseButton, RawKeyEvent},
     keyboard::{KeyCode as WinitKeyCode, PhysicalKey},
@@ -30,6 +30,13 @@ impl ToInput for WindowEvent {
             WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButton {
                 state: (*state).into(),
                 button: (*button).into(),
+            }),
+            WindowEvent::MouseWheel {
+                delta: MouseScrollDelta::LineDelta(x, y),
+                ..
+            } => Some(Input::MouseScroll {
+                delta_x: *x,
+                delta_y: *y,
             }),
             _ => None,
         }
