@@ -19,6 +19,17 @@ The input system is designed mostly for games, and may not be as flexible as
 other, more general-purpose input APIs.  If you think something is missing,
 feel free to make an issue, or a PR about it.
 
+## Status
+
+This crate is currently in early development.  You should expect missing
+features, bugs, changing APIs, and other spooky stuff until release 1.0.
+
+Additionally, input support is still a bit underdeveloped.  The library only
+supports the following input types:
+
+- Simple Keyboard Input
+- Simple Mouse Input
+
 ## License
 
 Wolf Engine Input is licensed under either:
