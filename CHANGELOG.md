@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_input]
 
-### [Unreleased]
+### [0.1] - 2024-24-03
 
 - Added `ButtonState` enum.
   - Added `Down` variant.
