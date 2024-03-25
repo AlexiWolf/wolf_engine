@@ -1,5 +1,6 @@
 [package]
 name = "wolf_engine_input"
+description = "A high-level input API."
 version = "0.1.0"
 authors = ["AlexiWolf <alexi@wolvesin.space>"]
 edition = "2021"
