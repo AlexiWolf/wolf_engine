@@ -11,7 +11,7 @@ keywords = ["wolf-engine", "gamedev", "input"]
 categories = ["game-development", "game-engines"]
 
 [dependencies]
-winit = { version = "0.29.14", optional = true }
+winit = { version = "0.29", optional = true }
 
 [dev-dependencies]
 test-case = "3.3.1"
