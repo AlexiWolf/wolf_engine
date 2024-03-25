@@ -53,7 +53,7 @@ pub enum Input {
     /// FPS-like camera controls.
     ///
     /// This event is not associated with a window.  It may be emitted alongside a normal
-    /// [`MouseMoved`](Input::MouseMoved) events.  Some window systems may filter out raw events
+    /// [`MouseMove`](Input::MouseMove) events.  Some window systems may filter out raw events
     /// when the window is not in-focus.
     RawMouseMove { delta_x: f32, delta_y: f32 },
 
