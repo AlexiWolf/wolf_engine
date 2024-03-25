@@ -1,7 +1,7 @@
 [package]
 name = "wolf_engine_input"
 description = "A high-level input API."
-version = "0.1.0"
+version = "0.1.1"
 authors = ["AlexiWolf <alexi@wolvesin.space>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
@@ -11,7 +11,7 @@ keywords = ["wolf-engine", "gamedev", "input"]
 categories = ["game-development", "game-engines"]
 
 [dependencies]
-winit = { version = "0.29.14", optional = true }
+winit = { version = "0.29", optional = true }
 
 [dev-dependencies]
 test-case = "3.3.1"

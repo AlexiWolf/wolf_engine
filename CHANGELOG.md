@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_input]
 
+### [0.1.1] - 2024-24-03
+
+- Changed winit dependency version to any `0.29` release.
+
 ### [0.1] - 2024-24-03
 
 - Added `ButtonState` enum.
