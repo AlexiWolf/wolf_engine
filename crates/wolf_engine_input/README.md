@@ -1,6 +1,6 @@
 # Wolf Engine Input 
 
-[![Crates.io](https://img.shields.io/crates/l/wolf_engine_input)](https://github.com/AlexiWolf/wolf_engine_input#license)
+[![Crates.io](https://img.shields.io/crates/l/wolf_engine_input)](https://github.com/AlexiWolf/wolf_engine#license)
 [![Crates.io](https://img.shields.io/crates/v/wolf_engine_input)](https://crates.io/crates/wolf_engine_input)
 
 Provides a high-level input system.
