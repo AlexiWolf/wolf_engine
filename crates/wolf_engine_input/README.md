@@ -3,13 +3,21 @@
 [![Crates.io](https://img.shields.io/crates/l/wolf_engine_input)](https://github.com/AlexiWolf/wolf_engine_input#license)
 [![Crates.io](https://img.shields.io/crates/v/wolf_engine_input)](https://crates.io/crates/wolf_engine_input)
 
-An input system for [Wolf Engine](https://crates.io/crates/wolf_engine).
+Provides a high-level input system.
 
-The main job of this crate is to provide a single set of common input events 
-to make input-handling in games / other applications easier.
+The main job of this crate is to provide a consistent, easy to use, and easy to
+test, input system.
 
-Adaptors for commonly-used APIs, such as winit, are provided, and can be 
-enabled through their respective feature flags.
+It features:
+
+- Input Events.
+- Input state.
+- Input / Action mapping.
+- Adapters for common input APIs. 
+
+The input system is designed mostly for games, and may not be as flexible as
+other, more general-purpose input APIs.  If you think something is missing,
+feel free to make an issue, or a PR about it.
 
 ## License
 
