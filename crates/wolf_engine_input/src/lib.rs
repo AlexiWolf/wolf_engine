@@ -1,10 +1,10 @@
 //! Provides a high-level input system.
 //!
-//! The main job of this crate is to provide a single set of common input events to make
-//! input-handling in games / other applications easier.
+//! The main job of this crate is to provide a consistent, easy to use, and easy to test, input
+//! system.
 //!
-//! Adaptors for commonly-used APIs, such as Winit, are provided, and can be
-//! enabled through their respective feature flags.
+//! Adaptors for commonly-used APIs, such as Winit, are provided, and can be enabled through their
+//! respective feature flags.
 
 pub mod keyboard;
 pub mod mouse;
