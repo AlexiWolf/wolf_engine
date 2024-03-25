@@ -3,7 +3,7 @@
 //! The main job of this crate is to provide a single set of common input events to make
 //! input-handling in games / other applications easier.
 //!
-//! Adaptors for commonly-used APIs, such as [winit](::winit), are provided, and can be
+//! Adaptors for commonly-used APIs, such as Winit, are provided, and can be
 //! enabled through their respective feature flags.
 
 pub mod keyboard;
