@@ -34,8 +34,10 @@ fn handle_event(context: &mut Context, event: Event<()>, event_loop: &EventLoopW
                     .with_resizable(false)
                     .build(event_loop)
                     .unwrap(),
+            context.graphics = Some(
+                pollster::block_on(wolf_engine::graphics::init())
+                    .expect("Failed to create the graphics context"),
             );
-            context.graphics = Some(pollster::block_on(wolf_engine::graphics::init().unwrap()));
         }
         _ => (),
     }
