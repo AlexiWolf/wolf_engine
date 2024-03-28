@@ -24,6 +24,7 @@ events = ["wolf_engine_events"]
 input = ["wolf_engine_input"]
 dynamic = ["wolf_engine_events?/dynamic"]
 winit = ["wolf_engine_input/winit"]
+graphics = ["wolf_engine_graphics"]
 
 [dev-dependencies]
 winit = "0.29.14"
