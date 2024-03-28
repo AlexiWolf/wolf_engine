@@ -1,5 +1,5 @@
 pub async fn init() -> Result<GraphicsContext, &'static str> {
-    todo!()
+    Ok(GraphicsContext {})
 }
 
 pub struct GraphicsContext {}
