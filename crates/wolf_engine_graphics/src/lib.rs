@@ -1,4 +1,4 @@
-pub fn init() -> Result<GraphicsContext, &'static str> {
+pub async fn init() -> Result<GraphicsContext, &'static str> {
     todo!()
 }
 
