@@ -35,7 +35,7 @@ fn handle_event(context: &mut Context, event: Event<()>, event_loop: &EventLoopW
                     .build(event_loop)
                     .unwrap(),
             );
-            context.graphics = Some(wolf_engine_graphics::init().unwrap());
+            context.graphics = Some(wolf_engine::graphics::init().unwrap());
         }
         _ => (),
     }
