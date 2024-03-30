@@ -16,7 +16,7 @@ pub struct GraphicsContextBuilder {
 impl GraphicsContextBuilder {
     pub async fn build(
         self,
-        _window: Option<&dyn HasWindowHandle>,
+        window: Option<(&dyn HasWindowHandle, (u32, u32))>,
     ) -> Result<GraphicsContext, &'static str> {
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
