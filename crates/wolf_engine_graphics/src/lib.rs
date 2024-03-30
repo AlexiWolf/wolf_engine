@@ -33,6 +33,6 @@ mod graphics_init_tests {
     #[test]
     fn should_default_window_to_none() {
         let graphics_builder = crate::init(GraphicsSettings::default());
-        assert_eq!(graphics_builder.window, None);
+        assert_eq!(graphics_builder.window_handle, None);
     }
 }
