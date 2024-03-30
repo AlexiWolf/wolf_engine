@@ -31,6 +31,6 @@ mod graphics_init_tests {
 
     #[pollster::test]
     async fn should_use_builder_pattern() {
-        let _graphics = crate::init().build().await.unwrap();
+        let _graphics = crate::init().build(None).await.unwrap();
     }
 }
