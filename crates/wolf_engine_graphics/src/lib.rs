@@ -21,6 +21,7 @@ pub struct GraphicsContext {}
 mod graphics_init_tests {
     #[pollster::test]
     async fn should_use_builder_pattern() {
-        let _graphics = crate::init().build().await.unwrap();
+        let graphics_settings = GraphicsSettings::default();
+        let _graphics = crate::init(graphics_settings).build().await.unwrap();
     }
 }
