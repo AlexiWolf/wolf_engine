@@ -14,7 +14,10 @@ pub struct GraphicsContextBuilder {
 }
 
 impl GraphicsContextBuilder {
-    pub async fn build(self) -> Result<GraphicsContext, &'static str> {
+    pub async fn build(
+        self,
+        _window: Option<&dyn HasWindowHandle>,
+    ) -> Result<GraphicsContext, &'static str> {
         Ok(GraphicsContext {})
     }
 }
