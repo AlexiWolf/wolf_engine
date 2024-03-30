@@ -41,11 +41,14 @@ impl GraphicsContextBuilder {
             )
             .await
             .unwrap();
-        Ok(GraphicsContext {})
+        Ok(GraphicsContext { device, queue })
     }
 }
 
-pub struct GraphicsContext {}
+pub struct GraphicsContext {
+    pub device: wgpu::Device,
+    pub queue: wgpu::Queue,
+}
 
 impl GraphicsContext {
     pub fn resize(&mut self, _width: u32, _height: u32) {}
