@@ -1,6 +1,5 @@
 use wgpu::rwh::{HasWindowHandle, WindowHandle};
 
-pub fn init(settings: GraphicsSettings) -> GraphicsContextBuilder<'static> {
 pub fn init() -> GraphicsContextBuilder {
     GraphicsContextBuilder {
         settings: GraphicsSettings::default(),
