@@ -1,8 +1,11 @@
 use wgpu::rwh::HasWindowHandle;
 
-pub fn init() -> GraphicsContextBuilder {
+pub fn init(graphics_settings: GraphicsSettings) -> GraphicsContextBuilder {
     GraphicsContextBuilder {}
 }
+
+#[derive(Default)]
+pub struct GraphicsSettings {}
 
 pub struct GraphicsContextBuilder {}
 
@@ -19,6 +22,8 @@ pub struct GraphicsContext {}
 
 #[cfg(test)]
 mod graphics_init_tests {
+    use super::*;
+
     #[pollster::test]
     async fn should_use_builder_pattern() {
         let graphics_settings = GraphicsSettings::default();
