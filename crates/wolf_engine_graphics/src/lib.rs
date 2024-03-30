@@ -1,4 +1,8 @@
-use wgpu::rwh::HasWindowHandle;
+use wgpu::rwh::{HasDisplayHandle, HasWindowHandle};
+
+pub trait WindowHandle: HasWindowHandle + HasDisplayHandle + Send + Sync {}
+
+impl<T> WindowHandle for T where T: HasDisplayHandle + HasWindowHandle + Send + Sync {}
 
 pub fn init() -> GraphicsContextBuilder {
     GraphicsContextBuilder {
@@ -16,14 +20,8 @@ pub struct GraphicsContextBuilder {
 impl GraphicsContextBuilder {
     pub async fn build(
         self,
-        window: Option<(&dyn HasWindowHandle, (u32, u32))>,
+        window: Option<(&dyn WindowHandle, (u32, u32))>,
     ) -> Result<GraphicsContext, &'static str> {
-        let (window_handle, window_size) = match window {
-            Some((window_handle, window_size)) => {
-                (Some(window_handle), Some((window_size.0, window_size.1)))
-            }
-            None => (None, None),
-        };
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
