@@ -5,8 +5,8 @@ pub async fn init() -> GraphicsContextBuilder {
 pub struct GraphicsContextBuilder {}
 
 impl GraphicsContextBuilder {
-    pub fn build(self) -> GraphicsContext {
-        GraphicsContext {}
+    pub async fn build(self) -> Result<GraphicsContext, &'static str> {
+        Ok(GraphicsContext {})
     }
 }
 
