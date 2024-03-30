@@ -1,28 +1,20 @@
 use wgpu::rwh::{HasWindowHandle, WindowHandle};
 
 pub fn init(settings: GraphicsSettings) -> GraphicsContextBuilder<'static> {
-    GraphicsContextBuilder::<'static> {
-        settings,
-        window_handle: None,
+pub fn init() -> GraphicsContextBuilder {
+    GraphicsContextBuilder {
+        settings: GraphicsSettings::default(),
     }
 }
 
 #[derive(Default)]
 pub struct GraphicsSettings {}
 
-pub struct GraphicsContextBuilder<'window> {
+pub struct GraphicsContextBuilder {
     settings: GraphicsSettings,
-    window_handle: Option<WindowHandle<'window>>,
 }
 
-impl<'window> GraphicsContextBuilder<'window> {
-    pub fn with_window<W: HasWindowHandle>(mut self, window: &'window W) -> Self {
-        self.window_handle = match window.window_handle() {
-            Ok(window_handle) => Some(window_handle),
-            Err(_) => None,
-        };
-        self
-    }
+impl GraphicsContextBuilder {
     pub async fn build(self) -> Result<GraphicsContext, &'static str> {
         Ok(GraphicsContext {})
     }
@@ -40,13 +32,6 @@ mod graphics_init_tests {
 
     #[pollster::test]
     async fn should_use_builder_pattern() {
-        let graphics_settings = GraphicsSettings::default();
-        let _graphics = crate::init(graphics_settings).build().await.unwrap();
-    }
-
-    #[test]
-    fn should_default_window_to_none() {
-        let graphics_builder = crate::init(GraphicsSettings::default());
-        assert_eq!(graphics_builder.window_handle, None);
+        let _graphics = crate::init().build().await.unwrap();
     }
 }
