@@ -1,3 +1,5 @@
+use wgpu::rwh::HasWindowHandle;
+
 pub fn init() -> GraphicsContextBuilder {
     GraphicsContextBuilder {}
 }
@@ -5,6 +7,9 @@ pub fn init() -> GraphicsContextBuilder {
 pub struct GraphicsContextBuilder {}
 
 impl GraphicsContextBuilder {
+    pub fn with_window<W: HasWindowHandle>(self, window: W) -> Self {
+        self
+    }
     pub async fn build(self) -> Result<GraphicsContext, &'static str> {
         Ok(GraphicsContext {})
     }
