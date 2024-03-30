@@ -29,4 +29,10 @@ mod graphics_init_tests {
         let graphics_settings = GraphicsSettings::default();
         let _graphics = crate::init(graphics_settings).build().await.unwrap();
     }
+
+    #[test]
+    fn should_default_window_to_none() {
+        let graphics_builder = crate::init(GraphicsSettings::default());
+        assert_eq!(graphics_builder.window, None);
+    }
 }
