@@ -36,13 +36,14 @@ fn handle_event(context: &mut Context, event: Event<()>, event_loop: &EventLoopW
                     .expect("Failed to create the window"),
             );
             let window = context.window.as_ref().unwrap();
-            context.graphics = Some(
-                pollster::block_on(wolf_engine::graphics::init().build(Some(window)))
-                    .expect("Failed to create the graphics context"),
-            );
             let window_size = window.inner_size();
             let (width, height) = (window_size.width, window_size.height);
-            context.graphics.as_mut().unwrap().resize(width, height);
+            context.graphics = Some(
+                pollster::block_on(
+                    wolf_engine::graphics::init().build(Some((window, (width, height)))),
+                )
+                .expect("Failed to create the graphics context"),
+            );
         }
         _ => (),
     }
