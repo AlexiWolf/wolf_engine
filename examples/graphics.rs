@@ -4,7 +4,7 @@ use winit::{
     event_loop::{EventLoop, EventLoopWindowTarget},
     window::{Window, WindowBuilder},
 };
-use wolf_engine_graphics::{GraphicsContext, GraphicsSettings};
+use wolf_engine_graphics::GraphicsContext;
 
 struct Context {
     window: Option<Window>,

@@ -1,8 +1,8 @@
-use wgpu::rwh::{HasWindowHandle, WindowHandle};
+use wgpu::rwh::HasWindowHandle;
 
 pub fn init() -> GraphicsContextBuilder {
     GraphicsContextBuilder {
-        settings: GraphicsSettings::default(),
+        _settings: GraphicsSettings::default(),
     }
 }
 
@@ -10,7 +10,7 @@ pub fn init() -> GraphicsContextBuilder {
 pub struct GraphicsSettings {}
 
 pub struct GraphicsContextBuilder {
-    settings: GraphicsSettings,
+    _settings: GraphicsSettings,
 }
 
 impl GraphicsContextBuilder {
@@ -25,13 +25,11 @@ impl GraphicsContextBuilder {
 pub struct GraphicsContext {}
 
 impl GraphicsContext {
-    pub fn resize(&mut self, width: u32, height: u32) {}
+    pub fn resize(&mut self, _width: u32, _height: u32) {}
 }
 
 #[cfg(test)]
 mod graphics_init_tests {
-    use super::*;
-
     #[pollster::test]
     async fn should_use_builder_pattern() {
         let _graphics = crate::init().build(None).await.unwrap();
