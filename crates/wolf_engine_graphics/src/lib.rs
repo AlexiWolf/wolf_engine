@@ -14,7 +14,11 @@ pub struct GraphicsContextBuilder<'window> {
 }
 
 impl<'window> GraphicsContextBuilder<'window> {
-    pub fn with_window<W: HasWindowHandle>(self, window: W) -> Self {
+    pub fn with_window<W: HasWindowHandle>(mut self, window: &'window W) -> Self {
+        self.window_handle = match window.window_handle() {
+            Ok(window_handle) => Some(window_handle),
+            Err(_) => None,
+        };
         self
     }
     pub async fn build(self) -> Result<GraphicsContext, &'static str> {
