@@ -13,3 +13,6 @@ categories = ["game-development", "game-engines"]
 
 [dependencies]
 wgpu = "0.19.3"
+
+[dev-dependencies]
+pollster = { version = "0.3.0", features = ["macro"] }
