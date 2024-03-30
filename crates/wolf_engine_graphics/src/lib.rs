@@ -22,6 +22,14 @@ impl GraphicsContextBuilder {
             backends: wgpu::Backends::all(),
             ..Default::default()
         });
+        let adapter = instance
+            .request_adapter(&wgpu::RequestAdapterOptions {
+                power_preference: Default::default(),
+                compatible_surface: None,
+                force_fallback_adapter: false,
+            })
+            .await
+            .unwrap();
         Ok(GraphicsContext {})
     }
 }
