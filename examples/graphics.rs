@@ -4,7 +4,7 @@ use winit::{
     event_loop::{EventLoop, EventLoopWindowTarget},
     window::{Window, WindowBuilder},
 };
-use wolf_engine_graphics::GraphicsContext;
+use wolf_engine_graphics::{GraphicsContext, GraphicsSettings};
 
 struct Context {
     window: Option<Window>,
@@ -37,7 +37,7 @@ fn handle_event(context: &mut Context, event: Event<()>, event_loop: &EventLoopW
             );
             context.graphics = Some(
                 pollster::block_on(
-                    wolf_engine::graphics::init()
+                    wolf_engine::graphics::init(GraphicsSettings::default())
                         .with_window(&context.window.as_ref().unwrap())
                         .build(),
                 )
