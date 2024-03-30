@@ -1,7 +1,8 @@
 use wgpu::rwh::{HasWindowHandle, WindowHandle};
 
-pub fn init(graphics_settings: GraphicsSettings) -> GraphicsContextBuilder<'static> {
+pub fn init(settings: GraphicsSettings) -> GraphicsContextBuilder<'static> {
     GraphicsContextBuilder::<'static> {
+        settings,
         window_handle: None,
     }
 }
@@ -10,6 +11,7 @@ pub fn init(graphics_settings: GraphicsSettings) -> GraphicsContextBuilder<'stat
 pub struct GraphicsSettings {}
 
 pub struct GraphicsContextBuilder<'window> {
+    settings: GraphicsSettings,
     window_handle: Option<WindowHandle<'window>>,
 }
 
@@ -27,6 +29,10 @@ impl<'window> GraphicsContextBuilder<'window> {
 }
 
 pub struct GraphicsContext {}
+
+impl GraphicsContext {
+    pub fn resize(&mut self, width: u32, height: u32) {}
+}
 
 #[cfg(test)]
 mod graphics_init_tests {
