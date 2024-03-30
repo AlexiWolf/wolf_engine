@@ -18,6 +18,12 @@ impl GraphicsContextBuilder {
         self,
         window: Option<(&dyn HasWindowHandle, (u32, u32))>,
     ) -> Result<GraphicsContext, &'static str> {
+        let (window_handle, window_size) = match window {
+            Some((window_handle, window_size)) => {
+                (Some(window_handle), Some((window_size.0, window_size.1)))
+            }
+            None => (None, None),
+        };
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
