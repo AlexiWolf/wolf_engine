@@ -1,4 +1,4 @@
-pub async fn init() -> GraphicsContextBuilder {
+pub fn init() -> GraphicsContextBuilder {
     GraphicsContextBuilder {}
 }
 
