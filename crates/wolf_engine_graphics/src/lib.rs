@@ -1,5 +1,13 @@
-pub async fn init() -> Result<GraphicsContext, &'static str> {
-    Ok(GraphicsContext {})
+pub async fn init() -> GraphicsContextBuilder {
+    GraphicsContextBuilder {}
+}
+
+pub struct GraphicsContextBuilder {}
+
+impl GraphicsContextBuilder {
+    pub fn build(self) -> GraphicsContext {
+        GraphicsContext {}
+    }
 }
 
 pub struct GraphicsContext {}
