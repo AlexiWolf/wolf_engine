@@ -36,7 +36,7 @@ fn handle_event(context: &mut Context, event: Event<()>, event_loop: &EventLoopW
                     .expect("Failed to create the window"),
             );
             context.graphics = Some(
-                pollster::block_on(wolf_engine::graphics::init())
+                pollster::block_on(wolf_engine::graphics::init().build())
                     .expect("Failed to create the graphics context"),
             );
         }
