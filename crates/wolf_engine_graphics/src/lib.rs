@@ -1,15 +1,19 @@
-use wgpu::rwh::HasWindowHandle;
+use wgpu::rwh::{HasWindowHandle, WindowHandle};
 
-pub fn init(graphics_settings: GraphicsSettings) -> GraphicsContextBuilder {
-    GraphicsContextBuilder {}
+pub fn init(graphics_settings: GraphicsSettings) -> GraphicsContextBuilder<'static> {
+    GraphicsContextBuilder::<'static> {
+        window_handle: None,
+    }
 }
 
 #[derive(Default)]
 pub struct GraphicsSettings {}
 
-pub struct GraphicsContextBuilder {}
+pub struct GraphicsContextBuilder<'window> {
+    window_handle: Option<WindowHandle<'window>>,
+}
 
-impl GraphicsContextBuilder {
+impl<'window> GraphicsContextBuilder<'window> {
     pub fn with_window<W: HasWindowHandle>(self, window: W) -> Self {
         self
     }
