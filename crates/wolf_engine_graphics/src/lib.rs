@@ -28,10 +28,14 @@ impl GraphicsContextBuilder {
             backends: wgpu::Backends::all(),
             ..Default::default()
         });
+        let surface = match window {
+            Some((window, _)) => instance.create_surface(window).ok(),
+            None => None,
+        };
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: Default::default(),
-                compatible_surface: None,
+                compatible_surface: surface.as_ref(),
                 force_fallback_adapter: false,
             })
             .await
