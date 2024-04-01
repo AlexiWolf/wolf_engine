@@ -12,7 +12,7 @@ pub fn main() {
         .with_resizable(false)
         .build(&event_loop)
         .expect("Failed to create the window");
-    let mut graphics = None;
+    let mut graphics: Option<GraphicsContext> = None;
     let _ = event_loop.run(|event, window_target| match event {
         Event::WindowEvent {
             event: WindowEvent::CloseRequested,
