@@ -89,9 +89,11 @@ impl GraphicsContextBuilder {
 pub struct GraphicsContext {
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
+    pub surface: Option<wgpu::Surface<'window>>,
+    pub surface_config: Option<wgpu::SurfaceConfiguration>,
 }
 
-impl GraphicsContext {
+impl GraphicsContext<'_> {
     pub fn resize(&mut self, _width: u32, _height: u32) {}
 }
 
