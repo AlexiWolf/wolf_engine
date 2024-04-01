@@ -51,7 +51,38 @@ impl GraphicsContextBuilder {
             )
             .await
             .unwrap();
-        Ok(GraphicsContext { device, queue })
+        let surface_config = match window {
+            Some((_, size)) => {
+                let surface = surface.as_ref().unwrap();
+                let surface_capabilities = surface.get_capabilities(&adapter);
+                let surface_format = surface_capabilities
+                    .formats
+                    .iter()
+                    .copied()
+                    .filter(|f| f.is_srgb())
+                    .next()
+                    .unwrap_or(surface_capabilities.formats[0]);
+                let surface_config = wgpu::SurfaceConfiguration {
+                    usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+                    format: surface_format,
+                    width: size.0,
+                    height: size.1,
+                    present_mode: surface_capabilities.present_modes[0],
+                    desired_maximum_frame_latency: 0,
+                    alpha_mode: surface_capabilities.alpha_modes[0],
+                    view_formats: vec![],
+                };
+                surface.configure(&device, &surface_config);
+                Some(surface_config)
+            }
+            None => None,
+        };
+        Ok(GraphicsContext {
+            device,
+            queue,
+            surface,
+            surface_config,
+        })
     }
 }
 
