@@ -117,6 +117,24 @@ impl GraphicsContext<'_> {
         }
     }
 
+    pub fn clear(&mut self, frame: &mut Frame, color: wgpu::Color) {
+        let _render_pass = frame
+            .encoder
+            .begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("Clear Pass"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &frame.view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(color),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })],
+                depth_stencil_attachment: None,
+                timestamp_writes: None,
+                occlusion_query_set: None,
+            });
+    }
 
 pub struct Frame {
     pub output: wgpu::SurfaceTexture,
