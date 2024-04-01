@@ -14,10 +14,29 @@ pub fn main() {
         .expect("Failed to create the window");
     let mut graphics: Option<GraphicsContext> = None;
     let _ = event_loop.run(|event, window_target| match event {
+        Event::NewEvents(_) => window.request_redraw(),
         Event::WindowEvent {
             event: WindowEvent::CloseRequested,
             ..
         } => window_target.exit(),
+        Event::WindowEvent {
+            event: WindowEvent::RedrawRequested,
+            ..
+        } => {
+            if let Some(graphics) = graphics.as_mut() {
+                let mut frame = graphics.new_frame().unwrap();
+                graphics.clear(
+                    &mut frame,
+                    wgpu::Color {
+                        r: 0.1,
+                        g: 0.1,
+                        b: 0.1,
+                        a: 1.0,
+                    },
+                );
+                graphics.present(frame);
+            }
+        }
         Event::Resumed => {
             let window_size = window.inner_size();
             let (width, height) = (window_size.width, window_size.height);
