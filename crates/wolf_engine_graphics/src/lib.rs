@@ -95,6 +95,28 @@ pub struct GraphicsContext {
 
 impl GraphicsContext<'_> {
     pub fn resize(&mut self, _width: u32, _height: u32) {}
+
+    pub fn new_frame(&mut self) -> Option<Frame> {
+        if let Some(surface) = self.surface.as_ref() {
+            let output = surface.get_current_texture().unwrap();
+            let view = output
+                .texture
+                .create_view(&wgpu::TextureViewDescriptor::default());
+            let encoder = self
+                .device
+                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                    label: Some("Render Encoder"),
+                });
+            Some(Frame {
+                output,
+                view,
+                encoder,
+            })
+        } else {
+            None
+        }
+    }
+
 }
 
 #[cfg(test)]
