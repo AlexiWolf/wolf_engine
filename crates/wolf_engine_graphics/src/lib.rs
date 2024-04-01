@@ -117,6 +117,11 @@ impl GraphicsContext<'_> {
         }
     }
 
+
+pub struct Frame {
+    pub output: wgpu::SurfaceTexture,
+    pub view: wgpu::TextureView,
+    pub encoder: wgpu::CommandEncoder,
 }
 
 #[cfg(test)]
