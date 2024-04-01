@@ -86,7 +86,7 @@ impl GraphicsContextBuilder {
     }
 }
 
-pub struct GraphicsContext {
+pub struct GraphicsContext<'window> {
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
     pub surface: Option<wgpu::Surface<'window>>,
