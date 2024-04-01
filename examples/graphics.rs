@@ -4,6 +4,7 @@ use winit::{
     event_loop::EventLoop,
     window::WindowBuilder,
 };
+use wolf_engine_graphics::{wgpu, GraphicsContext};
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
     let window = WindowBuilder::new()
