@@ -1,3 +1,5 @@
+pub use wgpu;
+
 use wgpu::rwh::{HasDisplayHandle, HasWindowHandle};
 
 pub trait WindowHandle: HasWindowHandle + HasDisplayHandle + Send + Sync {}
