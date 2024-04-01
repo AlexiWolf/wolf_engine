@@ -136,6 +136,12 @@ impl GraphicsContext<'_> {
             });
     }
 
+    pub fn present(&mut self, frame: Frame) {
+        self.queue.submit(std::iter::once(frame.encoder.finish()));
+        frame.output.present();
+    }
+}
+
 pub struct Frame {
     pub output: wgpu::SurfaceTexture,
     pub view: wgpu::TextureView,
