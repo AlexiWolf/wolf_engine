@@ -16,10 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added public re-export of `wolf_engine_events` as `events`.
   - Added `events` feature to enable / disable the `events` module.
     - Added `events` feature to the default feature-set.
-  - Added `dynamic` feature to enable / disable dynamic type features
-    engine-wide.
-    - Added `dynamic` feature to the default feature-set.
-- Added `wolf_engine_codegen` crate.
 
 ## [wolf_engine_input]
 
@@ -74,6 +70,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - Added `u32` value.
 
 ## [wolf_engine_events]
+
+### [Unreleased]
+
+- Removed the `dynamic` feature.
+  - Removed the `dynamic` module.
+  - Removed `dynamic` feature to enable / disable the `dynamic` module.
+  - Removed `dynamic` module.
+    - Removed `event_loop` module.
+      - Removed `EventLoop` struct.
+        - Removed `EventReceiver` impl.
+        - Removed `Default` impl.
+        - Removed `event_sender()` method.
+    - Removed `events` module.
+      - Removed `Quit` event.
+      - Removed `EventsCleared` event.
+    - Removed `DynamicEvent` trait.
+    - Removed `DynamicEventSender` trait.
+      - Removed auto-impl for `EventSender<DynamicEventBox>` types.
+      - Removed a provided `send_event()` method.
+    - Removed `DynamicEventBox` type-def of `Box<dyn DynamicEvent>`.
+    - Removed `DynamicEvent` derive macro.
 
 ### [0.1] - 2024-03-07
 
