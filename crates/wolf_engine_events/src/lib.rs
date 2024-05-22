@@ -103,9 +103,6 @@
 //! }).join();
 //! ```
 
-#[cfg(feature = "dynamic")]
-pub mod dynamic;
-
 mod event_queue;
 pub use event_queue::*;
 pub mod mpsc;

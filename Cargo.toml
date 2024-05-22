@@ -18,10 +18,9 @@ wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events", op
 wolf_engine_input = { version = "0.1.1", path = "crates/wolf_engine_input", optional = true }
 
 [features]
-default = ["events", "dynamic", "input"]
+default = ["events", "input"]
 events = ["wolf_engine_events"]
 input = ["wolf_engine_input"]
-dynamic = ["wolf_engine_events?/dynamic"]
 winit = ["wolf_engine_input/winit"]
 
 [dev-dependencies]
