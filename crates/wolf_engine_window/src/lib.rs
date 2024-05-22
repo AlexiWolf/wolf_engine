@@ -8,6 +8,8 @@ impl Default for WindowSettings {
     }
 }
 
+pub struct Window {}
+
 pub struct Context {}
 
 impl Context {
