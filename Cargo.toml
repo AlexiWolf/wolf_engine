@@ -29,5 +29,5 @@ winit = "0.29.14"
 
 [[example]]
 name = "input"
-required-features = ["winit"]
+required-features = ["window", "input"]
 
