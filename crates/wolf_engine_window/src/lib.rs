@@ -1,4 +1,4 @@
-pub type WindowSystem = ((), Context);
+pub type WindowSystem = (EventQueue, Context);
 
 pub struct WindowSettings {}
 
@@ -10,6 +10,7 @@ impl Default for WindowSettings {
 
 pub struct Window {}
 
+pub struct EventQueue {}
 pub struct Context {}
 
 impl Context {
