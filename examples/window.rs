@@ -1,3 +1,4 @@
+use wolf_engine::prelude::*;
 use wolf_engine::window::WindowSettings;
 
 pub fn main() {
