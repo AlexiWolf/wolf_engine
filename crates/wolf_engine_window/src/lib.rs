@@ -1,3 +1,5 @@
+use wolf_engine_events::EventReceiver;
+
 pub type WindowSystem = (EventQueue, Context);
 
 pub struct WindowSettings {}
@@ -11,6 +13,13 @@ impl Default for WindowSettings {
 pub struct Window {}
 
 pub struct EventQueue {}
+
+impl EventReceiver<()> for EventQueue {
+    fn next_event(&mut self) -> Option<()> {
+        None
+    }
+}
+
 pub struct Context {}
 
 impl Context {
@@ -20,5 +29,5 @@ impl Context {
 }
 
 pub fn init() -> WindowSystem {
-    ((), Context {})
+    (EventQueue {}, Context {})
 }
