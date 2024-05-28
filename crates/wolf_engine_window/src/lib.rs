@@ -32,14 +32,6 @@ pub fn init() -> WindowSystem {
     (EventQueue {}, Context {})
 }
 
-pub struct WindowSystemBuilder {}
-
-impl WindowSystemBuilder {
-    pub fn with_window_backend<T: WindowBackend + 'static>(mut self, backend: T) -> Self {
-        self
-    }
-}
-
 #[cfg_attr(test, mockall::automock)]
 pub trait WindowBackend {}
 
@@ -49,9 +41,6 @@ mod window_system_tests {
 
     pub fn should_create_window_system() {
         let test_backend = MockWindowBackend::new();
-        let (event_queue, context) = crate::init()
-            .with_window_backend(test_backend)
-            .build()
-            .unwrap();
+        let (event_queue, context) = crate::init_with_backend(test_backend).unwrap();
     }
 }
