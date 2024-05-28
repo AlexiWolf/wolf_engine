@@ -12,3 +12,6 @@ categories = ["game-development", "game-engines"]
 
 [dependencies]
 wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
+
+[dev-dependencies]
+mockall = "0.12.1"
