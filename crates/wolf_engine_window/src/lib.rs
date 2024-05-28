@@ -32,8 +32,13 @@ pub fn init() -> WindowSystem {
     (EventQueue {}, Context {})
 }
 
+#[cfg_attr(test, mockall::automock)]
+pub trait WindowBackend {}
+
 #[cfg(test)]
 mod window_system_tests {
+    use super::*;
+
     pub fn should_create_window_system() {
         let test_backend = MockWindowBackend::new();
     }
