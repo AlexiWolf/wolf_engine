@@ -2,7 +2,7 @@ use wolf_engine::prelude::*;
 use wolf_engine::window::WindowSettings;
 
 pub fn main() {
-    let (mut event_queue, context) = wolf_engine::window::init();
+    let (mut event_queue, context) = wolf_engine::window::init().unwrap();
     let window = context.create_window(WindowSettings::default());
 
     loop {
