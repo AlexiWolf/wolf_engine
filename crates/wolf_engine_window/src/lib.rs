@@ -32,6 +32,14 @@ pub fn init() -> WindowSystem {
     (EventQueue {}, Context {})
 }
 
+pub struct WindowSystemBuilder {}
+
+impl WindowSystemBuilder {
+    pub fn with_window_backend<T: WindowBackend + 'static>(mut self, backend: T) -> Self {
+        self
+    }
+}
+
 #[cfg_attr(test, mockall::automock)]
 pub trait WindowBackend {}
 
