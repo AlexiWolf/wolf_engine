@@ -41,6 +41,6 @@ mod window_system_tests {
 
     pub fn should_create_window_system() {
         let test_backend = MockWindowBackend::new();
-        let (event_queue, context) = crate::init_with_backend(test_backend).unwrap();
+        let (event_queue, context) = crate::init_with_backend(test_backend);
     }
 }
