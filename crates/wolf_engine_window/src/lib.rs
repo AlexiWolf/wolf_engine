@@ -1,4 +1,7 @@
 use wolf_engine_events::EventReceiver;
+pub enum WindowEvent {
+    CloseRequested { id: Uuid },
+}
 
 pub type WindowSystem = (EventQueue, Context);
 
