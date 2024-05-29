@@ -1,4 +1,6 @@
-use ::winit::event_loop::EventLoop;
+use std::{collections::HashMap, sync::RwLock};
+
+use ::winit::{event_loop::EventLoop, window::WindowId};
 use wolf_engine_events::mpsc::MpscEventSender;
 
 use crate::*;
@@ -14,11 +16,19 @@ impl WindowBackend for WinitBackend {
     }
 }
 
-pub struct WinitAdapter {}
+pub struct WinitAdapter {
+    event_sender: MpscEventSender<WindowEvent>,
+    event_loop: RwLock<EventLoop<()>>,
+    window_uuids: RwLock<HashMap<WindowId, Uuid>>,
+}
 
 impl WinitAdapter {
     fn new(event_sender: MpscEventSender<WindowEvent>, event_loop: EventLoop<()>) -> Self {
-        Self {}
+        Self {
+            event_sender,
+            event_loop: RwLock::new(event_loop),
+            window_uuids: RwLock::new(HashMap::new()),
+        }
     }
 }
 
