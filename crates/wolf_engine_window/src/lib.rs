@@ -1,5 +1,8 @@
 use uuid::Uuid;
-use wolf_engine_events::{mpsc::MpscEventSender, EventReceiver};
+use wolf_engine_events::{
+    mpsc::{self, MpscEventSender},
+    EventReceiver,
+};
 
 #[non_exhaustive]
 pub enum WindowEvent {
@@ -39,6 +42,10 @@ pub fn init() -> Result<WindowSystem, &'static str> {
 }
 
 pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem {
+    let (event_sender, event_receiver) = mpsc::event_queue();
+    let backend_adapter = backend.init(event_sender);
+    let context = Context::new(backend_adapter);
+    let event_queue = EventQueue::new(event_sender);
     (EventQueue {}, Context {})
 }
 
