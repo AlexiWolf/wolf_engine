@@ -36,12 +36,14 @@ impl EventReceiver<()> for EventQueue {
 }
 
 pub struct Context {
-    backend_adapter: Box<dyn WindowBackendAdapter>,
+    backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
 }
 
 impl Context {
     fn new(backend_adapter: Box<dyn WindowBackendAdapter>) -> Self {
-        Self { backend_adapter }
+        Self {
+            backend_adapter: Arc::new(backend_adapter),
+        }
     }
 
     pub fn create_window(&self, settings: WindowSettings) -> Window {
