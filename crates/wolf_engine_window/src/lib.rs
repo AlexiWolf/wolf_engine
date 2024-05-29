@@ -44,7 +44,7 @@ mod window_system_tests {
     use super::*;
 
     #[test]
-    pub fn should_create_window_system() {
+    pub fn should_support_custom_backends() {
         let test_backend = MockWindowBackend::new();
         let (_event_queue, _context) = crate::init_with_backend(test_backend);
     }
