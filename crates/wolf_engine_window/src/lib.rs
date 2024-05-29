@@ -34,6 +34,10 @@ pub struct Context {
 }
 
 impl Context {
+    fn new(backend_adapter: Box<dyn WindowBackendAdapter>) -> Self {
+        Self { backend_adapter }
+    }
+
     pub fn create_window(&self, settings: WindowSettings) -> Window {
         Window {}
     }
