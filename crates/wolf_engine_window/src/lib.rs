@@ -23,10 +23,11 @@ pub struct Window {}
 
 pub struct EventQueue {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
+    event_receiver: MpscEventReceiver<WindowEvent>,
 }
 
 impl EventQueue {
-    fn new(context: &Context, event_reciever: MpscEventReceiver<WindowEvent>) -> Self {
+    fn new(context: &Context, event_receiver: MpscEventReceiver<WindowEvent>) -> Self {
         let backend_adapter = context.backend_adapter();
         Self {}
     }
