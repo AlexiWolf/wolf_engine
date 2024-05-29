@@ -74,7 +74,10 @@ mod window_system_tests {
     }
 
     impl WindowBackend for TestWindowBackend {
-        fn init(self, _event_sender: MpscEventSender<()>) -> Box<dyn WindowBackendAdapter> {
+        fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter> {
+            for event in self.events {
+                event_sender.send_event(event);
+            }
             Box::new(self.mock_window_system)
         }
     }
