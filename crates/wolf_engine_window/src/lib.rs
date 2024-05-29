@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use uuid::Uuid;
+use winit::WinitBackend;
 use wolf_engine_events::{
     mpsc::{self, MpscEventReceiver, MpscEventSender},
     EventReceiver,
@@ -72,7 +73,7 @@ impl Context {
 }
 
 pub fn init() -> Result<WindowSystem, &'static str> {
-    todo!()
+    init_with_backend(WinitBackend)
 }
 
 pub fn init_with_backend<T: WindowBackend + 'static>(
