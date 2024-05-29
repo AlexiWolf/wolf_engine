@@ -1,6 +1,6 @@
 use uuid::Uuid;
 use wolf_engine_events::{
-    mpsc::{self, MpscEventSender},
+    mpsc::{self, MpscEventReceiver, MpscEventSender},
     EventReceiver,
 };
 
@@ -22,6 +22,12 @@ impl Default for WindowSettings {
 pub struct Window {}
 
 pub struct EventQueue {}
+
+impl EventQueue {
+    fn new(context: &Context, event_reciever: MpscEventReceiver<WindowEvent>) -> Self {
+        Self {}
+    }
+}
 
 impl EventReceiver<()> for EventQueue {
     fn next_event(&mut self) -> Option<()> {
