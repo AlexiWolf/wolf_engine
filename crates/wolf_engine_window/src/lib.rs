@@ -1,3 +1,4 @@
+use uuid::Uuid;
 use wolf_engine_events::{mpsc::MpscEventSender, EventReceiver};
 
 pub enum WindowEvent {
