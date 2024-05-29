@@ -43,8 +43,9 @@ pub trait WindowBackend {}
 mod window_system_tests {
     use super::*;
 
+    #[test]
     pub fn should_create_window_system() {
         let test_backend = MockWindowBackend::new();
-        let (event_queue, context) = crate::init_with_backend(test_backend);
+        let (_event_queue, _context) = crate::init_with_backend(test_backend);
     }
 }
