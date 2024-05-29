@@ -46,7 +46,7 @@ pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem
     let backend_adapter = backend.init(event_sender);
     let context = Context::new(backend_adapter);
     let event_queue = EventQueue::new(event_sender);
-    (EventQueue {}, Context {})
+    (event_queue, context)
 }
 
 pub trait WindowBackend {
