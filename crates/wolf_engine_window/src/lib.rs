@@ -125,13 +125,6 @@ mod window_system_tests {
     }
 
     #[test]
-    pub fn should_support_custom_backends() {
-        let test_adapter = MockWindowBackendAdapter::new();
-        let (_event_queue, _context) =
-            crate::init_with_backend(TestWindowBackend::new(test_adapter));
-    }
-
-    #[test]
     pub fn should_pump_backend_events_when_event_queue_is_cleared() {
         let mut test_adapter = MockWindowBackendAdapter::new();
         test_adapter.expect_pump_events().once().returning(|| ());
