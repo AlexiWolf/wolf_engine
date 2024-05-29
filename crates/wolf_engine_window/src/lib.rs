@@ -86,7 +86,7 @@ pub trait WindowBackend {
 
 #[cfg_attr(test, mockall::automock)]
 pub trait WindowBackendAdapter {
-    fn pump_events(&mut self);
+    fn pump_events(&self);
 }
 
 #[cfg(test)]
