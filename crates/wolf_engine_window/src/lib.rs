@@ -85,56 +85,79 @@ pub trait WindowBackend {
     fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter>;
 }
 
-#[cfg_attr(test, mockall::automock)]
 pub trait WindowBackendAdapter {
     fn pump_events(&self);
 }
 
 #[cfg(test)]
 mod window_system_tests {
+    use std::{collections::VecDeque, sync::RwLock};
+
     use wolf_engine_events::EventSender;
 
     use super::*;
 
     struct TestWindowBackend {
-        mock_window_system: MockWindowBackendAdapter,
-        events: Vec<WindowEvent>,
+        adapter: TestWindowBackendAdapter,
     }
 
     impl TestWindowBackend {
-        pub fn new(mock_window_system: MockWindowBackendAdapter) -> Self {
-            Self {
-                mock_window_system,
-                events: Vec::new(),
-            }
-        }
-
-        pub fn send_events(mut self, events: Vec<WindowEvent>) -> Self {
-            self.events = events;
-            self
+        pub fn new(adapter: TestWindowBackendAdapter) -> Self {
+            Self { adapter }
         }
     }
 
     impl WindowBackend for TestWindowBackend {
         fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter> {
-            for event in self.events {
-                event_sender.send_event(event).unwrap();
+            *self.adapter.event_sender.write().unwrap() = Some(event_sender);
+            Box::new(self.adapter)
+        }
+    }
+
+    #[derive(Clone)]
+    pub struct TestWindowBackendAdapter {
+        event_sender: Arc<RwLock<Option<MpscEventSender<WindowEvent>>>>,
+        pub buffered_events: Arc<RwLock<VecDeque<WindowEvent>>>,
+    }
+
+    impl TestWindowBackendAdapter {
+        fn new() -> Self {
+            Self {
+                event_sender: Arc::new(RwLock::new(None)),
+                buffered_events: Arc::new(RwLock::new(VecDeque::new())),
             }
-            Box::new(self.mock_window_system)
+        }
+
+        pub fn buffer_event(&self, event: WindowEvent) {
+            self.buffered_events.write().unwrap().push_back(event);
+        }
+    }
+
+    impl WindowBackendAdapter for TestWindowBackendAdapter {
+        fn pump_events(&self) {
+            while let Some(event) = self.buffered_events.write().unwrap().pop_front() {
+                let guard = self.event_sender.read().unwrap();
+                let event_queue = guard.as_ref().unwrap();
+                event_queue.send_event(event).unwrap();
+            }
         }
     }
 
     #[test]
     pub fn should_pump_backend_events_when_event_queue_is_cleared() {
-        let mut test_adapter = MockWindowBackendAdapter::new();
-        test_adapter.expect_pump_events().once().returning(|| ());
+        let test_adapter = TestWindowBackendAdapter::new();
+        let (mut event_queue, _context) =
+            crate::init_with_backend(TestWindowBackend::new(test_adapter.clone()));
 
-        let (mut event_queue, _context) = crate::init_with_backend(
-            TestWindowBackend::new(test_adapter)
-                .send_events(vec![WindowEvent::CloseRequested { id: Uuid::new_v4() }]),
+        test_adapter.buffer_event(WindowEvent::CloseRequested { id: Uuid::new_v4() });
+
+        assert!(
+            event_queue.next_event().is_none(),
+            "Expected `None`.  Events should be pumped only after a `None` is returned."
         );
-
-        assert!(event_queue.next_event().is_some());
-        assert_eq!(event_queue.next_event(), None)
+        assert!(
+            event_queue.next_event().is_some(),
+            "Expected `Some`. Events should have been pumped by the previous `next_event()` call."
+        );
     }
 }
