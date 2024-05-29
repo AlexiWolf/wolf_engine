@@ -38,7 +38,7 @@ impl Context {
 }
 
 pub fn init() -> Result<WindowSystem, &'static str> {
-    Ok((EventQueue {}, Context {}))
+    todo!()
 }
 
 pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem {
