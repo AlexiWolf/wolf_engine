@@ -42,7 +42,7 @@ pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem
 }
 
 pub trait WindowBackend {
-    fn init(self, event_sender: MpscEventSender<()>) -> Box<dyn WindowBackendAdapter>;
+    fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter>;
 }
 
 #[cfg_attr(test, mockall::automock)]
@@ -52,6 +52,8 @@ pub trait WindowBackendAdapter {
 
 #[cfg(test)]
 mod window_system_tests {
+    use wolf_engine_events::EventSender;
+
     use super::*;
 
     struct TestWindowBackend {
