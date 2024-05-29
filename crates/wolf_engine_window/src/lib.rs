@@ -51,7 +51,7 @@ pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem
     let (event_sender, event_receiver) = mpsc::event_queue();
     let backend_adapter = backend.init(event_sender);
     let context = Context::new(backend_adapter);
-    let event_queue = EventQueue::new(event_sender);
+    let event_queue = EventQueue::new(&context, event_receiver);
     (event_queue, context)
 }
 
