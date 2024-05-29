@@ -36,9 +36,13 @@ impl EventQueue {
     }
 }
 
-        None
 impl EventReceiver<WindowEvent> for EventQueue {
     fn next_event(&mut self) -> Option<WindowEvent> {
+        let event = self.event_receiver.next_event();
+        if event.is_none() {
+            self.backend_adapter.pump_events();
+        }
+        event
     }
 }
 
