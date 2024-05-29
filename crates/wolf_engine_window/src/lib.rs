@@ -36,9 +36,9 @@ impl EventQueue {
     }
 }
 
-impl EventReceiver<()> for EventQueue {
-    fn next_event(&mut self) -> Option<()> {
         None
+impl EventReceiver<WindowEvent> for EventQueue {
+    fn next_event(&mut self) -> Option<WindowEvent> {
     }
 }
 
