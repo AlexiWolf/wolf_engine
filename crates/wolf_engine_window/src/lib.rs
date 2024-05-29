@@ -1,4 +1,5 @@
-use wolf_engine_events::EventReceiver;
+use wolf_engine_events::{mpsc::MpscEventSender, EventReceiver};
+
 pub enum WindowEvent {
     CloseRequested { id: Uuid },
 }
@@ -51,6 +52,31 @@ pub trait WindowBackendAdapter {
 #[cfg(test)]
 mod window_system_tests {
     use super::*;
+
+    struct TestWindowBackend {
+        mock_window_system: MockWindowBackendAdapter,
+        events: Vec<WindowEvent>,
+    }
+
+    impl TestWindowBackend {
+        pub fn new(mock_window_system: MockWindowBackendAdapter) -> Self {
+            Self {
+                mock_window_system,
+                events: Vec::new(),
+            }
+        }
+
+        pub fn send_events(mut self, events: Vec<WindowEvent>) -> Self {
+            self.events = events;
+            self
+        }
+    }
+
+    impl WindowBackend for TestWindowBackend {
+        fn init(self, _event_sender: MpscEventSender<()>) -> Box<dyn WindowBackendAdapter> {
+            Box::new(self.mock_window_system)
+        }
+    }
 
     #[test]
     pub fn should_support_custom_backends() {
