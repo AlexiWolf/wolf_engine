@@ -37,6 +37,7 @@ pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem
 }
 
 pub trait WindowBackend {
+    fn init(self, event_sender: MpscEventSender<()>) -> Box<dyn WindowBackendAdapter>;
 }
 
 #[cfg_attr(test, mockall::automock)]
