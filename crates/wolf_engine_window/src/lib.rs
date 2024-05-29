@@ -1,6 +1,7 @@
 use uuid::Uuid;
 use wolf_engine_events::{mpsc::MpscEventSender, EventReceiver};
 
+#[non_exhaustive]
 pub enum WindowEvent {
     CloseRequested { id: Uuid },
 }
