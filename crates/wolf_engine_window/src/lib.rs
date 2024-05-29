@@ -36,8 +36,12 @@ pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem
     (EventQueue {}, Context {})
 }
 
+pub trait WindowBackend {
+}
+
 #[cfg_attr(test, mockall::automock)]
-pub trait WindowBackend {}
+pub trait WindowBackendAdapter {
+}
 
 #[cfg(test)]
 mod window_system_tests {
