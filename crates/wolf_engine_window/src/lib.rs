@@ -6,6 +6,7 @@ use wolf_engine_events::{
     EventReceiver,
 };
 
+#[derive(Debug, PartialEq)]
 #[non_exhaustive]
 pub enum WindowEvent {
     CloseRequested { id: Uuid },
