@@ -6,6 +6,8 @@ use wolf_engine_events::{
     EventReceiver,
 };
 
+mod winit;
+
 #[derive(Debug, PartialEq)]
 #[non_exhaustive]
 pub enum WindowEvent {
