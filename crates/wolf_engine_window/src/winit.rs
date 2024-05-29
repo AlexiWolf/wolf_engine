@@ -7,6 +7,7 @@ pub struct WinitBackend;
 
 impl WindowBackend for WinitBackend {
     fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter> {
-        todo!()
+        let event_loop = ::winit::event_loop::EventLoop::new().unwrap();
+        let winit_adapter = WinitAdapter::new(event_loop);
     }
 }
