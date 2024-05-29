@@ -29,7 +29,9 @@ impl EventReceiver<()> for EventQueue {
     }
 }
 
-pub struct Context {}
+pub struct Context {
+    backend_adapter: Box<dyn WindowBackendAdapter>,
+}
 
 impl Context {
     pub fn create_window(&self, settings: WindowSettings) -> Window {
