@@ -21,10 +21,13 @@ impl Default for WindowSettings {
 
 pub struct Window {}
 
-pub struct EventQueue {}
+pub struct EventQueue {
+    backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
+}
 
 impl EventQueue {
     fn new(context: &Context, event_reciever: MpscEventReceiver<WindowEvent>) -> Self {
+        let backend_adapter = context.backend_adapter();
         Self {}
     }
 }
@@ -48,6 +51,10 @@ impl Context {
 
     pub fn create_window(&self, settings: WindowSettings) -> Window {
         Window {}
+    }
+
+    fn backend_adapter(&self) -> Arc<Box<dyn WindowBackendAdapter>> {
+        self.backend_adapter.clone()
     }
 }
 
