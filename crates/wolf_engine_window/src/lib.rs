@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use uuid::Uuid;
 use wolf_engine_events::{
     mpsc::{self, MpscEventReceiver, MpscEventSender},
