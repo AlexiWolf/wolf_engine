@@ -75,12 +75,14 @@ pub fn init() -> Result<WindowSystem, &'static str> {
     todo!()
 }
 
-pub fn init_with_backend<T: WindowBackend + 'static>(backend: T) -> WindowSystem {
+pub fn init_with_backend<T: WindowBackend + 'static>(
+    backend: T,
+) -> Result<WindowSystem, &'static str> {
     let (event_sender, event_receiver) = mpsc::event_queue();
     let backend_adapter = backend.init(event_sender);
     let context = Context::new(backend_adapter);
     let event_queue = EventQueue::new(&context, event_receiver);
-    (event_queue, context)
+    Ok((event_queue, context))
 }
 
 pub trait WindowBackend {
@@ -149,7 +151,7 @@ mod window_system_tests {
     pub fn should_pump_backend_events_when_event_queue_is_cleared() {
         let test_adapter = TestWindowBackendAdapter::new();
         let (mut event_queue, _context) =
-            crate::init_with_backend(TestWindowBackend::new(test_adapter.clone()));
+            crate::init_with_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
 
         test_adapter.buffer_event(WindowEvent::CloseRequested { id: Uuid::new_v4() });
 
