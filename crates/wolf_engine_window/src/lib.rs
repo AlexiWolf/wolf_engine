@@ -59,9 +59,12 @@ mod window_system_tests {
         let mut test_adapter = MockWindowBackendAdapter::new();
         test_adapter.expect_pump_events().once().returning(|| ());
 
-        let (mut event_queue, _context) =
-            crate::init_with_backend(TestWindowBackend::new(test_adapter));
+        let (mut event_queue, _context) = crate::init_with_backend(
+            TestWindowBackend::new(test_adapter)
+                .send_events(vec![WindowEvent::CloseRequested { id: Uuid::new_v4() }]),
+        );
 
+        assert!(event_queue.next_event().is_some());
         assert_eq!(event_queue.next_event(), None)
     }
 }
