@@ -92,6 +92,7 @@ pub trait WindowBackend {
 
 pub trait WindowBackendAdapter {
     fn pump_events(&self);
+    fn create_window(&self, settings: WindowSettings) -> Window;
 }
 
 #[cfg(test)]
@@ -145,6 +146,10 @@ mod window_system_tests {
                 let event_queue = guard.as_ref().unwrap();
                 event_queue.send_event(event).unwrap();
             }
+        }
+
+        fn create_window(&self, settings: WindowSettings) -> Window {
+            Window {}
         }
     }
 
