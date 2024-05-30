@@ -17,11 +17,17 @@ pub enum WindowEvent {
 
 pub type WindowSystem = (EventQueue, Context);
 
-pub struct WindowSettings {}
+pub struct WindowSettings {
+    pub title: String,
+    pub size: (u32, u32),
+}
 
 impl Default for WindowSettings {
     fn default() -> Self {
-        Self {}
+        Self {
+            title: "untitled".to_string(),
+            size: (1280, 720),
+        }
     }
 }
 
