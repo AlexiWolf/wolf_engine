@@ -6,6 +6,7 @@ use ::winit::window::WindowAttributes;
 use ::winit::{event_loop::EventLoop, window::WindowId};
 
 use wolf_engine_events::mpsc::MpscEventSender;
+use wolf_engine_events::EventSender;
 
 use crate::*;
 
@@ -38,6 +39,10 @@ impl WinitAdapter {
     fn insert_id(&self, winit_id: WindowId, uuid: Uuid) {
         self.window_uuids.write().unwrap().insert(winit_id, uuid);
     }
+
+    fn get_uuid(&self, winit_id: WindowId) -> Option<Uuid> {
+        self.window_uuids.read().unwrap().get(&winit_id).copied()
+    }
 }
 
 impl WindowBackendAdapter for WinitAdapter {
@@ -47,6 +52,16 @@ impl WindowBackendAdapter for WinitAdapter {
         self.event_loop.write().unwrap().pump_events(
             Some(timeout),
             |event, event_loop| match event {
+                ::winit::event::Event::WindowEvent {
+                    window_id,
+                    event: ::winit::event::WindowEvent::CloseRequested,
+                } => {
+                    if let Some(uuid) = self.get_uuid(window_id) {
+                        self.event_sender
+                            .send_event(WindowEvent::CloseRequested { id: uuid })
+                            .unwrap();
+                    }
+                }
                 _ => (),
             },
         );
