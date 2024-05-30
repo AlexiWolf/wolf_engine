@@ -25,7 +25,9 @@ impl Default for WindowSettings {
     }
 }
 
-pub struct Window {}
+pub struct Window {
+    inner: Box<dyn WindowTrait>,
+}
 
 pub trait WindowTrait {}
 
