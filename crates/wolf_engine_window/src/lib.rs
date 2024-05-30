@@ -32,14 +32,20 @@ impl Default for WindowSettings {
 }
 
 pub struct Window {
+    id: Uuid,
     inner: Box<dyn WindowTrait>,
 }
 
 impl Window {
     pub fn new<T: WindowTrait + 'static>(inner: T) -> Self {
         Self {
+            id: Uuid::new_v4(),
             inner: Box::new(inner),
         }
+    }
+
+    pub fn id(&self) -> Uuid {
+        self.id
     }
 }
 
