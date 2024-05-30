@@ -14,3 +14,6 @@ categories = ["game-development", "game-engines"]
 uuid = { version = "1.8.0", features = ["v4", "fast-rng"] }
 winit = "0.30.0"
 wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
+
+[dev-dependencies]
+mockall = "0.12.1"
