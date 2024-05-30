@@ -1,6 +1,7 @@
 use std::{collections::HashMap, sync::RwLock, time::Duration};
 
 use ::winit::platform::pump_events::EventLoopExtPumpEvents;
+use ::winit::window::WindowAttributes;
 use ::winit::{event_loop::EventLoop, window::WindowId};
 
 use wolf_engine_events::mpsc::MpscEventSender;
@@ -47,6 +48,13 @@ impl WindowBackendAdapter for WinitAdapter {
     }
 
     fn create_window(&self, settings: WindowSettings) -> Window {
-        Window {}
+        #[allow(deprecated)]
+        let winit_window = self.event_loop.read().unwrap().create_window(
+            WindowAttributes::default()
+                .with_title(settings.title)
+                .with_inner_size(settings.size),
+        );
+        let window = Window::new(winit_window);
+        window
     }
 }
