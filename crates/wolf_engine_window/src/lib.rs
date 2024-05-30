@@ -27,6 +27,8 @@ impl Default for WindowSettings {
 
 pub struct Window {}
 
+pub trait WindowTrait {}
+
 pub struct EventQueue {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
     event_receiver: MpscEventReceiver<WindowEvent>,
