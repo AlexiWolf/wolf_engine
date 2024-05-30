@@ -29,6 +29,12 @@ pub struct Window {
     inner: Box<dyn WindowTrait>,
 }
 
+impl Window {
+    pub fn new<T: WindowTrait + 'static>(inner: WindowTrait) -> Self {
+        Self { inner }
+    }
+}
+
 pub trait WindowTrait {}
 
 pub struct EventQueue {
