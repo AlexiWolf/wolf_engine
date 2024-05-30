@@ -76,7 +76,7 @@ impl Context {
     }
 
     pub fn create_window(&self, settings: WindowSettings) -> Window {
-        Window {}
+        self.backend_adapter.create_window(settings)
     }
 
     fn backend_adapter(&self) -> Arc<Box<dyn WindowBackendAdapter>> {
