@@ -34,6 +34,10 @@ impl WinitAdapter {
             window_uuids: RwLock::new(HashMap::new()),
         }
     }
+
+    fn insert_id(&self, winit_id: WindowId, uuid: Uuid) {
+        self.window_uuids.write().unwrap().insert(winit_id, uuid);
+    }
 }
 
 impl WindowBackendAdapter for WinitAdapter {
@@ -60,7 +64,10 @@ impl WindowBackendAdapter for WinitAdapter {
                     .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1)),
             )
             .unwrap();
+        let winit_id = winit_window.id();
         let window = Window::new(winit_window);
+        let window_uuid = window.id();
+        self.insert_id(winit_id, window_uuid);
         window
     }
 }
