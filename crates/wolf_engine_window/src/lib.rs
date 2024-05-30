@@ -30,8 +30,10 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new<T: WindowTrait + 'static>(inner: WindowTrait) -> Self {
-        Self { inner }
+    pub fn new<T: WindowTrait + 'static>(inner: T) -> Self {
+        Self {
+            inner: Box::new(inner),
+        }
     }
 }
 
