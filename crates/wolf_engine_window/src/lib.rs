@@ -149,9 +149,13 @@ mod window_system_tests {
         }
 
         fn create_window(&self, settings: WindowSettings) -> Window {
-            Window {}
+            Window::new(TestWindow);
         }
     }
+
+    struct TestWindow;
+
+    impl WindowTrait for TestWindow {}
 
     #[test]
     pub fn should_pump_backend_events_when_event_queue_is_cleared() {
