@@ -50,11 +50,16 @@ impl WindowBackendAdapter for WinitAdapter {
 
     fn create_window(&self, settings: WindowSettings) -> Window {
         #[allow(deprecated)]
-        let winit_window = self.event_loop.read().unwrap().create_window(
-            WindowAttributes::default()
-                .with_title(settings.title)
-                .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1)),
-        );
+        let winit_window = self
+            .event_loop
+            .read()
+            .unwrap()
+            .create_window(
+                WindowAttributes::default()
+                    .with_title(settings.title)
+                    .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1)),
+            )
+            .unwrap();
         let window = Window::new(winit_window);
         window
     }
