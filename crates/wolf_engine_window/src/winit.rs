@@ -1,5 +1,6 @@
 use std::{collections::HashMap, sync::RwLock, time::Duration};
 
+use ::winit::dpi::PhysicalSize;
 use ::winit::platform::pump_events::EventLoopExtPumpEvents;
 use ::winit::window::WindowAttributes;
 use ::winit::{event_loop::EventLoop, window::WindowId};
@@ -52,7 +53,7 @@ impl WindowBackendAdapter for WinitAdapter {
         let winit_window = self.event_loop.read().unwrap().create_window(
             WindowAttributes::default()
                 .with_title(settings.title)
-                .with_inner_size(settings.size),
+                .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1)),
         );
         let window = Window::new(winit_window);
         window
