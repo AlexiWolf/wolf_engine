@@ -45,4 +45,8 @@ impl WindowBackendAdapter for WinitAdapter {
             },
         );
     }
+
+    fn create_window(&self, settings: WindowSettings) -> Window {
+        Window {}
+    }
 }
