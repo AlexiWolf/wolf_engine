@@ -161,7 +161,7 @@ mod window_system_tests {
         }
 
         fn create_window(&self, settings: WindowSettings) -> Window {
-            Window::new(TestWindow);
+            Window::new(TestWindow)
         }
     }
 
