@@ -1,6 +1,8 @@
-use std::{collections::HashMap, sync::RwLock};
+use std::{collections::HashMap, sync::RwLock, time::Duration};
 
+use ::winit::platform::pump_events::EventLoopExtPumpEvents;
 use ::winit::{event_loop::EventLoop, window::WindowId};
+
 use wolf_engine_events::mpsc::MpscEventSender;
 
 use crate::*;
@@ -34,6 +36,13 @@ impl WinitAdapter {
 
 impl WindowBackendAdapter for WinitAdapter {
     fn pump_events(&self) {
-        todo!()
+        let timeout = Duration::ZERO;
+        #[allow(deprecated)]
+        self.event_loop.write().unwrap().pump_events(
+            Some(timeout),
+            |event, event_loop| match event {
+                _ => (),
+            },
+        );
     }
 }
