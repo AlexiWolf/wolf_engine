@@ -64,3 +64,5 @@ impl WindowBackendAdapter for WinitAdapter {
         window
     }
 }
+
+impl WindowTrait for ::winit::window::Window {}
