@@ -225,5 +225,8 @@ mod window_system_tests {
                 .with_title("Test Window")
                 .with_size((1280, 720)),
         );
+
+        assert_eq!(window.title(), "Test Window");
+        assert_eq!(window.size(), (1280, 720));
     }
 }
