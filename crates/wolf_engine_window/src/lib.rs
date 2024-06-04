@@ -195,20 +195,22 @@ mod window_system_tests {
             }
         }
 
-        fn create_window(&self, _settings: WindowSettings) -> Window {
-            Window::new(TestWindow)
+        fn create_window(&self, settings: WindowSettings) -> Window {
+            Window::new(TestWindow { settings })
         }
     }
 
-    struct TestWindow;
+    struct TestWindow {
+        settings: WindowSettings,
+    }
 
     impl WindowTrait for TestWindow {
         fn title(&self) -> String {
-            todo!()
+            self.settings.title.to_owned()
         }
 
         fn size(&self) -> (u32, u32) {
-            todo!()
+            self.settings.size
         }
     }
 
