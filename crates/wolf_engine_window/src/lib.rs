@@ -69,7 +69,10 @@ impl Window {
     }
 }
 
-pub trait WindowTrait {}
+pub trait WindowTrait {
+    fn title(&self) -> String;
+    fn size(&self) -> (u32, u32);
+}
 
 pub struct EventQueue {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
