@@ -61,11 +61,11 @@ impl Window {
     }
 
     pub fn title(&self) -> String {
-        "".to_string()
+        self.inner.title()
     }
 
     pub fn size(&self) -> (u32, u32) {
-        (0, 0)
+        self.inner.size()
     }
 }
 
