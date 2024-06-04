@@ -14,8 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `winit` feature to enable / disable Winit integration engine-wide.
 - Added `wolf_engine_events` crate.
   - Added public re-export of `wolf_engine_events` as `events`.
-  - Added `events` feature to enable / disable the `events` module.
-    - Added `events` feature to the default feature-set.
 
 ## [wolf_engine_input]
 
