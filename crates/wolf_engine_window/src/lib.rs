@@ -202,7 +202,15 @@ mod window_system_tests {
 
     struct TestWindow;
 
-    impl WindowTrait for TestWindow {}
+    impl WindowTrait for TestWindow {
+        fn title(&self) -> String {
+            todo!()
+        }
+
+        fn size(&self) -> (u32, u32) {
+            todo!()
+        }
+    }
 
     #[test]
     pub fn should_pump_backend_events_when_event_queue_is_cleared() {

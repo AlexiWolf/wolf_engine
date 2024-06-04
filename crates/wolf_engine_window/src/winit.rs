@@ -87,4 +87,12 @@ impl WindowBackendAdapter for WinitAdapter {
     }
 }
 
-impl WindowTrait for ::winit::window::Window {}
+impl WindowTrait for ::winit::window::Window {
+    fn title(&self) -> String {
+        todo!()
+    }
+
+    fn size(&self) -> (u32, u32) {
+        todo!()
+    }
+}
