@@ -60,6 +60,10 @@ impl Window {
         self.id
     }
 
+    pub fn title(&self) -> String {
+        "".to_string()
+    }
+
     pub fn size(&self) -> (u32, u32) {
         (0, 0)
     }
