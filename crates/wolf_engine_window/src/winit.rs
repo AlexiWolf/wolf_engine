@@ -51,7 +51,7 @@ impl WindowBackendAdapter for WinitAdapter {
         #[allow(deprecated)]
         self.event_loop.write().unwrap().pump_events(
             Some(timeout),
-            |event, event_loop| match event {
+            |event, _event_loop| match event {
                 ::winit::event::Event::WindowEvent {
                     window_id,
                     event: ::winit::event::WindowEvent::CloseRequested,
