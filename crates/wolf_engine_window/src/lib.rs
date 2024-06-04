@@ -26,7 +26,7 @@ impl Default for WindowSettings {
     fn default() -> Self {
         Self {
             title: "untitled".to_string(),
-            size: (1280, 720),
+            size: (800, 600),
         }
     }
 }
