@@ -47,6 +47,10 @@ impl Window {
     pub fn id(&self) -> Uuid {
         self.id
     }
+
+    pub fn size(&self) -> (u32, u32) {
+        (0, 0)
+    }
 }
 
 pub trait WindowTrait {}
@@ -196,6 +200,18 @@ mod window_system_tests {
         assert!(
             event_queue.next_event().is_some(),
             "Expected `Some`. Events should have been pumped by the previous `next_event()` call."
+        );
+    }
+
+    #[test]
+    pub fn should_create_window_with_backend() {
+        let test_adapter = TestWindowBackendAdapter::new();
+        let (mut _event_queue, context) =
+            crate::init_with_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
+        let window = context.create_window(
+            WindowSettings::default()
+                .with_title("Test Window")
+                .with_size((1280, 720)),
         );
     }
 }
