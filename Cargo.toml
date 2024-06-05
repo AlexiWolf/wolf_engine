@@ -22,6 +22,7 @@ wolf_engine_window = { version = "0.1.0", path = "crates/wolf_engine_window", op
 default = ["input"]
 input = ["wolf_engine_input"]
 window = ["wolf_engine_window"]
+rwh_05 = ["wolf_engine_window/rwh_05"]
 winit = ["wolf_engine_input/winit"]
 
 [dev-dependencies]
@@ -34,5 +35,5 @@ required-features = ["window", "input"]
 
 [[example]]
 name = "window"
-required-features = ["window"]
+required-features = ["window", "rwh_05"]
 
