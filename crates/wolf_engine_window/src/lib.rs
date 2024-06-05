@@ -2,6 +2,9 @@ use std::sync::Arc;
 
 pub use raw_window_handle;
 
+use raw_window_handle::{
+    HasDisplayHandle, HasRawDisplayHandle, HasRawWindowHandle, HasWindowHandle,
+};
 use uuid::Uuid;
 use winit::WinitBackend;
 use wolf_engine_events::{
