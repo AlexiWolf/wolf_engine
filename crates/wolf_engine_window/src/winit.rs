@@ -89,10 +89,11 @@ impl WindowBackendAdapter for WinitAdapter {
 
 impl WindowTrait for ::winit::window::Window {
     fn title(&self) -> String {
-        todo!()
+        ::winit::window::Window::title(&self)
     }
 
     fn size(&self) -> (u32, u32) {
-        todo!()
+        let size = self.inner_size();
+        (size.height, size.width)
     }
 }
