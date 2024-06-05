@@ -238,18 +238,28 @@ mod window_system_tests {
         }
     }
 
-    impl HasWindowHandle for TestWindow {
-        fn window_handle(
-            &self,
-        ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
+    impl rwh_06::HasWindowHandle for TestWindow {
+        fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
             no_handle_panic()
         }
     }
 
-    impl HasDisplayHandle for TestWindow {
-        fn display_handle(
-            &self,
-        ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
+    impl rwh_06::HasDisplayHandle for TestWindow {
+        fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
+            no_handle_panic()
+        }
+    }
+
+    #[cfg(feature = "rwh_05")]
+    unsafe impl rwh_05::HasRawWindowHandle for TestWindow {
+        fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
+            no_handle_panic()
+        }
+    }
+
+    #[cfg(feature = "rwh_05")]
+    unsafe impl rwh_05::HasRawDisplayHandle for TestWindow {
+        fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
             no_handle_panic()
         }
     }
