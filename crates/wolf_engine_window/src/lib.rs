@@ -71,6 +71,34 @@ impl Window {
 }
 
 #[cfg(feature = "rwh_06")]
+impl rwh_06::HasWindowHandle for Window {
+    fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
+        rwh_06::HasWindowHandle::window_handle(&self.inner)
+    }
+}
+
+#[cfg(feature = "rwh_06")]
+impl rwh_06::HasDisplayHandle for Window {
+    fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
+        rwh_06::HasDisplayHandle::display_handle(&self.inner)
+    }
+}
+
+#[cfg(feature = "rwh_05")]
+unsafe impl rwh_05::HasRawWindowHandle for Window {
+    fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
+        rwh_05::HasRawWindowHandle::raw_window_handle(&*self.inner)
+    }
+}
+
+#[cfg(feature = "rwh_05")]
+unsafe impl rwh_05::HasRawDisplayHandle for Window {
+    fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
+        rwh_05::HasRawDisplayHandle::raw_display_handle(&*self.inner)
+    }
+}
+
+#[cfg(feature = "rwh_06")]
 pub trait HasRwh6Handles: rwh_06::HasWindowHandle + rwh_06::HasDisplayHandle {}
 #[cfg(feature = "rwh_06")]
 impl<T> HasRwh6Handles for T where T: rwh_06::HasWindowHandle + rwh_06::HasDisplayHandle {}
