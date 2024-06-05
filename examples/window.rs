@@ -21,6 +21,9 @@ pub fn main() {
         while let Some(event) = event_queue.next_event() {
             match event {
                 WindowEvent::CloseRequested { .. } => break 'main,
+                WindowEvent::Resized { width, height, .. } => {
+                    pixels.resize_surface(width, height).unwrap()
+                }
                 _ => (),
             }
         }
