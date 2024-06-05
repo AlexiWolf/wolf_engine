@@ -10,7 +10,7 @@ pub fn main() {
     let mut pixels = {
         let (width, height) = window.size();
         let surface_texture = SurfaceTexture::new(width, height, &window);
-        Pixels::new(width, height, surface_texture).unwrap();
+        Pixels::new(width, height, surface_texture).unwrap()
     };
 
     'main: loop {
