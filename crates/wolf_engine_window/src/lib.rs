@@ -70,7 +70,9 @@ impl Window {
     }
 }
 
-pub trait WindowTrait {
+pub trait WindowTrait:
+    HasWindowHandle + HasDisplayHandle + HasRawWindowHandle + HasRawDisplayHandle
+{
     fn title(&self) -> String;
     fn size(&self) -> (u32, u32);
 }
@@ -213,6 +215,26 @@ mod window_system_tests {
         fn size(&self) -> (u32, u32) {
             self.settings.size
         }
+    }
+
+    impl HasWindowHandle for TestWindow {
+        fn window_handle(
+            &self,
+        ) -> Result<raw_window_handle::WindowHandle<'_>, raw_window_handle::HandleError> {
+            no_handle_panic()
+        }
+    }
+
+    impl HasDisplayHandle for TestWindow {
+        fn display_handle(
+            &self,
+        ) -> Result<raw_window_handle::DisplayHandle<'_>, raw_window_handle::HandleError> {
+            no_handle_panic()
+        }
+    }
+
+    fn no_handle_panic() -> ! {
+        panic!("TestWindow does not have a Window/Display handle.");
     }
 
     #[test]
