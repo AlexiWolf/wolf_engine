@@ -1,3 +1,4 @@
+use pixels::wgpu::Color;
 use pixels::{Pixels, SurfaceTexture};
 use wolf_engine::prelude::*;
 use wolf_engine::window::WindowSettings;
@@ -13,7 +14,10 @@ pub fn main() {
         Pixels::new(width, height, surface_texture).unwrap()
     };
 
+    pixels.clear_color(Color::RED);
+
     'main: loop {
+        pixels.render().unwrap();
         while let Some(event) = event_queue.next_event() {
             match event {
                 WindowEvent::CloseRequested { .. } => break 'main,
