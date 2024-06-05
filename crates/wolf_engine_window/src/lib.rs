@@ -17,6 +17,7 @@ pub enum WindowEvent {
 
 pub type WindowSystem = (EventQueue, Context);
 
+#[derive(Copy, Clone, PartialEq, Eq)]
 pub struct WindowSettings {
     pub title: &'static str,
     pub size: (u32, u32),
