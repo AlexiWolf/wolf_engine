@@ -11,6 +11,7 @@ keywords = ["wolf-engine", "gamedev", "input"]
 categories = ["game-development", "game-engines"]
 
 [dependencies]
+raw-window-handle = "0.6.2"
 uuid = { version = "1.8.0", features = ["v4", "fast-rng"] }
 winit = "0.30.0"
 wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
