@@ -18,18 +18,18 @@ pub enum WindowEvent {
 pub type WindowSystem = (EventQueue, Context);
 
 pub struct WindowSettings {
-    pub title: String,
+    pub title: &'static str,
     pub size: (u32, u32),
 }
 
 impl WindowSettings {
-    pub fn with_title<T: Into<String>>(mut self, title: T) -> Self {
+    pub fn with_title<T: Into<&'static str>>(mut self, title: T) -> Self {
         self.title = title.into();
         self
     }
 
     pub fn with_size<T: Into<(u32, u32)>>(mut self, size: T) -> Self {
-        self.size = self.size.into();
+        self.size = size.into();
         self
     }
 }
@@ -37,7 +37,7 @@ impl WindowSettings {
 impl Default for WindowSettings {
     fn default() -> Self {
         Self {
-            title: "untitled".to_string(),
+            title: "untitled",
             size: (800, 600),
         }
     }
