@@ -62,6 +62,20 @@ impl WindowBackendAdapter for WinitAdapter {
                             .unwrap();
                     }
                 }
+                ::winit::event::Event::WindowEvent {
+                    window_id,
+                    event: ::winit::event::WindowEvent::Resized(size),
+                } => {
+                    if let Some(uuid) = self.get_uuid(window_id) {
+                        self.event_sender
+                            .send_event(WindowEvent::Resized {
+                                id: uuid,
+                                width: size.width,
+                                height: size.height,
+                            })
+                            .unwrap();
+                    }
+                }
                 _ => (),
             },
         );
