@@ -1,5 +1,7 @@
 use std::sync::Arc;
 
+pub use raw_window_handle;
+
 use uuid::Uuid;
 use winit::WinitBackend;
 use wolf_engine_events::{
