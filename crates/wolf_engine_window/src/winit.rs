@@ -1,6 +1,7 @@
 use std::{collections::HashMap, sync::RwLock, time::Duration};
 
 use ::winit::dpi::PhysicalSize;
+use ::winit::event::{Event as WinitEvent, WindowEvent as WinitWindowEvent};
 use ::winit::platform::pump_events::EventLoopExtPumpEvents;
 use ::winit::window::WindowAttributes;
 use ::winit::{event_loop::EventLoop, window::WindowId};
@@ -52,9 +53,9 @@ impl WindowBackendAdapter for WinitAdapter {
         self.event_loop.write().unwrap().pump_events(
             Some(timeout),
             |event, _event_loop| match event {
-                ::winit::event::Event::WindowEvent {
+                WinitEvent::WindowEvent {
                     window_id,
-                    event: ::winit::event::WindowEvent::CloseRequested,
+                    event: WinitWindowEvent::CloseRequested,
                 } => {
                     if let Some(uuid) = self.get_uuid(window_id) {
                         self.event_sender
@@ -62,9 +63,9 @@ impl WindowBackendAdapter for WinitAdapter {
                             .unwrap();
                     }
                 }
-                ::winit::event::Event::WindowEvent {
+                WinitEvent::WindowEvent {
                     window_id,
-                    event: ::winit::event::WindowEvent::Resized(size),
+                    event: WinitWindowEvent::Resized(size),
                 } => {
                     if let Some(uuid) = self.get_uuid(window_id) {
                         self.event_sender
