@@ -13,7 +13,7 @@ pub fn main() {
             .with_size((1280, 720)),
     );
     let mut pixels = {
-        let (width, height) = window.size();
+        let (width, height) = window.size().unwrap();
         let surface_texture = SurfaceTexture::new(width, height, &window);
         Pixels::new(width, height, surface_texture).unwrap()
     };
