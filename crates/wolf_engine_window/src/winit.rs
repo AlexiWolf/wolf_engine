@@ -166,22 +166,3 @@ unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowHandle {
         todo!()
     }
 }
-
-impl WindowTrait for ::winit::window::Window {
-    fn title(&self) -> String {
-        ::winit::window::Window::title(&self)
-    }
-
-    fn size(&self) -> (u32, u32) {
-        let size = self.inner_size();
-        (size.height, size.width)
-    }
-
-    fn is_open(&self) -> bool {
-        todo!()
-    }
-
-    fn close(&self) {
-        todo!()
-    }
-}
