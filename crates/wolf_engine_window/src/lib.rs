@@ -5,6 +5,7 @@ use uuid::Uuid;
 use winit::WinitBackend;
 use wolf_engine_events::mpsc::{self, MpscEventSender};
 
+pub mod backend;
 pub mod context;
 pub mod error;
 pub mod event;
@@ -28,15 +29,6 @@ pub fn init_with_backend<T: WindowBackend + 'static>(
     let context = Context::new(backend_adapter);
     let event_queue = EventQueue::new(&context, event_receiver);
     Ok((event_queue, context))
-}
-
-pub trait WindowBackend {
-    fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter>;
-}
-
-pub trait WindowBackendAdapter {
-    fn pump_events(&self);
-    fn create_window(&self, settings: WindowSettings) -> Window;
 }
 
 #[cfg(test)]
