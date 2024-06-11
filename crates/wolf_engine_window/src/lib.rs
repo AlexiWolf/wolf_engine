@@ -62,11 +62,11 @@ impl Window {
         self.id
     }
 
-    pub fn title(&self) -> String {
+    pub fn title(&self) -> Result<String, WindowError> {
         self.inner.title()
     }
 
-    pub fn size(&self) -> (u32, u32) {
+    pub fn size(&self) -> Result<(u32, u32), WindowError> {
         self.inner.size()
     }
 
@@ -131,8 +131,8 @@ pub trait HasRawWindowHandles: HasRwh6Handles + HasRwh5Handles {}
 impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
 pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
-    fn title(&self) -> String;
-    fn size(&self) -> (u32, u32);
+    fn title(&self) -> Result<String, WindowError>;
+    fn size(&self) -> Result<(u32, u32), WindowError>;
     fn is_open(&self) -> bool;
     fn close(&self);
 }
@@ -268,12 +268,12 @@ mod window_system_tests {
     }
 
     impl WindowTrait for TestWindow {
-        fn title(&self) -> String {
-            self.settings.title.to_owned()
+        fn title(&self) -> Result<String, WindowError> {
+            Ok(self.settings.title.to_owned())
         }
 
-        fn size(&self) -> (u32, u32) {
-            self.settings.size
+        fn size(&self) -> Result<(u32, u32), WindowError> {
+            Ok(self.settings.size)
         }
 
         fn is_open(&self) -> bool {
