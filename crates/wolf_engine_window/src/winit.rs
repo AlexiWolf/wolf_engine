@@ -115,51 +115,61 @@ impl WinitWindowHandle {
             is_open: Arc::new(RwLock::new(true)),
         }
     }
+
+    fn panic_if_closed(&self) {
+        if !self.is_open() {
+            panic!("This window has been closed");
+        }
+    }
 }
 
 impl WindowTrait for WinitWindowHandle {
     fn title(&self) -> String {
-        let window = self.inner.upgrade().unwrap();
-        window.title()
+        self.panic_if_closed();
+        self.inner.title()
     }
 
     fn size(&self) -> (u32, u32) {
-        let window = self.inner.upgrade().unwrap();
-        let size = window.inner_size();
+        self.panic_if_closed();
+        let size = self.inner.inner_size();
         (size.width, size.height)
     }
 
     fn is_open(&self) -> bool {
-        self.inner.upgrade().is_some()
+        self.panic_if_closed();
+        *self.is_open.read().unwrap()
     }
 
     fn close(&self) {
-        todo!()
+        if self.is_open() {
+            *self.is_open.write().unwrap() = false;
+            self.inner.set_visible(false)
+        }
     }
 }
 
 impl rwh_06::HasWindowHandle for WinitWindowHandle {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        todo!()
+        rwh_06::HasWindowHandle::window_handle(&self.inner)
     }
 }
 
 impl rwh_06::HasDisplayHandle for WinitWindowHandle {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        todo!()
+        rwh_06::HasDisplayHandle::display_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawWindowHandle for WinitWindowHandle {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        todo!()
+        rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowHandle {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        todo!()
+        rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner)
     }
 }
