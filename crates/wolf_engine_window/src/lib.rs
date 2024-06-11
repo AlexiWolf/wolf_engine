@@ -1,9 +1,10 @@
+use backend::WindowBackend;
 use context::Context;
 use event::{EventQueue, WindowEvent};
 use settings::WindowSettings;
 use uuid::Uuid;
 use winit::WinitBackend;
-use wolf_engine_events::mpsc::{self, MpscEventSender};
+use wolf_engine_events::mpsc;
 
 pub mod backend;
 pub mod context;
@@ -39,9 +40,11 @@ mod window_system_tests {
         thread,
     };
 
-    use wolf_engine_events::{EventReceiver, EventSender};
+    use wolf_engine_events::{mpsc::MpscEventSender, EventReceiver, EventSender};
 
     use crate::error::WindowError;
+
+    use self::backend::{WindowBackend, WindowBackendAdapter};
 
     use super::*;
 

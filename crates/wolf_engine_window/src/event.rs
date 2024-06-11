@@ -3,7 +3,7 @@ use std::sync::Arc;
 use uuid::Uuid;
 use wolf_engine_events::{mpsc::MpscEventReceiver, EventReceiver};
 
-use crate::{context::Context, WindowBackendAdapter};
+use crate::{backend::WindowBackendAdapter, context::Context};
 
 #[derive(Debug, PartialEq)]
 #[non_exhaustive]

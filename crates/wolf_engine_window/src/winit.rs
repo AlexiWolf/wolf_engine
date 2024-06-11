@@ -12,6 +12,8 @@ use wolf_engine_events::EventSender;
 use crate::error::WindowError;
 use crate::*;
 
+use self::backend::WindowBackendAdapter;
+
 #[derive(Copy, Clone)]
 pub struct WinitBackend;
 

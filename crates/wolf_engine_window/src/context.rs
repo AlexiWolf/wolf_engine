@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::{settings::WindowSettings, Window, WindowBackendAdapter};
+use crate::{backend::WindowBackendAdapter, settings::WindowSettings, Window};
 
 pub struct Context {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
