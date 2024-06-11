@@ -7,7 +7,7 @@ pub struct Context {
 }
 
 impl Context {
-    fn new(backend_adapter: Box<dyn WindowBackendAdapter>) -> Self {
+    pub(crate) fn new(backend_adapter: Box<dyn WindowBackendAdapter>) -> Self {
         Self {
             backend_adapter: Arc::new(backend_adapter),
         }
@@ -17,7 +17,7 @@ impl Context {
         self.backend_adapter.create_window(settings)
     }
 
-    fn backend_adapter(&self) -> Arc<Box<dyn WindowBackendAdapter>> {
+    pub(crate) fn backend_adapter(&self) -> Arc<Box<dyn WindowBackendAdapter>> {
         self.backend_adapter.clone()
     }
 }

@@ -18,7 +18,7 @@ pub struct EventQueue {
 }
 
 impl EventQueue {
-    fn new(context: &Context, event_receiver: MpscEventReceiver<WindowEvent>) -> Self {
+    pub(crate) fn new(context: &Context, event_receiver: MpscEventReceiver<WindowEvent>) -> Self {
         let backend_adapter = context.backend_adapter();
         Self {
             backend_adapter,
