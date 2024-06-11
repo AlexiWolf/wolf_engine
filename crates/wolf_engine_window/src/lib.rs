@@ -353,11 +353,16 @@ mod window_system_tests {
         let test_adapter = TestWindowBackendAdapter::new();
         let (mut _event_queue, context) =
             crate::init_with_backend(TestWindowBackend::new(test_adapter)).unwrap();
-        let window = context.create_window(WindowSettings::default());
+        let window = context.create_window(WindowSettings::default().with_title("Test Window"));
 
-        let thread = thread::spawn(|| {
-            let win = &window;
+        thread::scope(|scope| {
+            scope
+                .spawn(|| {
+                    let win = &window;
+                    assert_eq!(win.title(), "Test Window");
+                })
+                .join()
+                .unwrap();
         });
-        thread.join().unwrap();
     }
 }
