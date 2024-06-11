@@ -136,7 +136,7 @@ impl WindowTrait for WinitWindowHandle {
     }
 
     fn is_open(&self) -> bool {
-        todo!()
+        self.inner.upgrade().is_some()
     }
 
     fn close(&self) {
