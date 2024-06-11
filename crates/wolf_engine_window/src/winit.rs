@@ -5,14 +5,15 @@ use ::winit::event::{Event as WinitEvent, WindowEvent as WinitWindowEvent};
 use ::winit::platform::pump_events::EventLoopExtPumpEvents;
 use ::winit::window::{Window as WinitWindow, WindowAttributes};
 use ::winit::{event_loop::EventLoop, window::WindowId};
+use uuid::Uuid;
 
 use wolf_engine_events::mpsc::MpscEventSender;
 use wolf_engine_events::EventSender;
 
+use crate::backend::{WindowBackend, WindowBackendAdapter, WindowTrait};
 use crate::error::WindowError;
-use crate::*;
-
-use self::backend::WindowBackendAdapter;
+use crate::event::WindowEvent;
+use crate::{Window, WindowSettings};
 
 #[derive(Copy, Clone)]
 pub struct WinitBackend;

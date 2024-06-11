@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::{error::WindowError, raw_window_handle::HasRawWindowHandles};
+use crate::{backend::WindowTrait, error::WindowError};
 
 pub struct Window {
     id: Uuid,
@@ -62,11 +62,4 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         rwh_05::HasRawDisplayHandle::raw_display_handle(&*self.inner)
     }
-}
-
-pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
-    fn title(&self) -> Result<String, WindowError>;
-    fn size(&self) -> Result<(u32, u32), WindowError>;
-    fn is_open(&self) -> bool;
-    fn close(&self);
 }
