@@ -8,6 +8,7 @@ use wolf_engine_events::{
 };
 
 mod winit;
+pub mod context;
 pub mod settings;
 
 #[derive(Debug, PartialEq)]
@@ -51,27 +52,6 @@ impl EventReceiver<WindowEvent> for EventQueue {
         event
     }
 }
-
-pub struct Context {
-    backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
-}
-
-impl Context {
-    fn new(backend_adapter: Box<dyn WindowBackendAdapter>) -> Self {
-        Self {
-            backend_adapter: Arc::new(backend_adapter),
-        }
-    }
-
-    pub fn create_window(&self, settings: WindowSettings) -> Window {
-        self.backend_adapter.create_window(settings)
-    }
-
-    fn backend_adapter(&self) -> Arc<Box<dyn WindowBackendAdapter>> {
-        self.backend_adapter.clone()
-    }
-}
-
 pub fn init() -> Result<WindowSystem, &'static str> {
     init_with_backend(WinitBackend)
 }
