@@ -1,7 +1,6 @@
 use backend::WindowBackend;
 use context::Context;
 use event::{EventQueue, WindowEvent};
-use settings::WindowSettings;
 use uuid::Uuid;
 use winit::WinitBackend;
 use wolf_engine_events::mpsc;
@@ -11,8 +10,9 @@ pub mod context;
 pub mod error;
 pub mod event;
 pub mod raw_window_handle;
-pub mod settings;
 
+mod settings;
+pub use settings::*;
 mod window;
 pub use window::*;
 mod winit;
