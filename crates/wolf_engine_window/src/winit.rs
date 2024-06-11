@@ -1,4 +1,3 @@
-use std::sync::Weak;
 use std::{collections::HashMap, sync::RwLock, time::Duration};
 
 use ::winit::dpi::PhysicalSize;
@@ -27,7 +26,6 @@ pub struct WinitAdapter {
     event_sender: MpscEventSender<WindowEvent>,
     event_loop: RwLock<EventLoop<()>>,
     window_uuids: RwLock<HashMap<WindowId, Uuid>>,
-    windows: RwLock<HashMap<Uuid, Arc<WinitWindow>>>,
 }
 
 impl WinitAdapter {
@@ -36,7 +34,6 @@ impl WinitAdapter {
             event_sender,
             event_loop: RwLock::new(event_loop),
             window_uuids: RwLock::new(HashMap::new()),
-            windows: RwLock::new(HashMap::new()),
         }
     }
 
@@ -103,22 +100,20 @@ impl WindowBackendAdapter for WinitAdapter {
         let window = Window::new(window_handle);
         let window_uuid = window.id();
         self.insert_id(winit_id, window_uuid);
-        self.windows
-            .write()
-            .unwrap()
-            .insert(window_uuid, winit_window);
         window
     }
 }
 
 struct WinitWindowHandle {
-    inner: Weak<::winit::window::Window>,
+    inner: Arc<WinitWindow>,
+    is_open: Arc<RwLock<bool>>,
 }
 
 impl WinitWindowHandle {
-    pub fn new(window: &Arc<WinitWindow>) -> Self {
+    pub fn new(window: WinitWindow) -> Self {
         Self {
-            inner: Arc::downgrade(window),
+            inner: Arc::new(window),
+            is_open: Arc::new(RwLock::new(true)),
         }
     }
 }
