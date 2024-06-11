@@ -117,6 +117,14 @@ impl WindowTrait for WinitWindowAdapter {
     fn size(&self) -> (u32, u32) {
         todo!()
     }
+
+    fn is_open(&self) -> bool {
+        todo!()
+    }
+
+    fn close(&self) {
+        todo!()
+    }
 }
 
 impl rwh_06::HasWindowHandle for WinitWindowAdapter {
@@ -153,5 +161,13 @@ impl WindowTrait for ::winit::window::Window {
     fn size(&self) -> (u32, u32) {
         let size = self.inner_size();
         (size.height, size.width)
+    }
+
+    fn is_open(&self) -> bool {
+        todo!()
+    }
+
+    fn close(&self) {
+        todo!()
     }
 }

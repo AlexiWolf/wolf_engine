@@ -69,6 +69,14 @@ impl Window {
     pub fn size(&self) -> (u32, u32) {
         self.inner.size()
     }
+
+    pub fn is_open(&self) -> bool {
+        self.inner.is_open()
+    }
+
+    pub fn close(&self) {
+        self.inner.close()
+    }
 }
 
 #[cfg(feature = "rwh_06")]
@@ -125,6 +133,8 @@ impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 pub trait WindowTrait: HasRawWindowHandles {
     fn title(&self) -> String;
     fn size(&self) -> (u32, u32);
+    fn is_open(&self) -> bool;
+    fn close(&self);
 }
 
 pub struct EventQueue {
@@ -264,6 +274,14 @@ mod window_system_tests {
 
         fn size(&self) -> (u32, u32) {
             self.settings.size
+        }
+
+        fn is_open(&self) -> bool {
+            todo!()
+        }
+
+        fn close(&self) {
+            todo!()
         }
     }
 
