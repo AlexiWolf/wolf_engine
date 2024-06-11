@@ -1,3 +1,4 @@
+use std::sync::Weak;
 use std::{collections::HashMap, sync::RwLock, time::Duration};
 
 use ::winit::dpi::PhysicalSize;
@@ -102,6 +103,20 @@ impl WindowBackendAdapter for WinitAdapter {
     }
 }
 
+struct WinitWindowAdapter {
+    inner: Weak<::winit::window::Window>,
+}
+
+impl WindowTrait for WinitWindowAdapter {
+    fn title(&self) -> String {
+        todo!()
+    }
+
+    fn size(&self) -> (u32, u32) {
+        todo!()
+    }
+}
+
 impl WindowTrait for ::winit::window::Window {
     fn title(&self) -> String {
         ::winit::window::Window::title(&self)
@@ -110,5 +125,31 @@ impl WindowTrait for ::winit::window::Window {
     fn size(&self) -> (u32, u32) {
         let size = self.inner_size();
         (size.height, size.width)
+    }
+}
+
+impl rwh_06::HasWindowHandle for WinitWindowAdapter {
+    fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
+        todo!()
+    }
+}
+
+impl rwh_06::HasDisplayHandle for WinitWindowAdapter {
+    fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
+        todo!()
+    }
+}
+
+#[cfg(feature = "rwh_05")]
+unsafe impl rwh_05::HasRawWindowHandle for WinitWindowAdapter {
+    fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
+        todo!()
+    }
+}
+
+#[cfg(feature = "rwh_05")]
+unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowAdapter {
+    fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
+        todo!()
     }
 }
