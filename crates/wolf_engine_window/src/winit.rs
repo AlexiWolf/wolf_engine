@@ -104,15 +104,15 @@ impl WindowBackendAdapter for WinitAdapter {
 }
 
 struct WinitWindowHandle {
-    inner: Arc<WinitWindow>,
-    is_open: Arc<RwLock<bool>>,
+    inner: WinitWindow,
+    is_open: RwLock<bool>,
 }
 
 impl WinitWindowHandle {
     pub fn new(window: WinitWindow) -> Self {
         Self {
-            inner: Arc::new(window),
-            is_open: Arc::new(RwLock::new(true)),
+            inner: window,
+            is_open: RwLock::new(true),
         }
     }
 
