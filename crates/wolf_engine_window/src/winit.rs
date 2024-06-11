@@ -119,17 +119,6 @@ impl WindowTrait for WinitWindowAdapter {
     }
 }
 
-impl WindowTrait for ::winit::window::Window {
-    fn title(&self) -> String {
-        ::winit::window::Window::title(&self)
-    }
-
-    fn size(&self) -> (u32, u32) {
-        let size = self.inner_size();
-        (size.height, size.width)
-    }
-}
-
 impl rwh_06::HasWindowHandle for WinitWindowAdapter {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         todo!()
@@ -153,5 +142,16 @@ unsafe impl rwh_05::HasRawWindowHandle for WinitWindowAdapter {
 unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowAdapter {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         todo!()
+    }
+}
+
+impl WindowTrait for ::winit::window::Window {
+    fn title(&self) -> String {
+        ::winit::window::Window::title(&self)
+    }
+
+    fn size(&self) -> (u32, u32) {
+        let size = self.inner_size();
+        (size.height, size.width)
     }
 }
