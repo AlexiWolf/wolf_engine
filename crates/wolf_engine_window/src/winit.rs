@@ -136,7 +136,6 @@ impl WindowTrait for WinitWindowHandle {
     }
 
     fn is_open(&self) -> bool {
-        self.panic_if_closed();
         *self.is_open.read().unwrap()
     }
 
