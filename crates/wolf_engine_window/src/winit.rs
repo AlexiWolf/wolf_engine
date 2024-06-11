@@ -105,11 +105,11 @@ impl WindowBackendAdapter for WinitAdapter {
     }
 }
 
-struct WinitWindowAdapter {
+struct WinitWindowHandle {
     inner: Weak<::winit::window::Window>,
 }
 
-impl WindowTrait for WinitWindowAdapter {
+impl WindowTrait for WinitWindowHandle {
     fn title(&self) -> String {
         todo!()
     }
@@ -127,27 +127,27 @@ impl WindowTrait for WinitWindowAdapter {
     }
 }
 
-impl rwh_06::HasWindowHandle for WinitWindowAdapter {
+impl rwh_06::HasWindowHandle for WinitWindowHandle {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         todo!()
     }
 }
 
-impl rwh_06::HasDisplayHandle for WinitWindowAdapter {
+impl rwh_06::HasDisplayHandle for WinitWindowHandle {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
         todo!()
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for WinitWindowAdapter {
+unsafe impl rwh_05::HasRawWindowHandle for WinitWindowHandle {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
         todo!()
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowAdapter {
+unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowHandle {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         todo!()
     }
