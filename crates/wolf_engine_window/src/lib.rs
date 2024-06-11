@@ -344,8 +344,8 @@ mod window_system_tests {
                 .with_size((1280, 720)),
         );
 
-        assert_eq!(window.title(), "Test Window");
-        assert_eq!(window.size(), (1280, 720));
+        assert_eq!(window.title().unwrap(), "Test Window");
+        assert_eq!(window.size().unwrap(), (1280, 720));
     }
 
     #[test]
@@ -359,7 +359,7 @@ mod window_system_tests {
             scope
                 .spawn(|| {
                     let win = &window;
-                    assert_eq!(win.title(), "Test Window");
+                    assert_eq!(win.title().unwrap(), "Test Window");
                 })
                 .join()
                 .unwrap();
