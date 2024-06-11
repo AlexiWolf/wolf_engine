@@ -4,7 +4,7 @@ use std::{collections::HashMap, sync::RwLock, time::Duration};
 use ::winit::dpi::PhysicalSize;
 use ::winit::event::{Event as WinitEvent, WindowEvent as WinitWindowEvent};
 use ::winit::platform::pump_events::EventLoopExtPumpEvents;
-use ::winit::window::WindowAttributes;
+use ::winit::window::{Window as WinitWindow, WindowAttributes};
 use ::winit::{event_loop::EventLoop, window::WindowId};
 
 use wolf_engine_events::mpsc::MpscEventSender;
@@ -27,6 +27,7 @@ pub struct WinitAdapter {
     event_sender: MpscEventSender<WindowEvent>,
     event_loop: RwLock<EventLoop<()>>,
     window_uuids: RwLock<HashMap<WindowId, Uuid>>,
+    windows: RwLock<HashMap<Uuid, Arc<WinitWindow>>>,
 }
 
 impl WinitAdapter {
@@ -35,6 +36,7 @@ impl WinitAdapter {
             event_sender,
             event_loop: RwLock::new(event_loop),
             window_uuids: RwLock::new(HashMap::new()),
+            windows: RwLock::new(HashMap::new()),
         }
     }
 
