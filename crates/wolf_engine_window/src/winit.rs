@@ -84,19 +84,18 @@ impl WindowBackendAdapter for WinitAdapter {
 
     fn create_window(&self, settings: WindowSettings) -> Window {
         #[allow(deprecated)]
-        let winit_window = Arc::new(
-            self.event_loop
-                .read()
-                .unwrap()
-                .create_window(
-                    WindowAttributes::default()
-                        .with_title(settings.title)
-                        .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1)),
-                )
-                .unwrap(),
-        );
+        let winit_window = self
+            .event_loop
+            .read()
+            .unwrap()
+            .create_window(
+                WindowAttributes::default()
+                    .with_title(settings.title)
+                    .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1)),
+            )
+            .unwrap();
         let winit_id = winit_window.id();
-        let window_handle = WinitWindowHandle::new(&winit_window);
+        let window_handle = WinitWindowHandle::new(winit_window);
         let window = Window::new(window_handle);
         let window_uuid = window.id();
         self.insert_id(winit_id, window_uuid);
