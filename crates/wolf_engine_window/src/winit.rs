@@ -9,6 +9,7 @@ use ::winit::{event_loop::EventLoop, window::WindowId};
 use wolf_engine_events::mpsc::MpscEventSender;
 use wolf_engine_events::EventSender;
 
+use crate::error::WindowError;
 use crate::*;
 
 #[derive(Copy, Clone)]

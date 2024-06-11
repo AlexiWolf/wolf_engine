@@ -1,13 +1,10 @@
-use std::sync::Arc;
-
+use context::Context;
+use event::{EventQueue, WindowEvent};
+use settings::WindowSettings;
 use uuid::Uuid;
 use winit::WinitBackend;
-use wolf_engine_events::{
-    mpsc::{self, MpscEventReceiver, MpscEventSender},
-    EventReceiver,
-};
+use wolf_engine_events::mpsc::{self, MpscEventSender};
 
-mod winit;
 pub mod context;
 pub mod error;
 pub mod event;
@@ -15,6 +12,7 @@ pub mod settings;
 
 mod window;
 pub use window::*;
+mod winit;
 
 pub type WindowSystem = (EventQueue, Context);
 
@@ -43,9 +41,15 @@ pub trait WindowBackendAdapter {
 
 #[cfg(test)]
 mod window_system_tests {
-    use std::{collections::VecDeque, sync::RwLock, thread};
+    use std::{
+        collections::VecDeque,
+        sync::{Arc, RwLock},
+        thread,
+    };
 
     use wolf_engine_events::EventSender;
+
+    use crate::error::WindowError;
 
     use super::*;
 

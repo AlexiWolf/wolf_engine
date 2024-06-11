@@ -1,5 +1,7 @@
 use uuid::Uuid;
 
+use crate::error::WindowError;
+
 pub struct Window {
     id: Uuid,
     inner: Box<dyn WindowTrait>,

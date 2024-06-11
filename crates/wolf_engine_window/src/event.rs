@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
 use uuid::Uuid;
-use wolf_engine_events::mpsc::MpscEventReceiver;
+use wolf_engine_events::{mpsc::MpscEventReceiver, EventReceiver};
 
-use crate::WindowBackendAdapter;
+use crate::{context::Context, WindowBackendAdapter};
 
 #[derive(Debug, PartialEq)]
 #[non_exhaustive]
