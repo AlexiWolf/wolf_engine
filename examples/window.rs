@@ -20,11 +20,11 @@ pub fn main() {
 
     pixels.clear_color(Color::RED);
 
-    'main: loop {
+    while window.is_open() {
         pixels.render().unwrap();
         while let Some(event) = event_queue.next_event() {
             match event {
-                WindowEvent::CloseRequested { .. } => break 'main,
+                WindowEvent::CloseRequested { .. } => window.close(),
                 WindowEvent::Resized { width, height, .. } => {
                     pixels.resize_surface(width, height).unwrap()
                 }
