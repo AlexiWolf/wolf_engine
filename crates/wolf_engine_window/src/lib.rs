@@ -10,6 +10,7 @@ pub mod backend;
 pub mod context;
 pub mod error;
 pub mod event;
+pub mod raw_window_handle;
 pub mod settings;
 
 mod window;
