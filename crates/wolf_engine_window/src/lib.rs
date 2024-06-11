@@ -9,6 +9,7 @@ use wolf_engine_events::{
 
 mod winit;
 pub mod context;
+pub mod error;
 pub mod settings;
 
 #[derive(Debug, PartialEq)]
@@ -21,12 +22,6 @@ mod window;
 pub use window::*;
 
 pub type WindowSystem = (EventQueue, Context);
-
-#[non_exhaustive]
-#[derive(Debug)]
-pub enum WindowError {
-    WindowClosed,
-}
 
 pub struct EventQueue {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
