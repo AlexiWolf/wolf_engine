@@ -10,6 +10,7 @@ use wolf_engine_events::{
 mod winit;
 pub mod context;
 pub mod error;
+pub mod event;
 pub mod settings;
 
 mod window;
@@ -17,30 +18,6 @@ pub use window::*;
 
 pub type WindowSystem = (EventQueue, Context);
 
-pub struct EventQueue {
-    backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
-    event_receiver: MpscEventReceiver<WindowEvent>,
-}
-
-impl EventQueue {
-    fn new(context: &Context, event_receiver: MpscEventReceiver<WindowEvent>) -> Self {
-        let backend_adapter = context.backend_adapter();
-        Self {
-            backend_adapter,
-            event_receiver,
-        }
-    }
-}
-
-impl EventReceiver<WindowEvent> for EventQueue {
-    fn next_event(&mut self) -> Option<WindowEvent> {
-        let event = self.event_receiver.next_event();
-        if event.is_none() {
-            self.backend_adapter.pump_events();
-        }
-        event
-    }
-}
 pub fn init() -> Result<WindowSystem, &'static str> {
     init_with_backend(WinitBackend)
 }

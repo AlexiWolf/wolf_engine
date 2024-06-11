@@ -1,3 +1,10 @@
+use std::sync::Arc;
+
+use uuid::Uuid;
+use wolf_engine_events::mpsc::MpscEventReceiver;
+
+use crate::WindowBackendAdapter;
+
 #[derive(Debug, PartialEq)]
 #[non_exhaustive]
 pub enum WindowEvent {
@@ -5,3 +12,27 @@ pub enum WindowEvent {
     Resized { id: Uuid, width: u32, height: u32 },
 }
 
+pub struct EventQueue {
+    backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
+    event_receiver: MpscEventReceiver<WindowEvent>,
+}
+
+impl EventQueue {
+    fn new(context: &Context, event_receiver: MpscEventReceiver<WindowEvent>) -> Self {
+        let backend_adapter = context.backend_adapter();
+        Self {
+            backend_adapter,
+            event_receiver,
+        }
+    }
+}
+
+impl EventReceiver<WindowEvent> for EventQueue {
+    fn next_event(&mut self) -> Option<WindowEvent> {
+        let event = self.event_receiver.next_event();
+        if event.is_none() {
+            self.backend_adapter.pump_events();
+        }
+        event
+    }
+}
