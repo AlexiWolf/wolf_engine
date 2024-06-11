@@ -130,7 +130,9 @@ impl WindowTrait for WinitWindowHandle {
     }
 
     fn size(&self) -> (u32, u32) {
-        todo!()
+        let window = self.inner.upgrade().unwrap();
+        let size = window.inner_size();
+        (size.width, size.height)
     }
 
     fn is_open(&self) -> bool {
