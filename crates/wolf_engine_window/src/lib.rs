@@ -137,6 +137,12 @@ pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
     fn close(&self);
 }
 
+#[non_exhaustive]
+#[derive(Debug)]
+pub enum WindowError {
+    WindowClosed,
+}
+
 pub struct EventQueue {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
     event_receiver: MpscEventReceiver<WindowEvent>,
