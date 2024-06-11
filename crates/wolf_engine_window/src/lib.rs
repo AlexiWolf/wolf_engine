@@ -47,7 +47,7 @@ mod window_system_tests {
         thread,
     };
 
-    use wolf_engine_events::EventSender;
+    use wolf_engine_events::{EventReceiver, EventSender};
 
     use crate::error::WindowError;
 

@@ -1,8 +1,8 @@
 use pixels::wgpu::Color;
 use pixels::{Pixels, SurfaceTexture};
 use wolf_engine::prelude::*;
-use wolf_engine::window::WindowSettings;
-use wolf_engine_window::WindowEvent;
+use wolf_engine::window::settings::WindowSettings;
+use wolf_engine_window::event::WindowEvent;
 
 pub fn main() {
     let (mut event_queue, context) = wolf_engine::window::init().unwrap();
