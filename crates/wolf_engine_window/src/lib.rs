@@ -130,7 +130,7 @@ impl<T> HasRwh5Handles for T {}
 pub trait HasRawWindowHandles: HasRwh6Handles + HasRwh5Handles {}
 impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
-pub trait WindowTrait: HasRawWindowHandles {
+pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
     fn title(&self) -> String;
     fn size(&self) -> (u32, u32);
     fn is_open(&self) -> bool;
