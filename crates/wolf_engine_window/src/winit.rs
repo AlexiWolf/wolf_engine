@@ -115,24 +115,24 @@ impl WinitWindowHandle {
             is_open: RwLock::new(true),
         }
     }
-
-    fn panic_if_closed(&self) {
-        if !self.is_open() {
-            panic!("This window has been closed");
-        }
-    }
 }
 
 impl WindowTrait for WinitWindowHandle {
-    fn title(&self) -> String {
-        self.panic_if_closed();
-        self.inner.title()
+    fn title(&self) -> Result<String, WindowError> {
+        if self.is_open() {
+            Ok(self.inner.title())
+        } else {
+            Err(WindowError::WindowClosed)
+        }
     }
 
-    fn size(&self) -> (u32, u32) {
-        self.panic_if_closed();
-        let size = self.inner.inner_size();
-        (size.width, size.height)
+    fn size(&self) -> Result<(u32, u32), WindowError> {
+        if self.is_open() {
+            let size = self.inner.inner_size();
+            Ok((size.width, size.height))
+        } else {
+            Err(WindowError::WindowClosed)
+        }
     }
 
     fn is_open(&self) -> bool {
