@@ -125,7 +125,8 @@ impl WinitWindowHandle {
 
 impl WindowTrait for WinitWindowHandle {
     fn title(&self) -> String {
-        todo!()
+        let window = self.inner.upgrade().unwrap();
+        window.title()
     }
 
     fn size(&self) -> (u32, u32) {
