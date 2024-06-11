@@ -347,4 +347,17 @@ mod window_system_tests {
         assert_eq!(window.title(), "Test Window");
         assert_eq!(window.size(), (1280, 720));
     }
+
+    #[test]
+    pub fn should_impl_send_sync_for_window() {
+        let test_adapter = TestWindowBackendAdapter::new();
+        let (mut _event_queue, context) =
+            crate::init_with_backend(TestWindowBackend::new(test_adapter)).unwrap();
+        let window = context.create_window(WindowSettings::default());
+
+        let thread = thread::spawn(|| {
+            let win = &window;
+        });
+        thread.join().unwrap();
+    }
 }
