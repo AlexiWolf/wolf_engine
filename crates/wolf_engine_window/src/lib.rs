@@ -207,7 +207,7 @@ pub trait WindowBackendAdapter {
 
 #[cfg(test)]
 mod window_system_tests {
-    use std::{collections::VecDeque, sync::RwLock};
+    use std::{collections::VecDeque, sync::RwLock, thread};
 
     use wolf_engine_events::EventSender;
 
