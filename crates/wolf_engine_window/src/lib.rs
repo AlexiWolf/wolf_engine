@@ -18,6 +18,8 @@ pub use event::*;
 pub use settings::*;
 pub use window::*;
 
+pub use uuid::Uuid;
+
 pub type WindowSystem = (WindowEventQueue, WindowContext);
 
 pub fn init() -> Result<WindowSystem, &'static str> {
