@@ -1,22 +1,24 @@
 use backend::WindowBackend;
-use event::EventQueue;
 use winit::WinitBackend;
 use wolf_engine_events::mpsc;
 
 pub mod backend;
-pub mod error;
-pub mod event;
 pub mod raw_window_handle;
 
 mod context;
-pub use context::*;
+mod error;
+mod event;
 mod settings;
-pub use settings::*;
 mod window;
-pub use window::*;
 mod winit;
 
-pub type WindowSystem = (EventQueue, WindowContext);
+pub use context::*;
+pub use error::*;
+pub use event::*;
+pub use settings::*;
+pub use window::*;
+
+pub type WindowSystem = (WindowEventQueue, WindowContext);
 
 pub fn init() -> Result<WindowSystem, &'static str> {
     init_with_backend(WinitBackend)
@@ -28,7 +30,7 @@ pub fn init_with_backend<T: WindowBackend + 'static>(
     let (event_sender, event_receiver) = mpsc::event_queue();
     let backend_adapter = backend.init(event_sender);
     let context = WindowContext::new(backend_adapter);
-    let event_queue = EventQueue::new(&context, event_receiver);
+    let event_queue = WindowEventQueue::new(&context, event_receiver);
     Ok((event_queue, context))
 }
 

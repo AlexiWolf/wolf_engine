@@ -12,12 +12,12 @@ pub enum WindowEvent {
     Resized { id: Uuid, width: u32, height: u32 },
 }
 
-pub struct EventQueue {
+pub struct WindowEventQueue {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
     event_receiver: MpscEventReceiver<WindowEvent>,
 }
 
-impl EventQueue {
+impl WindowEventQueue {
     pub(crate) fn new(
         context: &WindowContext,
         event_receiver: MpscEventReceiver<WindowEvent>,
@@ -30,7 +30,7 @@ impl EventQueue {
     }
 }
 
-impl EventReceiver<WindowEvent> for EventQueue {
+impl EventReceiver<WindowEvent> for WindowEventQueue {
     fn next_event(&mut self) -> Option<WindowEvent> {
         let event = self.event_receiver.next_event();
         if event.is_none() {
