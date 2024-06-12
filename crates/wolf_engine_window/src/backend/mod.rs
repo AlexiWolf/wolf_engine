@@ -1,4 +1,4 @@
-pub mod winit;
+pub(crate) mod winit;
 
 use crate::{
     error::WindowError, raw_window_handle::HasRawWindowHandles, settings::WindowSettings, Window,
