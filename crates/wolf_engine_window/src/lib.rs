@@ -1,15 +1,15 @@
 use backend::WindowBackend;
-use context::WindowContext;
 use event::EventQueue;
 use winit::WinitBackend;
 use wolf_engine_events::mpsc;
 
 pub mod backend;
-pub mod context;
 pub mod error;
 pub mod event;
 pub mod raw_window_handle;
 
+mod context;
+pub use context::*;
 mod settings;
 pub use settings::*;
 mod window;
