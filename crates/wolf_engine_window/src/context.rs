@@ -2,11 +2,11 @@ use std::sync::Arc;
 
 use crate::{backend::WindowBackendAdapter, settings::WindowSettings, Window};
 
-pub struct Context {
+pub struct WindowContext {
     backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
 }
 
-impl Context {
+impl WindowContext {
     pub(crate) fn new(backend_adapter: Box<dyn WindowBackendAdapter>) -> Self {
         Self {
             backend_adapter: Arc::new(backend_adapter),
