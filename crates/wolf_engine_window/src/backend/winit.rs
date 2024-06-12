@@ -10,21 +10,10 @@ use uuid::Uuid;
 use wolf_engine_events::mpsc::MpscEventSender;
 use wolf_engine_events::EventSender;
 
-use crate::backend::{WindowBackend, WindowBackendAdapter, WindowTrait};
+use crate::backend::{WindowBackendAdapter, WindowTrait};
 use crate::error::WindowError;
 use crate::event::WindowEvent;
 use crate::{Window, WindowSettings};
-
-#[derive(Copy, Clone)]
-pub struct WinitBackend;
-
-impl WindowBackend for WinitBackend {
-    fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter> {
-        let event_loop = EventLoop::new().unwrap();
-        let winit_adapter = WinitAdapter::new(event_sender, event_loop);
-        Box::from(winit_adapter)
-    }
-}
 
 pub struct WinitAdapter {
     event_sender: MpscEventSender<WindowEvent>,
@@ -33,6 +22,12 @@ pub struct WinitAdapter {
 }
 
 impl WinitAdapter {
+    fn init(event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter> {
+        let event_loop = EventLoop::new().unwrap();
+        let winit_adapter = WinitAdapter::new(event_sender, event_loop);
+        Box::from(winit_adapter)
+    }
+
     fn new(event_sender: MpscEventSender<WindowEvent>, event_loop: EventLoop<()>) -> Self {
         Self {
             event_sender,
