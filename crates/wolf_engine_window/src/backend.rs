@@ -12,9 +12,7 @@ pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
     fn close(&self);
 }
 
-pub fn init_with_backend<T: WindowBackend + 'static>(
-    backend: T,
-) -> Result<WindowSystem, &'static str> {
+pub fn init_backend<T: WindowBackend + 'static>(backend: T) -> Result<WindowSystem, &'static str> {
     let (event_sender, event_receiver) = mpsc::event_queue();
     let backend_adapter = backend.init(event_sender);
     let context = WindowContext::new(backend_adapter);

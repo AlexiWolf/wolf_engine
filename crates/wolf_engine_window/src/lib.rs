@@ -1,4 +1,4 @@
-use backend::init_with_backend;
+use backend::init_backend;
 use winit::WinitBackend;
 
 pub mod backend;
@@ -22,7 +22,7 @@ pub use uuid::Uuid;
 pub type WindowSystem = (WindowEventQueue, WindowContext);
 
 pub fn init() -> Result<WindowSystem, &'static str> {
-    init_with_backend(WinitBackend)
+    init_backend(WinitBackend)
 }
 
 #[cfg(test)]
@@ -148,7 +148,7 @@ mod window_system_tests {
     pub fn should_pump_backend_events_when_event_queue_is_cleared() {
         let test_adapter = TestWindowBackendAdapter::new();
         let (mut event_queue, _context) =
-            crate::init_with_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
+            crate::init_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
 
         test_adapter.buffer_event(WindowEvent::CloseRequested { id: Uuid::new_v4() });
 
@@ -166,7 +166,7 @@ mod window_system_tests {
     pub fn should_create_window_with_backend() {
         let test_adapter = TestWindowBackendAdapter::new();
         let (mut _event_queue, context) =
-            crate::init_with_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
+            crate::init_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
         let window = context.create_window(
             WindowSettings::default()
                 .with_title("Test Window")
@@ -181,7 +181,7 @@ mod window_system_tests {
     pub fn should_impl_send_sync_for_window() {
         let test_adapter = TestWindowBackendAdapter::new();
         let (mut _event_queue, context) =
-            crate::init_with_backend(TestWindowBackend::new(test_adapter)).unwrap();
+            crate::init_backend(TestWindowBackend::new(test_adapter)).unwrap();
         let window = context.create_window(WindowSettings::default().with_title("Test Window"));
 
         thread::scope(|scope| {
