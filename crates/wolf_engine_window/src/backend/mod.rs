@@ -11,7 +11,7 @@ pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
     fn close(&self);
 }
 
-pub trait WindowBackendAdapter {
+pub trait WindowBackend {
     fn pump_events(&self);
     fn create_window(&self, settings: WindowSettings) -> Window;
 }

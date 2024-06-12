@@ -1,6 +1,3 @@
-use backend::init_backend;
-use winit::WinitBackend;
-
 pub mod backend;
 pub mod raw_window_handle;
 
@@ -9,20 +6,18 @@ mod error;
 mod event;
 mod settings;
 mod window;
-mod winit;
 
 pub use context::*;
 pub use error::*;
 pub use event::*;
 pub use settings::*;
-pub use window::*;
-
 pub use uuid::Uuid;
+pub use window::*;
 
 pub type WindowSystem = (WindowEventQueue, WindowContext);
 
 pub fn init() -> Result<WindowSystem, &'static str> {
-    init_backend(WinitBackend)
+    todo!()
 }
 
 #[cfg(test)]
@@ -34,43 +29,33 @@ mod window_system_tests {
     };
 
     use uuid::Uuid;
-    use wolf_engine_events::{mpsc::MpscEventSender, EventReceiver, EventSender};
+    use wolf_engine_events::{
+        mpsc::{self, MpscEventSender},
+        EventReceiver, EventSender,
+    };
 
     use crate::{error::WindowError, event::WindowEvent};
 
-    use self::backend::{WindowBackend, WindowBackendAdapter, WindowTrait};
+    use self::backend::{WindowBackend, WindowTrait};
 
     use super::*;
 
-    struct TestWindowBackend {
-        adapter: TestWindowBackendAdapter,
-    }
-
-    impl TestWindowBackend {
-        pub fn new(adapter: TestWindowBackendAdapter) -> Self {
-            Self { adapter }
-        }
-    }
-
-    impl WindowBackend for TestWindowBackend {
-        fn init(self, event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter> {
-            *self.adapter.event_sender.write().unwrap() = Some(event_sender);
-            Box::new(self.adapter)
-        }
-    }
-
     #[derive(Clone)]
-    pub struct TestWindowBackendAdapter {
+    pub struct TestWindowBackend {
         event_sender: Arc<RwLock<Option<MpscEventSender<WindowEvent>>>>,
         pub buffered_events: Arc<RwLock<VecDeque<WindowEvent>>>,
     }
 
-    impl TestWindowBackendAdapter {
-        fn new() -> Self {
-            Self {
-                event_sender: Arc::new(RwLock::new(None)),
+    impl TestWindowBackend {
+        fn init() -> (WindowSystem, Self) {
+            let (event_sender, event_receiver) = mpsc::event_queue();
+            let adapter = Self {
+                event_sender: Arc::new(RwLock::new(Some(event_sender))),
                 buffered_events: Arc::new(RwLock::new(VecDeque::new())),
-            }
+            };
+            let context = WindowContext::new(Box::new(adapter.clone()));
+            let event_queue = WindowEventQueue::new(&context, event_receiver);
+            ((event_queue, context), adapter)
         }
 
         pub fn buffer_event(&self, event: WindowEvent) {
@@ -78,7 +63,7 @@ mod window_system_tests {
         }
     }
 
-    impl WindowBackendAdapter for TestWindowBackendAdapter {
+    impl WindowBackend for TestWindowBackend {
         fn pump_events(&self) {
             while let Some(event) = self.buffered_events.write().unwrap().pop_front() {
                 let guard = self.event_sender.read().unwrap();
@@ -146,11 +131,9 @@ mod window_system_tests {
 
     #[test]
     pub fn should_pump_backend_events_when_event_queue_is_cleared() {
-        let test_adapter = TestWindowBackendAdapter::new();
-        let (mut event_queue, _context) =
-            crate::init_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
+        let ((mut event_queue, _context), test_backend) = TestWindowBackend::init();
 
-        test_adapter.buffer_event(WindowEvent::CloseRequested { id: Uuid::new_v4() });
+        test_backend.buffer_event(WindowEvent::CloseRequested { id: Uuid::new_v4() });
 
         assert!(
             event_queue.next_event().is_none(),
@@ -164,9 +147,7 @@ mod window_system_tests {
 
     #[test]
     pub fn should_create_window_with_backend() {
-        let test_adapter = TestWindowBackendAdapter::new();
-        let (mut _event_queue, context) =
-            crate::init_backend(TestWindowBackend::new(test_adapter.clone())).unwrap();
+        let ((mut _event_queue, context), _test_backend) = TestWindowBackend::init();
         let window = context.create_window(
             WindowSettings::default()
                 .with_title("Test Window")
@@ -179,9 +160,7 @@ mod window_system_tests {
 
     #[test]
     pub fn should_impl_send_sync_for_window() {
-        let test_adapter = TestWindowBackendAdapter::new();
-        let (mut _event_queue, context) =
-            crate::init_backend(TestWindowBackend::new(test_adapter)).unwrap();
+        let ((mut _event_queue, context), _test_backend) = TestWindowBackend::init();
         let window = context.create_window(WindowSettings::default().with_title("Test Window"));
 
         thread::scope(|scope| {

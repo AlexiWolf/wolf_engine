@@ -10,7 +10,7 @@ use uuid::Uuid;
 use wolf_engine_events::mpsc::MpscEventSender;
 use wolf_engine_events::EventSender;
 
-use crate::backend::{WindowBackendAdapter, WindowTrait};
+use crate::backend::{WindowBackend, WindowTrait};
 use crate::error::WindowError;
 use crate::event::WindowEvent;
 use crate::{Window, WindowSettings};
@@ -22,7 +22,7 @@ pub struct WinitAdapter {
 }
 
 impl WinitAdapter {
-    fn init(event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackendAdapter> {
+    fn init(event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackend> {
         let event_loop = EventLoop::new().unwrap();
         let winit_adapter = WinitAdapter::new(event_sender, event_loop);
         Box::from(winit_adapter)
@@ -45,7 +45,7 @@ impl WinitAdapter {
     }
 }
 
-impl WindowBackendAdapter for WinitAdapter {
+impl WindowBackend for WinitAdapter {
     fn pump_events(&self) {
         let timeout = Duration::ZERO;
         #[allow(deprecated)]

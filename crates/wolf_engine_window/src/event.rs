@@ -3,7 +3,7 @@ use std::sync::Arc;
 use uuid::Uuid;
 use wolf_engine_events::{mpsc::MpscEventReceiver, EventReceiver};
 
-use crate::{backend::WindowBackendAdapter, context::WindowContext};
+use crate::{backend::WindowBackend, context::WindowContext};
 
 #[derive(Debug, PartialEq)]
 #[non_exhaustive]
@@ -13,7 +13,7 @@ pub enum WindowEvent {
 }
 
 pub struct WindowEventQueue {
-    backend_adapter: Arc<Box<dyn WindowBackendAdapter>>,
+    backend_adapter: Arc<Box<dyn WindowBackend>>,
     event_receiver: MpscEventReceiver<WindowEvent>,
 }
 
