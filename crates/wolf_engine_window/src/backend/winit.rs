@@ -22,8 +22,12 @@ pub struct WinitAdapter {
 }
 
 impl WinitAdapter {
+    pub fn init() -> Result<WindowSystem, &'static str> {
+        let event_loop = match EventLoop::new() {
+            Ok(event_loop) => event_loop,
+            Err(_) => return Err("Failed to initialize the window system"),
+        };
         let (event_sender, event_receiver) = mpsc::event_queue();
-        let event_loop = EventLoop::new().unwrap();
         let winit_adapter = WinitAdapter::new(event_sender, event_loop);
         let context = WindowContext::new(Box::new(winit_adapter));
         let event_queue = WindowEventQueue::new(&context, event_receiver);
