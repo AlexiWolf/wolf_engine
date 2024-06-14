@@ -15,20 +15,20 @@ use crate::error::WindowError;
 use crate::event::WindowEvent;
 use crate::{Window, WindowContext, WindowEventQueue, WindowSettings, WindowSystem};
 
-pub struct WinitAdapter {
+pub struct WinitBackend {
     event_sender: MpscEventSender<WindowEvent>,
     event_loop: RwLock<EventLoop<()>>,
     window_uuids: RwLock<HashMap<WindowId, Uuid>>,
 }
 
-impl WinitAdapter {
+impl WinitBackend {
     pub fn init() -> Result<WindowSystem, &'static str> {
         let event_loop = match EventLoop::new() {
             Ok(event_loop) => event_loop,
             Err(_) => return Err("Failed to initialize the window system"),
         };
         let (event_sender, event_receiver) = mpsc::event_queue();
-        let winit_adapter = WinitAdapter::new(event_sender, event_loop);
+        let winit_adapter = WinitBackend::new(event_sender, event_loop);
         let context = WindowContext::new(Box::new(winit_adapter));
         let event_queue = WindowEventQueue::new(&context, event_receiver);
         Ok((event_queue, context))
@@ -51,7 +51,7 @@ impl WinitAdapter {
     }
 }
 
-impl WindowBackend for WinitAdapter {
+impl WindowBackend for WinitBackend {
     fn pump_events(&self) {
         let timeout = Duration::ZERO;
         #[allow(deprecated)]
