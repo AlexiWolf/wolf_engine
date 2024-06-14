@@ -7,6 +7,7 @@ mod event;
 mod settings;
 mod window;
 
+use backend::winit::WinitAdapter;
 pub use context::*;
 pub use error::*;
 pub use event::*;
@@ -17,7 +18,7 @@ pub use window::*;
 pub type WindowSystem = (WindowEventQueue, WindowContext);
 
 pub fn init() -> Result<WindowSystem, &'static str> {
-    todo!()
+    Ok(WinitAdapter::init())
 }
 
 #[cfg(test)]

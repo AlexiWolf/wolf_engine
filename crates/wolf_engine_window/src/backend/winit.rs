@@ -7,13 +7,13 @@ use ::winit::window::{Window as WinitWindow, WindowAttributes};
 use ::winit::{event_loop::EventLoop, window::WindowId};
 use uuid::Uuid;
 
-use wolf_engine_events::mpsc::MpscEventSender;
+use wolf_engine_events::mpsc::{self, MpscEventSender};
 use wolf_engine_events::EventSender;
 
 use crate::backend::{WindowBackend, WindowTrait};
 use crate::error::WindowError;
 use crate::event::WindowEvent;
-use crate::{Window, WindowSettings};
+use crate::{Window, WindowContext, WindowEventQueue, WindowSettings, WindowSystem};
 
 pub struct WinitAdapter {
     event_sender: MpscEventSender<WindowEvent>,
@@ -22,10 +22,13 @@ pub struct WinitAdapter {
 }
 
 impl WinitAdapter {
-    fn init(event_sender: MpscEventSender<WindowEvent>) -> Box<dyn WindowBackend> {
+    pub fn init() -> WindowSystem {
+        let (event_sender, event_receiver) = mpsc::event_queue();
         let event_loop = EventLoop::new().unwrap();
         let winit_adapter = WinitAdapter::new(event_sender, event_loop);
-        Box::from(winit_adapter)
+        let context = WindowContext::new(Box::new(winit_adapter));
+        let event_queue = WindowEventQueue::new(&context, event_receiver);
+        (event_queue, context)
     }
 
     fn new(event_sender: MpscEventSender<WindowEvent>, event_loop: EventLoop<()>) -> Self {
