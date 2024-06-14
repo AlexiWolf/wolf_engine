@@ -7,8 +7,8 @@ use crate::{
 pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
     fn title(&self) -> Result<String, WindowError>;
     fn size(&self) -> Result<(u32, u32), WindowError>;
+    fn close(&self) -> Result<(), WindowError>;
     fn is_open(&self) -> bool;
-    fn close(&self);
 }
 
 pub trait WindowBackend {
