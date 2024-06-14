@@ -18,7 +18,7 @@ pub use window::*;
 pub type WindowSystem = (WindowEventQueue, WindowContext);
 
 pub fn init() -> Result<WindowSystem, &'static str> {
-    Ok(WinitAdapter::init())
+    WinitAdapter::init()
 }
 
 #[cfg(test)]
