@@ -22,13 +22,12 @@ pub struct WinitAdapter {
 }
 
 impl WinitAdapter {
-    pub fn init() -> WindowSystem {
         let (event_sender, event_receiver) = mpsc::event_queue();
         let event_loop = EventLoop::new().unwrap();
         let winit_adapter = WinitAdapter::new(event_sender, event_loop);
         let context = WindowContext::new(Box::new(winit_adapter));
         let event_queue = WindowEventQueue::new(&context, event_receiver);
-        (event_queue, context)
+        Ok((event_queue, context))
     }
 
     fn new(event_sender: MpscEventSender<WindowEvent>, event_loop: EventLoop<()>) -> Self {
