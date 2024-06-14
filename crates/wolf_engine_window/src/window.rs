@@ -31,7 +31,7 @@ impl Window {
         self.inner.is_open()
     }
 
-    pub fn close(&self) {
+    pub fn close(&self) -> Result<(), WindowError> {
         self.inner.close()
     }
 }
