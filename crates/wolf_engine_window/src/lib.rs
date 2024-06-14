@@ -95,8 +95,8 @@ mod window_system_tests {
             todo!()
         }
 
-        fn close(&self) {
-            todo!()
+        fn is_open(&self) -> bool {
+            true
         }
     }
 
