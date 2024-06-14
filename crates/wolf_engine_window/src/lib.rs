@@ -91,8 +91,8 @@ mod window_system_tests {
             Ok(self.settings.size)
         }
 
-        fn is_open(&self) -> bool {
-            todo!()
+        fn close(&self) -> Result<(), WindowError> {
+            Err(WindowError::OperationNotSupported)
         }
 
         fn is_open(&self) -> bool {
