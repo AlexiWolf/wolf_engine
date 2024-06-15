@@ -34,6 +34,10 @@ impl Window {
     pub fn close(&self) -> Result<(), WindowError> {
         self.inner.close()
     }
+
+    pub fn redraw(&self) {
+        self.inner.redraw()
+    }
 }
 
 #[cfg(feature = "rwh_06")]

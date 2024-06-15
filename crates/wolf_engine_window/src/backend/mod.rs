@@ -9,6 +9,7 @@ pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
     fn size(&self) -> Result<(u32, u32), WindowError>;
     fn close(&self) -> Result<(), WindowError>;
     fn is_open(&self) -> bool;
+    fn redraw(&self);
 }
 
 pub trait WindowBackend {
