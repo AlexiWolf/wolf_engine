@@ -37,7 +37,7 @@ mod window_system_tests {
 
     use crate::{error::WindowError, event::WindowEvent};
 
-    use self::backend::{WindowBackend, WindowTrait};
+    use self::backend::{WindowBackend, WindowResult, WindowTrait};
 
     use super::*;
 
@@ -83,15 +83,15 @@ mod window_system_tests {
     }
 
     impl WindowTrait for TestWindow {
-        fn title(&self) -> Result<String, WindowError> {
+        fn title(&self) -> WindowResult<String> {
             Ok(self.settings.title.to_owned())
         }
 
-        fn size(&self) -> Result<(u32, u32), WindowError> {
+        fn size(&self) -> WindowResult<(u32, u32)> {
             Ok(self.settings.size)
         }
 
-        fn redraw(&self) -> Result<(), WindowError> {
+        fn redraw(&self) -> WindowResult<()> {
             Ok(())
         }
     }

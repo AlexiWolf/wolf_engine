@@ -11,9 +11,10 @@ use wolf_engine_events::mpsc::{self, MpscEventSender};
 use wolf_engine_events::EventSender;
 
 use crate::backend::{WindowBackend, WindowTrait};
-use crate::error::WindowError;
 use crate::event::WindowEvent;
 use crate::{Window, WindowContext, WindowEventQueue, WindowSettings, WindowSystem};
+
+use super::WindowResult;
 
 pub struct WinitBackend {
     event_sender: MpscEventSender<WindowEvent>,
@@ -129,16 +130,16 @@ impl WinitWindowHandle {
 }
 
 impl WindowTrait for WinitWindowHandle {
-    fn title(&self) -> Result<String, WindowError> {
+    fn title(&self) -> WindowResult<String> {
         Ok(self.inner.title())
     }
 
-    fn size(&self) -> Result<(u32, u32), WindowError> {
+    fn size(&self) -> WindowResult<(u32, u32)> {
         let size = self.inner.inner_size();
         Ok((size.width, size.height))
     }
 
-    fn redraw(&self) -> Result<(), WindowError> {
+    fn redraw(&self) -> WindowResult<()> {
         Ok(self.inner.request_redraw())
     }
 }

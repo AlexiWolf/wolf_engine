@@ -1,6 +1,9 @@
 use uuid::Uuid;
 
-use crate::{backend::WindowTrait, error::WindowError};
+use crate::{
+    backend::{WindowResult, WindowTrait},
+    error::WindowError,
+};
 
 pub struct Window {
     id: Uuid,
@@ -19,14 +22,14 @@ impl Window {
         self.id
     }
 
-    pub fn title(&self) -> Result<String, WindowError> {
+    pub fn title(&self) -> WindowResult<String> {
         match self.inner.as_ref() {
             Some(inner) => inner.title(),
             None => Err(WindowError::Closed),
         }
     }
 
-    pub fn size(&self) -> Result<(u32, u32), WindowError> {
+    pub fn size(&self) -> WindowResult<(u32, u32)> {
         match self.inner.as_ref() {
             Some(inner) => inner.size(),
             None => Err(WindowError::Closed),
@@ -41,7 +44,7 @@ impl Window {
         self.inner = None;
     }
 
-    pub fn redraw(&self) -> Result<(), WindowError> {
+    pub fn redraw(&self) -> WindowResult<()> {
         match self.inner.as_ref() {
             Some(inner) => inner.redraw(),
             None => Err(WindowError::Closed),

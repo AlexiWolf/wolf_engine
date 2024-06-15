@@ -4,10 +4,12 @@ use crate::{
     error::WindowError, raw_window_handle::HasRawWindowHandles, settings::WindowSettings, Window,
 };
 
+pub type WindowResult<T> = Result<T, WindowError>;
+
 pub trait WindowTrait: HasRawWindowHandles + Send + Sync {
-    fn title(&self) -> Result<String, WindowError>;
-    fn size(&self) -> Result<(u32, u32), WindowError>;
-    fn redraw(&self) -> Result<(), WindowError>;
+    fn title(&self) -> WindowResult<String>;
+    fn size(&self) -> WindowResult<(u32, u32)>;
+    fn redraw(&self) -> WindowResult<()>;
 }
 
 pub trait WindowBackend {
