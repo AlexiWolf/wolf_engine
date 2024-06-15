@@ -1,5 +1,5 @@
 #[non_exhaustive]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WindowError {
     WindowClosed,
     OperationNotSupported,
