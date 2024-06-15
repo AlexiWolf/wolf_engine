@@ -31,9 +31,8 @@ impl Window {
         self.inner.is_some()
     }
 
-    pub fn close(&mut self) -> Result<(), WindowError> {
+    pub fn close(&mut self) {
         self.inner = None;
-        Ok(())
     }
 
     pub fn redraw(&self) {
