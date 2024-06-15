@@ -140,7 +140,8 @@ impl WindowTrait for WinitWindowHandle {
     }
 
     fn redraw(&self) -> WindowResult<()> {
-        Ok(self.inner.request_redraw())
+        self.inner.request_redraw();
+        Ok(())
     }
 }
 
