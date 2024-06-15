@@ -138,8 +138,8 @@ impl WindowTrait for WinitWindowHandle {
         Ok((size.width, size.height))
     }
 
-    fn redraw(&self) {
-        self.inner.request_redraw();
+    fn redraw(&self) -> Result<(), WindowError> {
+        Ok(self.inner.request_redraw())
     }
 }
 

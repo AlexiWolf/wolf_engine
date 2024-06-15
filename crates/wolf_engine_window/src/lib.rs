@@ -91,7 +91,9 @@ mod window_system_tests {
             Ok(self.settings.size)
         }
 
-        fn redraw(&self) {}
+        fn redraw(&self) -> Result<(), WindowError> {
+            Ok(())
+        }
     }
 
     impl rwh_06::HasWindowHandle for TestWindow {
