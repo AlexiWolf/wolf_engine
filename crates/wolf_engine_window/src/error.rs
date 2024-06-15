@@ -2,5 +2,5 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WindowError {
     Closed,
-    OperationNotSupported,
+    Unsupported,
 }
