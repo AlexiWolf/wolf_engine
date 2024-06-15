@@ -172,7 +172,7 @@ mod window_system_tests {
     #[test]
     pub fn should_close_window() {
         let ((mut _event_queue, context), _test_backend) = TestWindowBackend::init();
-        let window = context.create_window(WindowSettings::default());
+        let mut window = context.create_window(WindowSettings::default());
 
         assert!(window.is_open());
 
