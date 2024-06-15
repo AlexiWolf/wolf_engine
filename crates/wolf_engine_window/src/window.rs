@@ -28,7 +28,7 @@ impl Window {
     }
 
     pub fn is_open(&self) -> bool {
-        false
+        self.inner.is_some()
     }
 
     pub fn close(&self) -> Result<(), WindowError> {
