@@ -10,6 +10,7 @@ use crate::{backend::WindowBackend, context::WindowContext};
 pub enum WindowEvent {
     CloseRequested { id: Uuid },
     Resized { id: Uuid, width: u32, height: u32 },
+    RedrawRequested { id: Uuid },
 }
 
 pub struct WindowEventQueue {
