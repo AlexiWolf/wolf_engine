@@ -176,7 +176,7 @@ mod window_system_tests {
 
         assert!(window.is_open());
 
-        window.close().unwrap();
+        window.close();
 
         assert!(!window.is_open());
     }

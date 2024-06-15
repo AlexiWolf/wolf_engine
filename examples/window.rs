@@ -25,7 +25,7 @@ pub fn main() {
         while let Some(event) = event_queue.next_event() {
             match event {
                 WindowEvent::RedrawRequested { .. } => pixels.render().unwrap(),
-                WindowEvent::CloseRequested { .. } => window.close().unwrap(),
+                WindowEvent::CloseRequested { .. } => window.close(),
                 WindowEvent::Resized { width, height, .. } => {
                     pixels.resize_surface(width, height).unwrap()
                 }
