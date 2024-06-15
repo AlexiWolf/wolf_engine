@@ -32,7 +32,7 @@ impl Window {
     }
 
     pub fn close(&self) -> Result<(), WindowError> {
-        self.inner.as_ref().unwrap().close()
+        Ok(())
     }
 
     pub fn redraw(&self) {

@@ -154,14 +154,6 @@ impl WindowTrait for WinitWindowHandle {
         *self.is_open.read().unwrap()
     }
 
-    fn close(&self) -> Result<(), WindowError> {
-        if self.is_open() {
-            *self.is_open.write().unwrap() = false;
-            self.inner.set_visible(false);
-        }
-        Ok(())
-    }
-
     fn redraw(&self) {
         self.inner.request_redraw();
     }
