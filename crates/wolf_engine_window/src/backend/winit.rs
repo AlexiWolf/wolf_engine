@@ -150,10 +150,6 @@ impl WindowTrait for WinitWindowHandle {
         }
     }
 
-    fn is_open(&self) -> bool {
-        *self.is_open.read().unwrap()
-    }
-
     fn redraw(&self) {
         self.inner.request_redraw();
     }
