@@ -120,34 +120,22 @@ impl WindowBackend for WinitBackend {
 
 struct WinitWindowHandle {
     inner: WinitWindow,
-    is_open: RwLock<bool>,
 }
 
 impl WinitWindowHandle {
     pub fn new(window: WinitWindow) -> Self {
-        Self {
-            inner: window,
-            is_open: RwLock::new(true),
-        }
+        Self { inner: window }
     }
 }
 
 impl WindowTrait for WinitWindowHandle {
     fn title(&self) -> Result<String, WindowError> {
-        if self.is_open() {
-            Ok(self.inner.title())
-        } else {
-            Err(WindowError::WindowClosed)
-        }
+        Ok(self.inner.title())
     }
 
     fn size(&self) -> Result<(u32, u32), WindowError> {
-        if self.is_open() {
-            let size = self.inner.inner_size();
-            Ok((size.width, size.height))
-        } else {
-            Err(WindowError::WindowClosed)
-        }
+        let size = self.inner.inner_size();
+        Ok((size.width, size.height))
     }
 
     fn redraw(&self) {
