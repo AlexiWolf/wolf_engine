@@ -28,7 +28,7 @@ impl Window {
     }
 
     pub fn is_open(&self) -> bool {
-        self.inner.as_ref().unwrap().is_open()
+        false
     }
 
     pub fn close(&self) -> Result<(), WindowError> {
