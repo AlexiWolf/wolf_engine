@@ -31,7 +31,8 @@ impl Window {
         self.inner.is_some()
     }
 
-    pub fn close(&self) -> Result<(), WindowError> {
+    pub fn close(&mut self) -> Result<(), WindowError> {
+        self.inner = None;
         Ok(())
     }
 
