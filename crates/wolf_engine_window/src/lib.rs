@@ -189,8 +189,8 @@ mod window_system_tests {
         let mut window = context.create_window(WindowSettings::default());
         window.close();
 
-        assert_eq!(window.title().unwrap_err(), WindowError::WindowClosed);
-        assert_eq!(window.size().unwrap_err(), WindowError::WindowClosed);
-        assert_eq!(window.redraw().unwrap_err(), WindowError::WindowClosed);
+        assert_eq!(window.title().unwrap_err(), WindowError::Closed);
+        assert_eq!(window.size().unwrap_err(), WindowError::Closed);
+        assert_eq!(window.redraw().unwrap_err(), WindowError::Closed);
     }
 }

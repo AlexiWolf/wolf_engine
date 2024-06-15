@@ -22,14 +22,14 @@ impl Window {
     pub fn title(&self) -> Result<String, WindowError> {
         match self.inner.as_ref() {
             Some(inner) => inner.title(),
-            None => Err(WindowError::WindowClosed),
+            None => Err(WindowError::Closed),
         }
     }
 
     pub fn size(&self) -> Result<(u32, u32), WindowError> {
         match self.inner.as_ref() {
             Some(inner) => inner.size(),
-            None => Err(WindowError::WindowClosed),
+            None => Err(WindowError::Closed),
         }
     }
 
@@ -44,7 +44,7 @@ impl Window {
     pub fn redraw(&self) -> Result<(), WindowError> {
         match self.inner.as_ref() {
             Some(inner) => inner.redraw(),
-            None => Err(WindowError::WindowClosed),
+            None => Err(WindowError::Closed),
         }
     }
 }
