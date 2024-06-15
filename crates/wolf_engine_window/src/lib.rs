@@ -98,6 +98,8 @@ mod window_system_tests {
         fn is_open(&self) -> bool {
             true
         }
+
+        fn redraw(&self) {}
     }
 
     impl rwh_06::HasWindowHandle for TestWindow {

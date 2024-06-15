@@ -161,6 +161,10 @@ impl WindowTrait for WinitWindowHandle {
         }
         Ok(())
     }
+
+    fn redraw(&self) {
+        self.inner.request_redraw();
+    }
 }
 
 impl rwh_06::HasWindowHandle for WinitWindowHandle {
