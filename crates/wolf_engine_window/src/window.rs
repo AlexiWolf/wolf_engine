@@ -20,11 +20,17 @@ impl Window {
     }
 
     pub fn title(&self) -> Result<String, WindowError> {
-        self.inner.as_ref().unwrap().title()
+        match self.inner.as_ref() {
+            Some(inner) => inner.title(),
+            None => Err(WindowError::WindowClosed),
+        }
     }
 
     pub fn size(&self) -> Result<(u32, u32), WindowError> {
-        self.inner.as_ref().unwrap().size()
+        match self.inner.as_ref() {
+            Some(inner) => inner.size(),
+            None => Err(WindowError::WindowClosed),
+        }
     }
 
     pub fn is_open(&self) -> bool {
