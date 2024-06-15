@@ -91,10 +91,6 @@ mod window_system_tests {
             Ok(self.settings.size)
         }
 
-        fn is_open(&self) -> bool {
-            true
-        }
-
         fn redraw(&self) {}
     }
 
