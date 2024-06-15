@@ -82,6 +82,16 @@ impl WindowBackend for WinitBackend {
                             .unwrap();
                     }
                 }
+                WinitEvent::WindowEvent {
+                    window_id,
+                    event: WinitWindowEvent::RedrawRequested,
+                } => {
+                    if let Some(uuid) = self.get_uuid(window_id) {
+                        self.event_sender
+                            .send_event(WindowEvent::RedrawRequested { id: uuid })
+                            .unwrap();
+                    }
+                }
                 _ => (),
             },
         );
