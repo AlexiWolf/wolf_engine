@@ -21,9 +21,9 @@ pub fn main() {
     pixels.clear_color(Color::RED);
 
     while window.is_open() {
-        pixels.render().unwrap();
         while let Some(event) = event_queue.next_event() {
             match event {
+                WindowEvent::RedrawRequested { .. } => pixels.render().unwrap(),
                 WindowEvent::CloseRequested { .. } => window.close().unwrap(),
                 WindowEvent::Resized { width, height, .. } => {
                     pixels.resize_surface(width, height).unwrap()
