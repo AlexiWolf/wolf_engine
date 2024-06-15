@@ -41,8 +41,11 @@ impl Window {
         self.inner = None;
     }
 
-    pub fn redraw(&self) {
-        self.inner.as_ref().unwrap().redraw()
+    pub fn redraw(&self) -> Result<(), WindowError> {
+        match self.inner.as_ref() {
+            Some(inner) => inner.redraw(),
+            None => Err(WindowError::WindowClosed),
+        }
     }
 }
 
