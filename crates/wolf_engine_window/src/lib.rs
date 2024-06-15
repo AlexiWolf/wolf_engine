@@ -168,4 +168,16 @@ mod window_system_tests {
                 .unwrap();
         });
     }
+
+    #[test]
+    pub fn should_close_window() {
+        let ((mut _event_queue, context), _test_backend) = TestWindowBackend::init();
+        let window = context.create_window(WindowSettings::default());
+
+        assert!(window.is_open());
+
+        window.close().unwrap();
+
+        assert!(!window.is_open());
+    }
 }
