@@ -189,5 +189,6 @@ mod window_system_tests {
 
         assert_eq!(window.title().unwrap_err(), WindowError::WindowClosed);
         assert_eq!(window.size().unwrap_err(), WindowError::WindowClosed);
+        assert_eq!(window.redraw().unwrap_err(), WindowError::WindowClosed);
     }
 }
