@@ -1,15 +1,15 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use crate::{backend::WindowBackend, settings::WindowSettings, Window};
 
 pub struct WindowContext {
-    backend_adapter: Arc<Box<dyn WindowBackend>>,
+    backend_adapter: Rc<Box<dyn WindowBackend>>,
 }
 
 impl WindowContext {
     pub(crate) fn new(backend_adapter: Box<dyn WindowBackend>) -> Self {
         Self {
-            backend_adapter: Arc::new(backend_adapter),
+            backend_adapter: Rc::new(backend_adapter),
         }
     }
 
@@ -17,7 +17,7 @@ impl WindowContext {
         self.backend_adapter.create_window(settings)
     }
 
-    pub(crate) fn backend_adapter(&self) -> Arc<Box<dyn WindowBackend>> {
+    pub(crate) fn backend_adapter(&self) -> Rc<Box<dyn WindowBackend>> {
         self.backend_adapter.clone()
     }
 }

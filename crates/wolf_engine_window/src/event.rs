@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use uuid::Uuid;
 use wolf_engine_events::{mpsc::MpscEventReceiver, EventReceiver};
@@ -14,7 +14,7 @@ pub enum WindowEvent {
 }
 
 pub struct WindowEventQueue {
-    backend_adapter: Arc<Box<dyn WindowBackend>>,
+    backend_adapter: Rc<Box<dyn WindowBackend>>,
     event_receiver: MpscEventReceiver<WindowEvent>,
 }
 
