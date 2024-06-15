@@ -180,4 +180,14 @@ mod window_system_tests {
 
         assert!(!window.is_open());
     }
+
+    #[test]
+    pub fn should_return_window_closed_error() {
+        let ((mut _event_queue, context), _test_backend) = TestWindowBackend::init();
+        let mut window = context.create_window(WindowSettings::default());
+        window.close();
+
+        assert_eq!(window.title().unwrap_err(), WindowError::WindowClosed);
+        assert_eq!(window.size().unwrap_err(), WindowError::WindowClosed);
+    }
 }
