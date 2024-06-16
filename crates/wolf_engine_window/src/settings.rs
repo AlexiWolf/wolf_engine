@@ -2,6 +2,7 @@
 pub struct WindowSettings {
     pub title: &'static str,
     pub size: (u32, u32),
+    pub is_hidden: bool,
 }
 
 impl WindowSettings {
@@ -14,6 +15,11 @@ impl WindowSettings {
         self.size = size.into();
         self
     }
+
+    pub fn with_hidden(mut self) -> Self {
+        self.is_hidden = true;
+        self
+    }
 }
 
 impl Default for WindowSettings {
@@ -21,6 +27,7 @@ impl Default for WindowSettings {
         Self {
             title: "untitled",
             size: (800, 600),
+            is_hidden: false,
         }
     }
 }
