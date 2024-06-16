@@ -120,7 +120,8 @@ impl WindowBackend for WinitBackend {
             .create_window(
                 WindowAttributes::default()
                     .with_title(settings.title)
-                    .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1)),
+                    .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1))
+                    .with_visible(!settings.is_hidden),
             )
             .unwrap();
         let winit_id = winit_window.id();
