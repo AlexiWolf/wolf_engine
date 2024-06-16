@@ -198,7 +198,7 @@ mod winit_backend_tests {
         );
         winit_backend.pump_events();
 
-        let window = winit_backend.create_window(Default::default());
+        let window = winit_backend.create_window(WindowSettings::default().with_hidden());
         winit_backend.pump_events();
         assert_eq!(
             known_window_count(&winit_backend),
