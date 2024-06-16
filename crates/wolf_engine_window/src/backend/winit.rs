@@ -170,3 +170,52 @@ unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowHandle {
         rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner)
     }
 }
+
+#[cfg(test)]
+#[cfg(any(target_os = "windows", target_os = "linux"))]
+mod winit_backend_tests {
+    use super::*;
+
+    #[cfg(target_os = "windows")]
+    use winit::platform::windows::EventLoopBuilderExtWindows;
+
+    #[cfg(target_os = "linux")]
+    use winit::platform::x11::EventLoopBuilderExtX11;
+
+    #[test]
+    fn should_clean_up_window_data_after_window_drop() {
+        let event_loop = EventLoop::builder()
+            .with_any_thread(true)
+            .build()
+            .expect("Failed to create Winit's EventLoop");
+        let (event_sender, _event_receiver) = mpsc::event_queue();
+        let winit_backend = WinitBackend::new(event_sender, event_loop);
+
+        assert_eq!(
+            known_window_count(&winit_backend),
+            0,
+            "Expected 0 known window IDs, as no windows have been created yet"
+        );
+        winit_backend.pump_events();
+
+        let window = winit_backend.create_window(Default::default());
+        winit_backend.pump_events();
+        assert_eq!(
+            known_window_count(&winit_backend),
+            1,
+            "Expected 1 known window ID, as a window has been created"
+        );
+
+        drop(window);
+        winit_backend.pump_events();
+        assert_eq!(
+            known_window_count(&winit_backend),
+            0,
+            "Expected 0 known window IDs, as the ID should have been removed when the window was dropped"
+        );
+    }
+
+    fn known_window_count(backend: &WinitBackend) -> usize {
+        backend.window_uuids.read().unwrap().len()
+    }
+}
