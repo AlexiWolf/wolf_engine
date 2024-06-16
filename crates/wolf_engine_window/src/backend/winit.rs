@@ -6,6 +6,7 @@ use ::winit::platform::pump_events::EventLoopExtPumpEvents;
 use ::winit::window::{Window as WinitWindow, WindowAttributes};
 use ::winit::{event_loop::EventLoop, window::WindowId};
 use uuid::Uuid;
+use winit::event_loop::EventLoopProxy;
 
 use wolf_engine_events::mpsc::{self, MpscEventSender};
 use wolf_engine_events::EventSender;
@@ -16,15 +17,19 @@ use crate::{Window, WindowContext, WindowEventQueue, WindowSettings, WindowSyste
 
 use super::WindowResult;
 
+enum BackendEvent {
+    WindowDropped { id: WindowId },
+}
+
 pub struct WinitBackend {
     event_sender: MpscEventSender<WindowEvent>,
-    event_loop: RwLock<EventLoop<()>>,
+    event_loop: RwLock<EventLoop<BackendEvent>>,
     window_uuids: RwLock<HashMap<WindowId, Uuid>>,
 }
 
 impl WinitBackend {
     pub fn init() -> Result<WindowSystem, &'static str> {
-        let event_loop = match EventLoop::new() {
+        let event_loop = match EventLoop::with_user_event().build() {
             Ok(event_loop) => event_loop,
             Err(_) => return Err("Failed to initialize the window system"),
         };
@@ -35,7 +40,10 @@ impl WinitBackend {
         Ok((event_queue, context))
     }
 
-    fn new(event_sender: MpscEventSender<WindowEvent>, event_loop: EventLoop<()>) -> Self {
+    fn new(
+        event_sender: MpscEventSender<WindowEvent>,
+        event_loop: EventLoop<BackendEvent>,
+    ) -> Self {
         Self {
             event_sender,
             event_loop: RwLock::new(event_loop),
@@ -49,6 +57,10 @@ impl WinitBackend {
 
     fn get_uuid(&self, winit_id: WindowId) -> Option<Uuid> {
         self.window_uuids.read().unwrap().get(&winit_id).copied()
+    }
+
+    fn remove_id(&self, winit_id: WindowId) {
+        self.window_uuids.write().unwrap().remove(&winit_id);
     }
 }
 
@@ -93,6 +105,7 @@ impl WindowBackend for WinitBackend {
                             .unwrap();
                     }
                 }
+                WinitEvent::UserEvent(BackendEvent::WindowDropped { id }) => self.remove_id(id),
                 _ => (),
             },
         );
@@ -111,7 +124,8 @@ impl WindowBackend for WinitBackend {
             )
             .unwrap();
         let winit_id = winit_window.id();
-        let window_handle = WinitWindowHandle::new(winit_window);
+        let event_loop_proxy = self.event_loop.read().unwrap().create_proxy();
+        let window_handle = WinitWindowHandle::new(winit_window, event_loop_proxy);
         let window = Window::new(window_handle);
         let window_uuid = window.id();
         self.insert_id(winit_id, window_uuid);
@@ -121,11 +135,24 @@ impl WindowBackend for WinitBackend {
 
 struct WinitWindowHandle {
     inner: WinitWindow,
+    event_loop: EventLoopProxy<BackendEvent>,
 }
 
 impl WinitWindowHandle {
-    pub fn new(window: WinitWindow) -> Self {
-        Self { inner: window }
+    pub fn new(window: WinitWindow, event_loop: EventLoopProxy<BackendEvent>) -> Self {
+        Self {
+            inner: window,
+            event_loop,
+        }
+    }
+}
+
+impl Drop for WinitWindowHandle {
+    fn drop(&mut self) {
+        let id = self.inner.id();
+        let _ = self
+            .event_loop
+            .send_event(BackendEvent::WindowDropped { id });
     }
 }
 
@@ -184,7 +211,7 @@ mod winit_backend_tests {
 
     #[test]
     fn should_clean_up_window_data_after_window_drop() {
-        let event_loop = EventLoop::builder()
+        let event_loop = EventLoop::with_user_event()
             .with_any_thread(true)
             .build()
             .expect("Failed to create Winit's EventLoop");
