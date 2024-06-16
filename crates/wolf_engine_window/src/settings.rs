@@ -16,7 +16,7 @@ impl WindowSettings {
         self
     }
 
-    pub fn with_hidden(mut self) -> Self {
+    pub fn is_hidden(mut self) -> Self {
         self.is_hidden = true;
         self
     }
