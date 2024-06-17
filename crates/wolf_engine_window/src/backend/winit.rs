@@ -126,7 +126,7 @@ impl WindowBackend for WinitBackend {
             .unwrap();
         let winit_id = winit_window.id();
         let event_loop_proxy = self.event_loop.read().unwrap().create_proxy();
-        let window_handle = WinitWindowHandle::new(winit_window, event_loop_proxy);
+        let window_handle = WinitWindowAdapter::new(winit_window, event_loop_proxy);
         let window = Window::new(window_handle);
         let window_uuid = window.id();
         self.insert_id(winit_id, window_uuid);
@@ -134,12 +134,12 @@ impl WindowBackend for WinitBackend {
     }
 }
 
-struct WinitWindowHandle {
+struct WinitWindowAdapter {
     inner: WinitWindow,
     event_loop: EventLoopProxy<BackendEvent>,
 }
 
-impl WinitWindowHandle {
+impl WinitWindowAdapter {
     pub fn new(window: WinitWindow, event_loop: EventLoopProxy<BackendEvent>) -> Self {
         Self {
             inner: window,
@@ -148,7 +148,7 @@ impl WinitWindowHandle {
     }
 }
 
-impl Drop for WinitWindowHandle {
+impl Drop for WinitWindowAdapter {
     fn drop(&mut self) {
         let id = self.inner.id();
         let _ = self
@@ -157,7 +157,7 @@ impl Drop for WinitWindowHandle {
     }
 }
 
-impl WindowTrait for WinitWindowHandle {
+impl WindowTrait for WinitWindowAdapter {
     fn title(&self) -> WindowResult<String> {
         Ok(self.inner.title())
     }
@@ -173,27 +173,27 @@ impl WindowTrait for WinitWindowHandle {
     }
 }
 
-impl rwh_06::HasWindowHandle for WinitWindowHandle {
+impl rwh_06::HasWindowHandle for WinitWindowAdapter {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(&self.inner)
     }
 }
 
-impl rwh_06::HasDisplayHandle for WinitWindowHandle {
+impl rwh_06::HasDisplayHandle for WinitWindowAdapter {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasDisplayHandle::display_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for WinitWindowHandle {
+unsafe impl rwh_05::HasRawWindowHandle for WinitWindowAdapter {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
         rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowHandle {
+unsafe impl rwh_05::HasRawDisplayHandle for WinitWindowAdapter {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner)
     }
