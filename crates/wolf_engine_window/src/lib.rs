@@ -49,6 +49,12 @@ impl WindowContext {
 
 pub struct WindowSettings {}
 
+impl Default for WindowSettings {
+    fn default() -> Self {
+        Self {}
+    }
+}
+
 pub struct Window {}
 
 #[cfg(test)]
