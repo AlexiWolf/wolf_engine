@@ -54,6 +54,7 @@ pub struct WindowSettings {
     pub title: String,
     pub size: (u32, u32),
     pub is_resizable: bool,
+    pub is_visible: bool,
 }
 
 impl Default for WindowSettings {
@@ -62,6 +63,7 @@ impl Default for WindowSettings {
             title: "Untitled".to_string(),
             size: (1280, 720),
             is_resizable: true,
+            is_visible: true,
         }
     }
 }
