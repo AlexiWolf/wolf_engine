@@ -5,7 +5,7 @@ pub fn main() {
         .resizable(false)
         .build();
 
-    window_context.run(|event, window| {
+    window_context.run(|event, window| match event {
         WindowEvent::Resume => (),
         WindowEvent::Render => (),
         WindowEvent::Closed => (),
