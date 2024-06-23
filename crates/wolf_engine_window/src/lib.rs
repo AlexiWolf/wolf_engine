@@ -1,5 +1,5 @@
 pub fn init() -> WindowContextBuilder {
-    WindowContextBuilder::new();
+    WindowContextBuilder::new()
 }
 
 #[non_exhaustive]
