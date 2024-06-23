@@ -12,6 +12,10 @@ pub enum WindowEvent {
 pub struct WindowContextBuilder {}
 
 impl WindowContextBuilder {
+    pub fn window_settings(&self) -> WindowSettings {
+        todo!()
+    }
+
     pub fn with_title(mut self, title: &str) -> Self {
         self
     }
