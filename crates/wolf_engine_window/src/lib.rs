@@ -36,3 +36,16 @@ impl WindowContext {
 }
 
 pub struct Window {}
+
+#[cfg(test)]
+mod window_init_tests {
+    #[test]
+    fn should_set_builder_settings() {
+        let context_builder = crate::init()
+            .with_title("Custom Test Title")
+            .with_size((123, 123))
+            .resizable(false);
+
+        let window_settings = context_builder.window_settings();
+    }
+}
