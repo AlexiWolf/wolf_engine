@@ -22,3 +22,9 @@ impl WindowContextBuilder {
     }
 }
 
+pub struct WindowContext {}
+
+impl WindowContext {
+    pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {}
+}
+
