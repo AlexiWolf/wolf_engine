@@ -28,3 +28,4 @@ impl WindowContext {
     pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {}
 }
 
+pub struct Window {}
