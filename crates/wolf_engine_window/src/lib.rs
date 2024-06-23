@@ -88,4 +88,7 @@ mod window_init_tests {
         assert_eq!(window_settings.is_resizable, false);
         assert_eq!(window_settings.is_visible, false);
     }
+
+    #[test]
+    fn should_run_and_quit() {}
 }
