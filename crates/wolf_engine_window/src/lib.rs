@@ -1,5 +1,5 @@
 pub fn init() -> WindowContextBuilder {
-    todo!()
+    WindowContextBuilder::new();
 }
 
 #[non_exhaustive]
@@ -12,6 +12,10 @@ pub enum WindowEvent {
 pub struct WindowContextBuilder {}
 
 impl WindowContextBuilder {
+    pub fn new() -> Self {
+        Self {}
+    }
+
     pub fn window_settings(&self) -> WindowSettings {
         todo!()
     }
