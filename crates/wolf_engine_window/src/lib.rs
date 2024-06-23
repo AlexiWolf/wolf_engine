@@ -2,6 +2,13 @@ pub fn init() -> WindowContextBuilder {
     todo!()
 }
 
+#[non_exhaustive]
+pub enum WindowEvent {
+    Resume,
+    Render,
+    Closed,
+}
+
 pub struct WindowContextBuilder {}
 
 impl WindowContextBuilder {
