@@ -10,7 +10,7 @@ pub enum WindowEvent {
 }
 
 pub struct WindowContextBuilder {
-    window_settings: WindowSettings,
+    pub window_settings: WindowSettings,
 }
 
 impl WindowContextBuilder {
@@ -18,10 +18,6 @@ impl WindowContextBuilder {
         Self {
             window_settings: WindowSettings::default(),
         }
-    }
-
-    pub fn window_settings(&self) -> WindowSettings {
-        todo!()
     }
 
     pub fn with_title(mut self, title: &str) -> Self {
@@ -66,6 +62,6 @@ mod window_init_tests {
             .with_size((123, 123))
             .resizable(false);
 
-        let window_settings = context_builder.window_settings();
+        let window_settings = context_builder.window_settings;
     }
 }
