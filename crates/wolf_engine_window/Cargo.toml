@@ -1,0 +1,11 @@
+[package]
+name = "wolf_engine_window"
+description = "A simple, high-levle window API."
+version = "0.1.0"
+edition = "2021"
+authors = ["AlexiWolf <alexi@wolvesin.space>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/AlexiWolf/wolf_engine"
+homepage = "https://github.com/AlexiWolf/wolf_engine"
+keywords = ["wolf-engine", "gamedev", "input"]
+categories = ["game-development", "game-engines"]
