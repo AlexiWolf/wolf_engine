@@ -35,6 +35,10 @@ impl WindowContextBuilder {
         self
     }
 
+    pub fn with_visible(mut self, is_visible: bool) -> Self {
+        self
+    }
+
     pub fn build(self) -> WindowContext {
         todo!()
     }
