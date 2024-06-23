@@ -21,14 +21,17 @@ impl WindowContextBuilder {
     }
 
     pub fn with_title(mut self, title: &str) -> Self {
+        self.window_settings.title = title.to_string();
         self
     }
 
     pub fn with_size(mut self, size: (u32, u32)) -> Self {
+        self.window_settings.size = size;
         self
     }
 
     pub fn resizable(mut self, is_resizable: bool) -> Self {
+        self.window_settings.is_resizable = is_resizable;
         self
     }
 
