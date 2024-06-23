@@ -36,6 +36,7 @@ impl WindowContextBuilder {
     }
 
     pub fn with_visible(mut self, is_visible: bool) -> Self {
+        self.window_settings.is_visible = is_visible;
         self
     }
 
