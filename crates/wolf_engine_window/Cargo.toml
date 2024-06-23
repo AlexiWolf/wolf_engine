@@ -12,3 +12,6 @@ categories = ["game-development", "game-engines"]
 
 [dependencies]
 winit = "0.30"
+
+[dev-dependencies]
+pixels = "0.13.0"
