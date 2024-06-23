@@ -9,11 +9,15 @@ pub enum WindowEvent {
     Closed,
 }
 
-pub struct WindowContextBuilder {}
+pub struct WindowContextBuilder {
+    window_settings: WindowSettings,
+}
 
 impl WindowContextBuilder {
     pub fn new() -> Self {
-        Self {}
+        Self {
+            window_settings: WindowSettings::default(),
+        }
     }
 
     pub fn window_settings(&self) -> WindowSettings {
