@@ -63,5 +63,9 @@ mod window_init_tests {
             .resizable(false);
 
         let window_settings = context_builder.window_settings;
+
+        assert_eq!(window_settings.title, "Custom Test Title");
+        assert_eq!(window_settings.size, (123, 123));
+        assert_eq!(window_settings.is_resizable, false);
     }
 }
