@@ -43,11 +43,19 @@ impl WindowContext {
     pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {}
 }
 
-pub struct WindowSettings {}
+pub struct WindowSettings {
+    pub title: String,
+    pub size: (u32, u32),
+    pub is_resizable: bool,
+}
 
 impl Default for WindowSettings {
     fn default() -> Self {
-        Self {}
+        Self {
+            title: "Untitled".to_string(),
+            size: (1280, 720),
+            is_resizable: true,
+        }
     }
 }
 
