@@ -71,7 +71,8 @@ mod window_init_tests {
         let context_builder = crate::init()
             .with_title("Custom Test Title")
             .with_size((123, 123))
-            .with_resizable(false);
+            .with_resizable(false)
+            .with_visible(false);
 
         let window_settings = context_builder.window_settings;
 
