@@ -4,7 +4,7 @@ fn main() {
     let window_context = wolf_engine::window::init()
         .with_title("Wolf Engine - Window Example")
         .with_size((800, 600))
-        .resizable(false)
+        .with_resizable(false)
         .build();
 
     window_context.run(|event, window| match event {

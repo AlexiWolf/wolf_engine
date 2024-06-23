@@ -30,7 +30,7 @@ impl WindowContextBuilder {
         self
     }
 
-    pub fn resizable(mut self, is_resizable: bool) -> Self {
+    pub fn with_resizable(mut self, is_resizable: bool) -> Self {
         self.window_settings.is_resizable = is_resizable;
         self
     }
@@ -71,7 +71,7 @@ mod window_init_tests {
         let context_builder = crate::init()
             .with_title("Custom Test Title")
             .with_size((123, 123))
-            .resizable(false);
+            .with_resizable(false);
 
         let window_settings = context_builder.window_settings;
 
