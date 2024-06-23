@@ -31,3 +31,6 @@ winit = "0.29.14"
 name = "input"
 required-features = ["winit"]
 
+[[example]]
+name = "window"
+required-features = ["window"]
