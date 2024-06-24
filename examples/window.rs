@@ -1,4 +1,4 @@
-use pixels::{Pixels, SurfaceTexture};
+use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine::window::WindowEvent;
 
 fn main() {
@@ -16,9 +16,10 @@ fn main() {
                 let (width, height) = window.size();
                 let surface_texture = SurfaceTexture::new(width, height, &window);
                 Pixels::new(width, height, surface_texture).unwrap()
-            })
+            });
+            pixels.as_mut().unwrap().clear_color(Color::RED);
         }
-        WindowEvent::Render => (),
+        WindowEvent::Render => pixels.as_ref().unwrap().render().unwrap(),
         WindowEvent::Closed => (),
         _ => (),
     });
