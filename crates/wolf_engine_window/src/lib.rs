@@ -1,4 +1,4 @@
-use winit::event_loop::EventLoop;
+use winit::{dpi::PhysicalSize, event_loop::EventLoop, window::WindowAttributes};
 
 pub fn init() -> WindowContextBuilder {
     WindowContextBuilder::new()
@@ -67,7 +67,20 @@ impl WindowContext {
 }
 
 impl WindowContext {
-    pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {}
+    pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {
+        let (event_loop, window_settings) = (self.event_loop, self.window_settings);
+        let window = event_loop.create_window(
+            WindowAttributes::default()
+                .with_title(window_settings.title)
+                .with_inner_size(PhysicalSize::new(
+                    window_settings.size.0,
+                    window_settings.size.1,
+                ))
+                .with_resizable(window_settings.is_resizable)
+                .with_visible(window_settings.is_visible),
+        );
+        let _ = event_loop.run(|event, event_loop| {});
+    }
 }
 
 pub struct WindowSettings {
