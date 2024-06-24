@@ -16,6 +16,8 @@ pub enum WindowEvent {
     Closed,
 }
 
+type WinitEventLoop = winit::event_loop::EventLoop<BackendEvent>;
+
 pub struct WindowContextBuilder {
     pub window_settings: WindowSettings,
 }
@@ -48,22 +50,22 @@ impl WindowContextBuilder {
     }
 
     pub fn build(self) -> WindowContext {
-        let event_loop = EventLoop::new().unwrap();
+        let event_loop = EventLoop::with_user_event().build().unwrap();
         self.build_with_event_loop(event_loop)
     }
 
-    fn build_with_event_loop(self, event_loop: EventLoop<()>) -> WindowContext {
+    fn build_with_event_loop(self, event_loop: EventLoop<BackendEvent>) -> WindowContext {
         WindowContext::new(event_loop, self.window_settings)
     }
 }
 
 pub struct WindowContext {
-    event_loop: EventLoop<()>,
+    event_loop: WinitEventLoop,
     window_settings: WindowSettings,
 }
 
 impl WindowContext {
-    fn new(event_loop: EventLoop<()>, window_settings: WindowSettings) -> Self {
+    fn new(event_loop: WinitEventLoop, window_settings: WindowSettings) -> Self {
         Self {
             event_loop,
             window_settings,
@@ -129,6 +131,10 @@ impl Default for WindowSettings {
     }
 }
 
+enum BackendEvent {
+    CloseRequested,
+}
+
 #[derive(Clone)]
 pub struct Window<'a> {
     inner: &'a WinitWindow,
@@ -172,7 +178,10 @@ mod window_init_tests {
     #[test]
     #[ntest::timeout(100)]
     fn should_run_and_quit() {
-        let event_loop = EventLoop::builder().with_any_thread(true).build().unwrap();
+        let event_loop = EventLoop::with_user_event()
+            .with_any_thread(true)
+            .build()
+            .unwrap();
         let context = crate::init()
             .with_visible(false)
             .build_with_event_loop(event_loop);
