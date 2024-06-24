@@ -94,6 +94,12 @@ impl Window {
 mod window_init_tests {
     use super::*;
 
+    #[cfg(target_os = "linux")]
+    use winit::platform::x11::EventLoopBuilderExtX11;
+
+    #[cfg(target_os = "windows")]
+    use winit::platform::windows::EventLoopBuilderExtWindows;
+
     #[test]
     fn should_set_builder_settings() {
         let context_builder = crate::init()
@@ -110,6 +116,7 @@ mod window_init_tests {
         assert_eq!(window_settings.is_visible, false);
     }
 
+    #[cfg(any(target_os = "linux", target_os = "windows"))]
     #[test]
     #[ntest::timeout(100)]
     fn should_run_and_quit() {
