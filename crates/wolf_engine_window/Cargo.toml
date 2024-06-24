@@ -14,3 +14,4 @@ categories = ["game-development", "game-engines"]
 winit = "0.30"
 
 [dev-dependencies]
+ntest = "0.9.3"
