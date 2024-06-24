@@ -1,3 +1,4 @@
+use pixels::{Pixels, SurfaceTexture};
 use wolf_engine::window::WindowEvent;
 
 fn main() {
@@ -7,8 +8,16 @@ fn main() {
         .with_resizable(false)
         .build();
 
+    let mut pixels = None;
+
     window_context.run(|event, window| match event {
-        WindowEvent::Resume => (),
+        WindowEvent::Resume => {
+            pixels = Some({
+                let (width, height) = window.size();
+                let surface_texture = SurfaceTexture::new(width, height, &window);
+                Pixels::new(width, height, surface_texture).unwrap()
+            })
+        }
         WindowEvent::Render => (),
         WindowEvent::Closed => (),
         _ => (),
