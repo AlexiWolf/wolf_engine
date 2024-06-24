@@ -192,7 +192,7 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window<'_> {
     }
 }
 
-#[cfg(feature = "rwh_06")]
+#[cfg(feature = "rwh_05")]
 pub use rwh_05;
 
 #[cfg(feature = "rwh_06")]
