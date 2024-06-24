@@ -36,4 +36,4 @@ required-features = ["winit"]
 
 [[example]]
 name = "window"
-required-features = ["window"]
+required-features = ["window", "rwh_05"]
