@@ -1,3 +1,5 @@
+use winit::event_loop::EventLoop;
+
 pub fn init() -> WindowContextBuilder {
     WindowContextBuilder::new()
 }
@@ -41,11 +43,24 @@ impl WindowContextBuilder {
     }
 
     pub fn build(self) -> WindowContext {
-        todo!()
+        let event_loop = EventLoop::new().unwrap();
+        WindowContext::new(event_loop, self.window_settings)
     }
 }
 
-pub struct WindowContext {}
+pub struct WindowContext {
+    event_loop: EventLoop<()>,
+    window_settings: WindowSettings,
+}
+
+impl WindowContext {
+    fn new(event_loop: EventLoop<()>, window_settings: WindowSettings) -> Self {
+        Self {
+            event_loop,
+            window_settings,
+        }
+    }
+}
 
 impl WindowContext {
     pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {}
