@@ -1,6 +1,8 @@
 use winit::{
     dpi::PhysicalSize,
+    event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::{ControlFlow, EventLoop},
+    window::{Window as WinitWindow, WindowAttributes},
 };
 
 pub fn init() -> WindowContextBuilder {
@@ -70,7 +72,8 @@ impl WindowContext {
 }
 
 impl WindowContext {
-    pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {
+    #[allow(deprecated)]
+    pub fn run<F: FnMut(WindowEvent, Window)>(self, mut event_handler: F) {
         let (event_loop, window_settings) = (self.event_loop, self.window_settings);
         let winit_window = event_loop
             .create_window(
@@ -84,7 +87,27 @@ impl WindowContext {
                     .with_visible(window_settings.is_visible),
             )
             .unwrap();
+
         let window = Window::new(&winit_window);
+
+        let _ = event_loop.run(|event, event_loop| match event {
+            WinitEvent::NewEvents(..) => {
+                event_loop.set_control_flow(ControlFlow::Poll);
+                winit_window.request_redraw();
+            }
+            WinitEvent::WindowEvent {
+                event: WinitWindowEvent::RedrawRequested,
+                ..
+            } => (event_handler)(WindowEvent::Render, window.clone()),
+            WinitEvent::WindowEvent {
+                event: WinitWindowEvent::CloseRequested,
+                ..
+            } => {
+                (event_handler)(WindowEvent::Closed, window.clone());
+                event_loop.exit();
+            }
+            _ => (),
+        });
     }
 }
 
@@ -106,6 +129,7 @@ impl Default for WindowSettings {
     }
 }
 
+#[derive(Clone)]
 pub struct Window<'a> {
     inner: &'a WinitWindow,
 }
