@@ -97,6 +97,7 @@ impl WindowContext {
                 event_loop.set_control_flow(ControlFlow::Poll);
                 winit_window.request_redraw();
             }
+            WinitEvent::Resumed => (event_handler)(WindowEvent::Resume, window.clone()),
             WinitEvent::WindowEvent {
                 event: WinitWindowEvent::RedrawRequested,
                 ..
