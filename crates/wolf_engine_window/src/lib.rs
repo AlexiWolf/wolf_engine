@@ -135,6 +135,7 @@ impl Default for WindowSettings {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
 enum BackendEvent {
     CloseRequested,
 }
