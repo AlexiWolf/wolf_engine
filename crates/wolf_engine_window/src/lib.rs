@@ -84,6 +84,7 @@ impl WindowContext {
                     .with_visible(window_settings.is_visible),
             )
             .unwrap();
+        let window = Window::new(&winit_window);
     }
 }
 
@@ -105,9 +106,15 @@ impl Default for WindowSettings {
     }
 }
 
-pub struct Window {}
+pub struct Window<'a> {
+    inner: &'a WinitWindow,
+}
 
-impl Window {
+impl<'a> Window<'a> {
+    fn new(inner: &'a WinitWindow) -> Self {
+        Self { inner }
+    }
+
     pub fn close(&self) {}
 }
 
