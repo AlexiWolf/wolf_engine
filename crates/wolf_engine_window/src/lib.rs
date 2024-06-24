@@ -69,7 +69,6 @@ impl WindowContext {
 impl WindowContext {
     pub fn run<F: FnMut(WindowEvent, Window)>(mut self, event_handler: F) {
         let (event_loop, window_settings) = (self.event_loop, self.window_settings);
-        let window = event_loop.create_window(
             WindowAttributes::default()
                 .with_title(window_settings.title)
                 .with_inner_size(PhysicalSize::new(
@@ -80,6 +79,7 @@ impl WindowContext {
                 .with_visible(window_settings.is_visible),
         );
         let _ = event_loop.run(|event, event_loop| {});
+        let winit_window = event_loop
     }
 }
 
