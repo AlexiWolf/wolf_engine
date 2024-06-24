@@ -44,6 +44,10 @@ impl WindowContextBuilder {
 
     pub fn build(self) -> WindowContext {
         let event_loop = EventLoop::new().unwrap();
+        self.build_with_event_loop(event_loop)
+    }
+
+    fn build_with_event_loop(self, event_loop: EventLoop<()>) -> WindowContext {
         WindowContext::new(event_loop, self.window_settings)
     }
 }
@@ -120,7 +124,10 @@ mod window_init_tests {
     #[test]
     #[ntest::timeout(100)]
     fn should_run_and_quit() {
-        let context = crate::init().with_visible(false).build();
+        let event_loop = EventLoop::builder().with_any_thread(true).build().unwrap();
+        let context = crate::init()
+            .with_visible(false)
+            .build_with_event_loop(event_loop);
 
         context.run(|event, window| match event {
             WindowEvent::Resume => window.close(),
