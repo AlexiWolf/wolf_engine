@@ -71,6 +71,10 @@ impl Default for WindowSettings {
 
 pub struct Window {}
 
+impl Window {
+    pub fn close(&self) {}
+}
+
 #[cfg(test)]
 mod window_init_tests {
     use super::*;
