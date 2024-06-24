@@ -73,6 +73,8 @@ pub struct Window {}
 
 #[cfg(test)]
 mod window_init_tests {
+    use super::*;
+
     #[test]
     fn should_set_builder_settings() {
         let context_builder = crate::init()
@@ -90,5 +92,13 @@ mod window_init_tests {
     }
 
     #[test]
-    fn should_run_and_quit() {}
+    #[ntest::timeout(100)]
+    fn should_run_and_quit() {
+        let context = crate::init().with_visible(false).build();
+
+        context.run(|event, window| match event {
+            WindowEvent::Resume => window.close(),
+            _ => (),
+        });
+    }
 }
