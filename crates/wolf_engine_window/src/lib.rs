@@ -154,6 +154,11 @@ impl<'a> Window<'a> {
         }
     }
 
+    pub fn size(&self) -> (u32, u32) {
+        let size = self.inner.inner_size();
+        (size.width, size.height)
+    }
+
     pub fn close(&self) {
         self.event_loop_proxy
             .send_event(BackendEvent::CloseRequested)
