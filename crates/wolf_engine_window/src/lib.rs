@@ -129,9 +129,17 @@ mod window_init_tests {
             .with_visible(false)
             .build_with_event_loop(event_loop);
 
+        let mut has_quit = false;
+
         context.run(|event, window| match event {
             WindowEvent::Resume => window.close(),
+            WindowEvent::Closed => *&mut has_quit = true,
             _ => (),
         });
+
+        assert!(
+            has_quit,
+            "The window system has not quit, or did not run properly."
+        );
     }
 }
