@@ -154,7 +154,11 @@ impl<'a> Window<'a> {
         }
     }
 
-    pub fn close(&self) {}
+    pub fn close(&self) {
+        self.event_loop_proxy
+            .send_event(BackendEvent::CloseRequested)
+            .unwrap();
+    }
 }
 
 #[cfg(test)]
