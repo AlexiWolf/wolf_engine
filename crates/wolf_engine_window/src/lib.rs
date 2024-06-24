@@ -106,8 +106,10 @@ impl WindowContext {
                 ..
             }
             | WinitEvent::UserEvent(BackendEvent::CloseRequested) => {
-                (event_handler)(WindowEvent::Closed, window.clone());
                 event_loop.exit();
+            }
+            WinitEvent::LoopExiting => {
+                (event_handler)(WindowEvent::Closed, window.clone());
             }
             _ => (),
         });
