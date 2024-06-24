@@ -1,7 +1,7 @@
 use winit::{
     dpi::PhysicalSize,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
-    event_loop::{ControlFlow, EventLoop},
+    event_loop::{ControlFlow, EventLoop, EventLoopProxy},
     window::{Window as WinitWindow, WindowAttributes},
 };
 
@@ -77,6 +77,7 @@ impl WindowContext {
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, Window)>(self, mut event_handler: F) {
         let (event_loop, window_settings) = (self.event_loop, self.window_settings);
+        let event_loop_proxy = event_loop.create_proxy();
         let winit_window = event_loop
             .create_window(
                 WindowAttributes::default()
@@ -89,8 +90,7 @@ impl WindowContext {
                     .with_visible(window_settings.is_visible),
             )
             .unwrap();
-
-        let window = Window::new(&winit_window);
+        let window = Window::new(&winit_window, event_loop_proxy);
 
         let _ = event_loop.run(|event, event_loop| match event {
             WinitEvent::NewEvents(..) => {
@@ -104,7 +104,8 @@ impl WindowContext {
             WinitEvent::WindowEvent {
                 event: WinitWindowEvent::CloseRequested,
                 ..
-            } => {
+            }
+            | WinitEvent::UserEvent(BackendEvent::CloseRequested) => {
                 (event_handler)(WindowEvent::Closed, window.clone());
                 event_loop.exit();
             }
@@ -138,11 +139,15 @@ enum BackendEvent {
 #[derive(Clone)]
 pub struct Window<'a> {
     inner: &'a WinitWindow,
+    event_loop_proxy: EventLoopProxy<BackendEvent>,
 }
 
 impl<'a> Window<'a> {
-    fn new(inner: &'a WinitWindow) -> Self {
-        Self { inner }
+    fn new(inner: &'a WinitWindow, event_loop_proxy: EventLoopProxy<BackendEvent>) -> Self {
+        Self {
+            inner,
+            event_loop_proxy,
+        }
     }
 
     pub fn close(&self) {}
