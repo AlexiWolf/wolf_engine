@@ -18,9 +18,10 @@ fn main() {
                 Pixels::new(width, height, surface_texture).unwrap()
             });
             pixels.as_mut().unwrap().clear_color(Color::RED);
+            println!("Hello, world!");
         }
         WindowEvent::Render => pixels.as_ref().unwrap().render().unwrap(),
-        WindowEvent::Closed => (),
+        WindowEvent::Closed => println!("Goodbye, World!"),
         _ => (),
     });
 }
