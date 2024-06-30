@@ -54,8 +54,21 @@ impl WindowContextBuilder {
         self.build_with_event_loop(event_loop)
     }
 
+    #[allow(deprecated)]
     fn build_with_event_loop(self, event_loop: EventLoop<BackendEvent>) -> WindowContext {
-        WindowContext::new(event_loop, self.window_settings)
+        let winit_window = event_loop
+            .create_window(
+                WindowAttributes::default()
+                    .with_title(self.window_settings.title)
+                    .with_inner_size(PhysicalSize::new(
+                        self.window_settings.size.0,
+                        self.window_settings.size.1,
+                    ))
+                    .with_resizable(self.window_settings.is_resizable)
+                    .with_visible(self.window_settings.is_visible),
+            )
+            .unwrap();
+        WindowContext::new(event_loop, winit_window)
     }
 }
 
@@ -76,21 +89,7 @@ impl WindowContext {
 impl WindowContext {
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, Window)>(self, mut event_handler: F) {
-        let (event_loop, window_settings) = (self.event_loop, self.window_settings);
-        let event_loop_proxy = event_loop.create_proxy();
-        let winit_window = event_loop
-            .create_window(
-                WindowAttributes::default()
-                    .with_title(window_settings.title)
-                    .with_inner_size(PhysicalSize::new(
-                        window_settings.size.0,
-                        window_settings.size.1,
-                    ))
-                    .with_resizable(window_settings.is_resizable)
-                    .with_visible(window_settings.is_visible),
-            )
             .unwrap();
-        let window = Window::new(&winit_window, event_loop_proxy);
 
         let _ = event_loop.run(|event, event_loop| match event {
             WinitEvent::NewEvents(..) => {
