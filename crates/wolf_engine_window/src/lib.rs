@@ -140,32 +140,6 @@ enum BackendEvent {
     CloseRequested,
 }
 
-#[derive(Clone)]
-pub struct Window<'a> {
-    inner: &'a WinitWindow,
-    event_loop_proxy: EventLoopProxy<BackendEvent>,
-}
-
-impl<'a> Window<'a> {
-    fn new(inner: &'a WinitWindow, event_loop_proxy: EventLoopProxy<BackendEvent>) -> Self {
-        Self {
-            inner,
-            event_loop_proxy,
-        }
-    }
-
-    pub fn size(&self) -> (u32, u32) {
-        let size = self.inner.inner_size();
-        (size.width, size.height)
-    }
-
-    pub fn close(&self) {
-        self.event_loop_proxy
-            .send_event(BackendEvent::CloseRequested)
-            .unwrap();
-    }
-}
-
 impl rwh_06::HasWindowHandle for Window<'_> {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(&self.inner)
