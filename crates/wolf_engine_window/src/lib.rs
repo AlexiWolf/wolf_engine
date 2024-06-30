@@ -73,34 +73,47 @@ impl WindowContextBuilder {
 }
 
 pub struct WindowContext {
-    event_loop: WinitEventLoop,
-    window_settings: WindowSettings,
+    event_loop: Option<WinitEventLoop>,
+    event_loop_proxy: EventLoopProxy<BackendEvent>,
+    window: WinitWindow,
 }
 
 impl WindowContext {
-    fn new(event_loop: WinitEventLoop, window_settings: WindowSettings) -> Self {
+    fn new(event_loop: WinitEventLoop, window: WinitWindow) -> Self {
+        let event_loop_proxy = event_loop.create_proxy();
         Self {
-            event_loop,
-            window_settings,
+            event_loop: Some(event_loop),
+            event_loop_proxy,
+            window,
         }
     }
 }
 
 impl WindowContext {
-    #[allow(deprecated)]
-    pub fn run<F: FnMut(WindowEvent, Window)>(self, mut event_handler: F) {
-            .unwrap();
+    pub fn size(&self) -> (u32, u32) {
+        let size = self.window.inner_size();
+        (size.width, size.height)
+    }
 
+    pub fn close(&self) {
+        self.event_loop_proxy
+            .send_event(BackendEvent::CloseRequested)
+            .unwrap();
+    }
+
+    #[allow(deprecated)]
+    pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
+        let event_loop = std::mem::take(&mut self.event_loop).unwrap();
         let _ = event_loop.run(|event, event_loop| match event {
             WinitEvent::NewEvents(..) => {
                 event_loop.set_control_flow(ControlFlow::Poll);
-                winit_window.request_redraw();
+                self.window.request_redraw();
             }
-            WinitEvent::Resumed => (event_handler)(WindowEvent::Resume, window.clone()),
+            WinitEvent::Resumed => (event_handler)(WindowEvent::Resume, &self),
             WinitEvent::WindowEvent {
                 event: WinitWindowEvent::RedrawRequested,
                 ..
-            } => (event_handler)(WindowEvent::Render, window.clone()),
+            } => (event_handler)(WindowEvent::Render, &self),
             WinitEvent::WindowEvent {
                 event: WinitWindowEvent::CloseRequested,
                 ..
@@ -109,7 +122,7 @@ impl WindowContext {
                 event_loop.exit();
             }
             WinitEvent::LoopExiting => {
-                (event_handler)(WindowEvent::Closed, window.clone());
+                (event_handler)(WindowEvent::Closed, &self);
             }
             _ => (),
         });
