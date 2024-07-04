@@ -134,6 +134,7 @@ impl WindowContext {
     }
 }
 
+#[derive(Clone, Eq, PartialEq)]
 pub struct WindowSettings {
     pub title: String,
     pub size: (u32, u32),
