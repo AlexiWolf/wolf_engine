@@ -16,7 +16,6 @@ fn main() {
     pixels.clear_color(Color::RED);
 
     window.run(|event, _window| match event {
-        WindowEvent::Resume => println!("Hello, world!"),
         WindowEvent::Render => pixels.render().unwrap(),
         WindowEvent::Closed => println!("Goodbye, World!"),
         _ => (),
