@@ -13,6 +13,7 @@ pub fn init() -> WindowContextBuilder {
     WindowContextBuilder::new()
 }
 
+#[derive(Copy, Clone, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum WindowEvent {
     Resume,
