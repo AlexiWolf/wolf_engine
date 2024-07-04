@@ -5,6 +5,9 @@ use winit::{
     window::{Window as WinitWindow, WindowAttributes},
 };
 
+/// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
+pub mod raw_window_handle;
+
 pub fn init() -> WindowContextBuilder {
     WindowContextBuilder::new()
 }
