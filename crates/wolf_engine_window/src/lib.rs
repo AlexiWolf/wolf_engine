@@ -8,6 +8,7 @@ use winit::{
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
 pub mod raw_window_handle;
 
+/// Initialize the window system.
 pub fn init() -> WindowContextBuilder {
     WindowContextBuilder::new()
 }
