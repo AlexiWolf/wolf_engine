@@ -18,6 +18,7 @@ pub fn init() -> WindowContextBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Render,
+    Resized(u32, u32),
     Closed,
 }
 
@@ -226,6 +227,7 @@ mod window_init_tests {
         context.run(|event, window| match event {
             WindowEvent::Render => window.close(),
             WindowEvent::Closed => *&mut has_quit = true,
+            _ => (),
         });
 
         assert!(
