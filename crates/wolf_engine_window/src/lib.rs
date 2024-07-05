@@ -17,7 +17,7 @@ pub fn init() -> WindowContextBuilder {
 #[derive(Copy, Clone, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum WindowEvent {
-    Resume,
+    Resumed,
     Render,
     Resized(u32, u32),
     Closed,
@@ -116,7 +116,7 @@ impl WindowContext {
                 event_loop.set_control_flow(ControlFlow::Poll);
                 self.window.request_redraw();
             }
-            WinitEvent::Resumed => (event_handler)(WindowEvent::Resume, &self),
+            WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &self),
             WinitEvent::WindowEvent {
                 event: WinitWindowEvent::RedrawRequested,
                 ..
@@ -231,7 +231,7 @@ mod window_init_tests {
         let mut has_quit = false;
 
         context.run(|event, window| match event {
-            WindowEvent::Resume => window.close(),
+            WindowEvent::Resumed => window.close(),
             WindowEvent::Closed => *&mut has_quit = true,
             _ => (),
         });
