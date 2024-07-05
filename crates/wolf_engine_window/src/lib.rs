@@ -33,7 +33,7 @@ pub struct WindowContextBuilder {
 }
 
 impl WindowContextBuilder {
-    pub fn new() -> Self {
+    fn new() -> Self {
         Self {
             window_settings: WindowSettings::default(),
         }
