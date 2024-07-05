@@ -5,7 +5,7 @@ fn main() {
     let window = wolf_engine::window::init()
         .with_title("Wolf Engine - Window Example")
         .with_size((800, 600))
-        .with_resizable(false)
+        .with_resizable(true)
         .build();
 
     let mut pixels = {
@@ -17,6 +17,10 @@ fn main() {
 
     window.run(|event, _window| match event {
         WindowEvent::Render => pixels.render().unwrap(),
+        WindowEvent::Resized(width, height) => {
+            pixels.resize_buffer(width, height).unwrap();
+            pixels.resize_buffer(width, height).unwrap();
+        }
         WindowEvent::Closed => println!("Goodbye, World!"),
         _ => (),
     });
