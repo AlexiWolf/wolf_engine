@@ -173,6 +173,7 @@ impl WindowContext {
     }
 }
 
+/// The settings used by the [`WindowContext`] when creating the window.
 #[derive(Clone, Eq, PartialEq)]
 pub struct WindowSettings {
     pub title: String,
