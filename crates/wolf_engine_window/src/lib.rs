@@ -65,7 +65,9 @@ impl WindowContextBuilder {
 
     /// Initialize the window system.
     pub fn build(self) -> WindowContext {
-        let event_loop = EventLoop::with_user_event().build().unwrap();
+        let event_loop = EventLoop::with_user_event()
+            .build()
+            .expect("Failed to initialize the window system");
         self.build_with_event_loop(event_loop)
     }
 
