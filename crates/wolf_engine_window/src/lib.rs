@@ -25,6 +25,9 @@ pub enum WindowEvent {
 
 type WinitEventLoop = winit::event_loop::EventLoop<BackendEvent>;
 
+/// Provides a way to configure the [`WindowContext`].
+///
+/// Create a new builder by calling [`init()`].
 pub struct WindowContextBuilder {
     pub window_settings: WindowSettings,
 }
@@ -36,26 +39,31 @@ impl WindowContextBuilder {
         }
     }
 
+    /// Set the window's title.
     pub fn with_title(mut self, title: &str) -> Self {
         self.window_settings.title = title.to_string();
         self
     }
 
+    /// Set the window's size.
     pub fn with_size(mut self, size: (u32, u32)) -> Self {
         self.window_settings.size = size;
         self
     }
 
+    /// Set whether or not the window should be resizable.
     pub fn with_resizable(mut self, is_resizable: bool) -> Self {
         self.window_settings.is_resizable = is_resizable;
         self
     }
 
+    /// Set whether or not the window should be visible.
     pub fn with_visible(mut self, is_visible: bool) -> Self {
         self.window_settings.is_visible = is_visible;
         self
     }
 
+    /// Initialize the window system.
     pub fn build(self) -> WindowContext {
         let event_loop = EventLoop::with_user_event().build().unwrap();
         self.build_with_event_loop(event_loop)
@@ -67,6 +75,9 @@ impl WindowContextBuilder {
     }
 }
 
+/// Provides a simple window-system.
+///
+/// Create, and configure the window context [`init()`].
 pub struct WindowContext {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
@@ -87,11 +98,20 @@ impl WindowContext {
 }
 
 impl WindowContext {
+    /// Get the current size of the window.
+    ///
+    /// # Panics
+    ///
+    /// - Will panic if the window has not been created yet.  This happens on
+    /// [`WindowEvent::Resumed`].
     pub fn size(&self) -> (u32, u32) {
         let size = self.maybe_window().inner_size();
         (size.width, size.height)
     }
 
+    /// Close the current window.
+    ///
+    /// The window system will stop after this.
     pub fn close(&self) {
         self.event_loop_proxy
             .send_event(BackendEvent::CloseRequested)
@@ -102,6 +122,7 @@ impl WindowContext {
         self.window.as_ref().expect("Window not created yet")
     }
 
+    /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
