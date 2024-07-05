@@ -18,7 +18,7 @@ pub fn init() -> WindowContextBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Resumed,
-    Render,
+    RedrawRequested,
     Resized(u32, u32),
     Closed,
 }
@@ -120,7 +120,7 @@ impl WindowContext {
             WinitEvent::WindowEvent {
                 event: WinitWindowEvent::RedrawRequested,
                 ..
-            } => (event_handler)(WindowEvent::Render, &self),
+            } => (event_handler)(WindowEvent::RedrawRequested, &self),
             WinitEvent::WindowEvent {
                 event: WinitWindowEvent::Resized(size),
                 ..

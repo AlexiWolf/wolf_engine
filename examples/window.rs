@@ -17,7 +17,7 @@ fn main() {
 
     window.run(|event, _window| match event {
         WindowEvent::Resumed => println!("Hello, world!"),
-        WindowEvent::Render => pixels.render().unwrap(),
+        WindowEvent::RedrawRequested => pixels.render().unwrap(),
         WindowEvent::Resized(width, height) => {
             pixels.resize_buffer(width, height).unwrap();
             pixels.resize_surface(width, height).unwrap();
