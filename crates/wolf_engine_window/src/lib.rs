@@ -120,6 +120,10 @@ impl WindowContext {
                 ..
             } => (event_handler)(WindowEvent::Render, &self),
             WinitEvent::WindowEvent {
+                event: WinitWindowEvent::Resized(size),
+                ..
+            } => (event_handler)(WindowEvent::Resized(size.width, size.height), &self),
+            WinitEvent::WindowEvent {
                 event: WinitWindowEvent::CloseRequested,
                 ..
             }
