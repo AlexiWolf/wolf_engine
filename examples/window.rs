@@ -19,7 +19,7 @@ fn main() {
         WindowEvent::Render => pixels.render().unwrap(),
         WindowEvent::Resized(width, height) => {
             pixels.resize_buffer(width, height).unwrap();
-            pixels.resize_buffer(width, height).unwrap();
+            pixels.resize_surface(width, height).unwrap();
         }
         WindowEvent::Closed => println!("Goodbye, World!"),
         _ => (),
