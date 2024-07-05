@@ -79,7 +79,7 @@ impl WindowContextBuilder {
 
 /// Provides a simple window-system.
 ///
-/// Create, and configure the window context [`init()`].
+/// Create, and configure the Window Context with [`init()`].
 pub struct WindowContext {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
