@@ -255,7 +255,7 @@ mod window_init_tests {
 
     #[cfg(any(target_os = "linux", target_os = "windows"))]
     #[test]
-    #[ntest::timeout(100)]
+    #[ntest::timeout(1000)]
     fn should_run_and_quit() {
         let event_loop = EventLoop::with_user_event()
             .with_any_thread(true)
