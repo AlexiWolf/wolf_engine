@@ -28,6 +28,9 @@ jobs:
     - uses: actions-rust-lang/setup-rust-toolchain@v1
       with:
         toolchain: stable 
+    - name: Install xkbcommon on Linux
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: apt install libxkbcommon-x11
     - name: Setup Xvfb on Linux
       if: matrix.platform.os == 'ubuntu-latest'
       run: Xvfb :1 -screen 0 1920x1080x24 &
