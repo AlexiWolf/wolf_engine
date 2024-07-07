@@ -15,13 +15,12 @@ jobs:
         rust-version: 
           - stable 
         platform:
-          - { os: ubuntu-latest, command-prefix: xvfb-run}
+          - { os: ubuntu-latest, command-prefix: xvfb-run }
           - { os: windows-latest }
           - { os: macos-latest }
     env:
       RUST_BACKTRACE: 1
       CARGO_TERM_COLOR: always
-      DISPLAY: :1
     runs-on: ${{ matrix.platform.os }}
     steps:
     - uses: actions/checkout@v3
