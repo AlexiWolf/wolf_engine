@@ -15,7 +15,7 @@ jobs:
         rust-version: 
           - stable 
         platform:
-          - { os: ubuntu-latest }
+          - { os: ubuntu-latest, command: xvfb-run,}
           - { os: windows-latest }
           - { os: macos-latest }
     env:
@@ -29,7 +29,7 @@ jobs:
         toolchain: stable 
     - name: Test Workspace on ${{ matrix.platform.os }} 
       shell: bash
-      run: cargo test --workspace --verbose --all-features  
+      run: ${{ matrix.platform.command }} cargo test --workspace --verbose --all-features  
 
   check_code_format:
     name: Check Code Format
