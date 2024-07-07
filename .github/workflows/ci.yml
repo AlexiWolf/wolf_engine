@@ -15,21 +15,28 @@ jobs:
         rust-version: 
           - stable 
         platform:
-          - { os: ubuntu-latest, command: xvfb-run,}
+          - { os: ubuntu-latest}
           - { os: windows-latest }
           - { os: macos-latest }
     env:
       RUST_BACKTRACE: 1
       CARGO_TERM_COLOR: always
+      DISPLAY: :1
     runs-on: ${{ matrix.platform.os }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions-rust-lang/setup-rust-toolchain@v1
       with:
         toolchain: stable 
+    - name: Setup Xvfb on Linux
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: Xvfb :1 -screen 0 1920x1080 &
     - name: Test Workspace on ${{ matrix.platform.os }} 
       shell: bash
       run: ${{ matrix.platform.command }} cargo test --workspace --verbose --all-features  
+    - name: Tear-down Xvfb on Linux
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: killall Xvfb
 
   check_code_format:
     name: Check Code Format
