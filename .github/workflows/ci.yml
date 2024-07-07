@@ -29,16 +29,16 @@ jobs:
       with:
         toolchain: stable 
     - name: Install xkbcommon on Linux
-      runs-on: ubuntu-latest
+      if: matrix.platform.os == 'ubuntu-latest'
       run: sudo apt-get install libxkbcommon-x11-0
     - name: Setup Xvfb on Linux
-      runs-on: ubuntu-latest
+      if: matrix.platform.os == 'ubuntu-latest'
       run: Xvfb :1 -screen 0 1920x1080x24 &
     - name: Test Workspace on ${{ matrix.platform.os }} 
       shell: bash
       run: ${{ matrix.platform.command }} cargo test --workspace --verbose --all-features  
     - name: Tear-down Xvfb on Linux
-      runs-on: ubuntu-latest
+      if: matrix.platform.os == 'ubuntu-latest'
       run: killall Xvfb
 
   check_code_format:
