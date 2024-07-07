@@ -30,7 +30,7 @@ jobs:
         toolchain: stable 
     - name: Setup Xvfb on Linux
       if: matrix.platform.os == 'ubuntu-latest'
-      run: Xvfb :1 -screen 0 1920x1080 &
+      run: Xvfb :1 -screen 0 1920x1080x60 &
     - name: Test Workspace on ${{ matrix.platform.os }} 
       shell: bash
       run: ${{ matrix.platform.command }} cargo test --workspace --verbose --all-features  
