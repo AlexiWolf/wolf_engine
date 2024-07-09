@@ -2,11 +2,12 @@ use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
     event_loop::EventLoop,
-    window::WindowBuilder,
+    window::WindowAttributes,
 };
 use wolf_engine::input::ToInput;
 use wolf_engine_input::Input;
 
+#[allow(deprecated)]
 pub fn main() {
     let event_loop = EventLoop::new().unwrap();
     let mut window = None;
@@ -17,11 +18,13 @@ pub fn main() {
         match event {
             Event::Resumed => {
                 window = Some(
-                    WindowBuilder::new()
-                        .with_title("Wolf Engine - Input Example")
-                        .with_inner_size(PhysicalSize::new(800, 600))
-                        .with_resizable(false)
-                        .build(&window_target)
+                    window_target
+                        .create_window(
+                            WindowAttributes::default()
+                                .with_title("Wolf Engine - Input Example")
+                                .with_inner_size(PhysicalSize::new(800, 600))
+                                .with_resizable(false),
+                        )
                         .unwrap(),
                 );
             }
