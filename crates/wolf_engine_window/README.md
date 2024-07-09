@@ -3,9 +3,8 @@
 [![Crates.io](https://img.shields.io/crates/l/wolf_engine_window)](https://github.com/AlexiWolf/wolf_engine#license)
 [![Crates.io](https://img.shields.io/crates/v/wolf_engine_window)](https://crates.io/crates/wolf_engine_window)
 
-Provides a simple, high-level window system based on Winit.
-
-This is mostly a wrapper around Winit to make the basics easier.
+Provides a simple, high-level window system built on 
+[Winit](https://docs.rs/winit/latest/winit/).
 
 ## Status
 
