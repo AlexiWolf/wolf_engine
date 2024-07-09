@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `HasRawWindowHandles` trait.
   - Added `HasRwh5Handles` trait.
   - Added `HasRwh6Handles` trait.
+- Added public re-export of the `winit` crate.
 
 ## [wolf_engine_input]
 
