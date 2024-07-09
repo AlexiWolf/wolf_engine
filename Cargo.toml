@@ -27,7 +27,7 @@ winit = ["wolf_engine_input/winit"]
 window = ["wolf_engine_window"]
 
 [dev-dependencies]
-winit = "0.29.14"
+winit = "0.30"
 pixels = "0.13.0"
 
 [[example]]
