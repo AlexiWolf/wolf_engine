@@ -32,6 +32,7 @@ fn main() {
                 pixels.resize_surface(width, height).unwrap();
             }
         }
+        WindowEvent::Input(input) => println!("{:?}", input),
         WindowEvent::Closed => println!("Goodbye, World!"),
         _ => (),
     });
