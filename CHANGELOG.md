@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [0.1.1] - 2024-03-24
 
-- Changed winit dependency version to any `0.29` release.
+- Updated `winit` integration to `v0.29.x`. 
 
 ### [0.1] - 2024-03-24
 
