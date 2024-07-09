@@ -7,8 +7,8 @@ authors = ["AlexiWolf <alexi@wolvesin.space>"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/AlexiWolf/wolf_engine"
 homepage = "https://github.com/AlexiWolf/wolf_engine"
-categories = ["game-development", "game-engines"]
 keywords = ["wolf-engine", "gamedev", "windowing"]
+categories = ["game-development", "gui"]
 
 [features]
 default = ["rwh_06"]
