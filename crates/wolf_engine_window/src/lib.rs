@@ -24,6 +24,7 @@ pub enum WindowEvent {
     RedrawRequested,
     Resized(u32, u32),
     Closed,
+    Input(Input),
 }
 
 type WinitEventLoop = winit::event_loop::EventLoop<BackendEvent>;
