@@ -7,7 +7,7 @@ use winit::{
 };
 
 pub use winit;
-use wolf_engine_input::Input;
+use wolf_engine_input::{Input, ToInput};
 
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
 pub mod raw_window_handle;
@@ -133,49 +133,54 @@ impl WindowContext {
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
-        let _ = event_loop.run(|event, event_loop| match event {
-            WinitEvent::NewEvents(..) => {
-                event_loop.set_control_flow(ControlFlow::Poll);
-                if let Some(window) = &self.window {
-                    window.request_redraw();
+        let _ = event_loop.run(|event, event_loop| {
+            if let Some(input) = event.to_input() {
+                (event_handler)(WindowEvent::Input(input), &self);
+            }
+            match event {
+                WinitEvent::NewEvents(..) => {
+                    event_loop.set_control_flow(ControlFlow::Poll);
+                    if let Some(window) = &self.window {
+                        window.request_redraw();
+                    }
                 }
+                WinitEvent::Resumed => {
+                    self.window = Some(
+                        event_loop
+                            .create_window(
+                                WindowAttributes::default()
+                                    .with_title(&self.window_settings.title)
+                                    .with_inner_size(PhysicalSize::new(
+                                        self.window_settings.size.0,
+                                        self.window_settings.size.1,
+                                    ))
+                                    .with_resizable(self.window_settings.is_resizable)
+                                    .with_visible(self.window_settings.is_visible),
+                            )
+                            .expect("Window creation failed"),
+                    );
+                    (event_handler)(WindowEvent::Resumed, &self);
+                }
+                WinitEvent::WindowEvent {
+                    event: WinitWindowEvent::RedrawRequested,
+                    ..
+                } => (event_handler)(WindowEvent::RedrawRequested, &self),
+                WinitEvent::WindowEvent {
+                    event: WinitWindowEvent::Resized(size),
+                    ..
+                } => (event_handler)(WindowEvent::Resized(size.width, size.height), &self),
+                WinitEvent::WindowEvent {
+                    event: WinitWindowEvent::CloseRequested,
+                    ..
+                }
+                | WinitEvent::UserEvent(BackendEvent::CloseRequested) => {
+                    event_loop.exit();
+                }
+                WinitEvent::LoopExiting => {
+                    (event_handler)(WindowEvent::Closed, &self);
+                }
+                _ => (),
             }
-            WinitEvent::Resumed => {
-                self.window = Some(
-                    event_loop
-                        .create_window(
-                            WindowAttributes::default()
-                                .with_title(&self.window_settings.title)
-                                .with_inner_size(PhysicalSize::new(
-                                    self.window_settings.size.0,
-                                    self.window_settings.size.1,
-                                ))
-                                .with_resizable(self.window_settings.is_resizable)
-                                .with_visible(self.window_settings.is_visible),
-                        )
-                        .expect("Window creation failed"),
-                );
-                (event_handler)(WindowEvent::Resumed, &self);
-            }
-            WinitEvent::WindowEvent {
-                event: WinitWindowEvent::RedrawRequested,
-                ..
-            } => (event_handler)(WindowEvent::RedrawRequested, &self),
-            WinitEvent::WindowEvent {
-                event: WinitWindowEvent::Resized(size),
-                ..
-            } => (event_handler)(WindowEvent::Resized(size.width, size.height), &self),
-            WinitEvent::WindowEvent {
-                event: WinitWindowEvent::CloseRequested,
-                ..
-            }
-            | WinitEvent::UserEvent(BackendEvent::CloseRequested) => {
-                event_loop.exit();
-            }
-            WinitEvent::LoopExiting => {
-                (event_handler)(WindowEvent::Closed, &self);
-            }
-            _ => (),
         });
     }
 }
