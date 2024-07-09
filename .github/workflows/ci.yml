@@ -15,7 +15,7 @@ jobs:
         rust-version: 
           - stable 
         platform:
-          - { os: ubuntu-latest }
+          - { os: ubuntu-latest, command-prefix: xvfb-run }
           - { os: windows-latest }
           - { os: macos-latest }
     env:
@@ -27,9 +27,12 @@ jobs:
     - uses: actions-rust-lang/setup-rust-toolchain@v1
       with:
         toolchain: stable 
+    - name: Install xkbcommon on Linux
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: sudo apt-get install libxkbcommon-x11-0
     - name: Test Workspace on ${{ matrix.platform.os }} 
       shell: bash
-      run: cargo test --workspace --verbose --all-features  
+      run: ${{ matrix.platform.command-prefix }} cargo test --workspace --verbose --all-features  
 
   check_code_format:
     name: Check Code Format

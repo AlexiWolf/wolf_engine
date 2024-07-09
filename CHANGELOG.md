@@ -14,6 +14,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `winit` feature to enable / disable Winit integration engine-wide.
 - Added `wolf_engine_events` crate.
   - Added public re-export of `wolf_engine_events` as `events`.
+- Added `wolf_engine_window` crate.
+  - Added public re-export of `wolf_engine_window` as `window`.
+  - Added `window` feature to enable the `window` module.
+
+## [wolf_engine_window]
+
+### [Unreleased]
+
+- Added `init()` fn.
+- Added `WindowContext` struct.
+- Added `WindowContextBuilder` struct.
+- Added `WindowSettings` struct.
+- Added `WindowEvent` enum
+  - Added `Resized` variant.
+  - Added `RedrawRequested` variant.
+  - Added `Resized` variant.
+  - Added `Closed` variant.
+- Added `raw_window_handle` module.
+  - Added `rwh_05` module.
+  - Added `rwh_06` module.
+  - Added `HasRawWindowHandles` trait.
+  - Added `HasRwh5Handles` trait.
+  - Added `HasRwh6Handles` trait.
 
 ## [wolf_engine_input]
 
