@@ -5,6 +5,8 @@ use winit::{
     window::{Window as WinitWindow, WindowAttributes},
 };
 
+pub use winit;
+
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
 pub mod raw_window_handle;
 
