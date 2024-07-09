@@ -1,6 +1,6 @@
 [package]
 name = "wolf_engine_window"
-description = "A simple, high-levle window API."
+description = "A simple, high-level window API for video games."
 version = "0.1.0"
 edition = "2021"
 authors = ["AlexiWolf <alexi@wolvesin.space>"]
