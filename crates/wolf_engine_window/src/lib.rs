@@ -1,5 +1,6 @@
 use winit::{
     dpi::PhysicalSize,
+    error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::{ControlFlow, EventLoop, EventLoopProxy},
     window::{Window as WinitWindow, WindowAttributes},
@@ -66,11 +67,11 @@ impl WindowContextBuilder {
     }
 
     /// Initialize the window system.
-    pub fn build(self) -> WindowContext {
-        let event_loop = EventLoop::with_user_event()
-            .build()
-            .expect("Failed to initialize the window system");
-        self.build_with_event_loop(event_loop)
+    pub fn build(self) -> Result<WindowContext, EventLoopError> {
+        match EventLoop::with_user_event().build() {
+            Ok(event_loop) => Ok(self.build_with_event_loop(event_loop)),
+            Err(error) => Err(error),
+        }
     }
 
     #[allow(deprecated)]
