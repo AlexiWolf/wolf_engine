@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `RedrawRequested` variant.
   - Added `Resized` variant.
   - Added `Closed` variant.
+  - Added `Input` variant.
 - Added `raw_window_handle` module.
   - Added `rwh_05` module.
   - Added `rwh_06` module.
