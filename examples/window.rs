@@ -7,7 +7,8 @@ fn main() {
         .with_title("Wolf Engine - Window Example")
         .with_size((800, 600))
         .with_resizable(true)
-        .build();
+        .build()
+        .unwrap();
 
     window.run(|event, window| match event {
         WindowEvent::Resumed => {
