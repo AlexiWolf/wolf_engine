@@ -157,6 +157,14 @@ impl WindowContext {
 }
 
 impl WindowContext<context_state::Inactive> {
+    fn create_running_context(self) -> WindowContext<context_state::Running> {
+        WindowContext {
+            event_loop: self.event_loop,
+            event_loop_proxy: self.event_loop_proxy,
+            window: self.window,
+            window_settings: self.window_settings,
+            _state: PhantomData,
+        }
     }
 
     /// Run the event-loop, passing events to the provided `event_handler`.
@@ -166,42 +174,43 @@ impl WindowContext<context_state::Inactive> {
         mut event_handler: F,
     ) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
+        let mut context = self.create_running_context();
         let _ = event_loop.run(|event, event_loop| {
             if let Some(input) = event.to_input() {
-                (event_handler)(WindowEvent::Input(input), &self);
+                (event_handler)(WindowEvent::Input(input), &context);
             }
             match event {
                 WinitEvent::NewEvents(..) => {
                     event_loop.set_control_flow(ControlFlow::Poll);
-                    if let Some(window) = &self.window {
+                    if let Some(window) = &context.window {
                         window.request_redraw();
                     }
                 }
                 WinitEvent::Resumed => {
-                    self.window = Some(
+                    context.window = Some(
                         event_loop
                             .create_window(
                                 WindowAttributes::default()
-                                    .with_title(&self.window_settings.title)
+                                    .with_title(&context.window_settings.title)
                                     .with_inner_size(PhysicalSize::new(
-                                        self.window_settings.size.0,
-                                        self.window_settings.size.1,
+                                        context.window_settings.size.0,
+                                        context.window_settings.size.1,
                                     ))
-                                    .with_resizable(self.window_settings.is_resizable)
-                                    .with_visible(self.window_settings.is_visible),
+                                    .with_resizable(context.window_settings.is_resizable)
+                                    .with_visible(context.window_settings.is_visible),
                             )
                             .expect("Window creation failed"),
                     );
-                    (event_handler)(WindowEvent::Resumed, &self);
+                    (event_handler)(WindowEvent::Resumed, &context);
                 }
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::RedrawRequested,
                     ..
-                } => (event_handler)(WindowEvent::RedrawRequested, &self),
+                } => (event_handler)(WindowEvent::RedrawRequested, &context),
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::Resized(size),
                     ..
-                } => (event_handler)(WindowEvent::Resized(size.width, size.height), &self),
+                } => (event_handler)(WindowEvent::Resized(size.width, size.height), &context),
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::CloseRequested,
                     ..
@@ -210,7 +219,7 @@ impl WindowContext<context_state::Inactive> {
                     event_loop.exit();
                 }
                 WinitEvent::LoopExiting => {
-                    (event_handler)(WindowEvent::Closed, &self);
+                    (event_handler)(WindowEvent::Closed, &context);
                 }
                 _ => (),
             }
