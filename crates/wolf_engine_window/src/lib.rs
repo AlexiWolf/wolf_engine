@@ -128,11 +128,12 @@ impl WindowContextBuilder {
 /// Provides a simple window-system.
 ///
 /// Create, and configure the Window Context with [`init()`].
-pub struct WindowContext {
+pub struct WindowContext<State = context_state::Inactive> {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
     window: Option<WinitWindow>,
     window_settings: WindowSettings,
+    _state: PhantomData<State>,
 }
 
 impl WindowContext {
@@ -143,6 +144,7 @@ impl WindowContext {
             event_loop_proxy,
             window: None,
             window_settings,
+            _state: PhantomData,
         }
     }
 }
