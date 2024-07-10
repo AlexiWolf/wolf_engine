@@ -127,8 +127,13 @@ impl WindowContextBuilder {
     }
 }
 
+/// Type-states used by the [`WindowContext`].
 pub mod context_state {
+
+    /// Indicates the context has not run yet.
     pub struct Inactive;
+
+    /// Indicates the context has run, and the window has been created.
     pub struct Active;
 }
 
