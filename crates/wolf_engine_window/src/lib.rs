@@ -13,6 +13,23 @@
 //!     .unwrap();
 //! ```
 //!
+//! # Running, and Handling Events
+//!
+//! ```no_run
+//! # let window_context = wolf_engine_window::init().build().unwrap();
+//! #
+//! window_context.run(|event, window_context| match event {
+//!     // The window is created on Resumed, so this is where you can set up rendering.
+//!     WindowEvent::Resumed => println!("Hello, world!"),
+//!     // The window should be redrawn.  This is where you can put your main render code.
+//!     // Redraws are automatically requsted each frame.
+//!     WindowEvent::RedrawRequested => (),
+//!     // The window has closed, and the loop will exit.
+//!     WindowEvent::Closed => println!("Goodbye, World!"),
+//!     _ => (),
+//! });
+//! ```
+
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
