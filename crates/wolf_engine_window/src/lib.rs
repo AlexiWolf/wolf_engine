@@ -41,6 +41,8 @@
 //! integrates with the [`raw_window_handle`] crate in order to interoperate with external
 //! rendering libraries.
 
+use std::marker::PhantomData;
+
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
