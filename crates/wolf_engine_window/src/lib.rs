@@ -1,3 +1,46 @@
+//! Provides a simple, high-level window system.
+//!
+//! # Initializing the Window System
+//!
+//! You can configure the window, and initialize the window system by calling
+//! the [`init()`] function.
+//!
+//! ```no_run
+//! let window_context = wolf_engine_window::init()
+//!     .with_title("Test Window")
+//!     .with_size((800, 600))
+//!     .build()
+//!     .unwrap();
+//! ```
+//!
+//! # Running, and Handling Events
+//!
+//! Once you've created the [`WindowContext`], you can call its [`run()`](WindowContext::run())
+//! method to start the window system with the provided event-handling function.
+//!
+//! ```no_run
+//! # use wolf_engine_window::WindowEvent;
+//! #
+//! # let window_context = wolf_engine_window::init().build().unwrap();
+//! #
+//! window_context.run(|event, window_context| match event {
+//!     // The window is created on Resumed, so this is where you can set up rendering.
+//!     WindowEvent::Resumed => println!("Hello, world!"),
+//!     // The window should be redrawn.  This is where you can put your main render code.
+//!     // Redraws are automatically requsted each frame.
+//!     WindowEvent::RedrawRequested => (),
+//!     // The window has closed, and the loop will exit.
+//!     WindowEvent::Closed => println!("Goodbye, World!"),
+//!     _ => (),
+//! });
+//! ```
+//!
+//! # Drawing on the Window
+//!
+//! Like [Winit](winit), this crate doesn't provide its own rendering functions.  Instead, it
+//! integrates with the [`raw_window_handle`] crate in order to interoperate with external
+//! rendering libraries.
+
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
