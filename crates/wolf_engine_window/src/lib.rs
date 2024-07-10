@@ -156,34 +156,17 @@ impl WindowContext {
     }
 }
 
-impl WindowContext {
-    /// Get the current size of the window.
-    ///
-    /// # Panics
-    ///
-    /// - Will panic if the window has not been created yet.  This happens on
-    /// [`WindowEvent::Resumed`].
-    pub fn size(&self) -> (u32, u32) {
-        let size = self.maybe_window().inner_size();
-        (size.width, size.height)
-    }
-
-    /// Close the current window.
-    ///
-    /// The window system will stop after this.
-    pub fn close(&self) {
-        self.event_loop_proxy
-            .send_event(BackendEvent::CloseRequested)
-            .unwrap();
-    }
-
     fn maybe_window(&self) -> &WinitWindow {
         self.window.as_ref().expect("Window not created yet")
+impl WindowContext<context_state::Inactive> {
     }
 
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
+    pub fn run<F: FnMut(WindowEvent, &WindowContext<context_state::Running>)>(
+        mut self,
+        mut event_handler: F,
+    ) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
         let _ = event_loop.run(|event, event_loop| {
             if let Some(input) = event.to_input() {
@@ -237,6 +220,28 @@ impl WindowContext {
     }
 }
 
+impl WindowContext<context_state::Running> {
+    /// Get the current size of the window.
+    ///
+    /// # Panics
+    ///
+    /// - Will panic if the window has not been created yet.  This happens on
+    /// [`WindowEvent::Resumed`].
+    pub fn size(&self) -> (u32, u32) {
+        let size = self.window().inner_size();
+        (size.width, size.height)
+    }
+
+    /// Close the current window.
+    ///
+    /// The window system will stop after this.
+    pub fn close(&self) {
+        self.event_loop_proxy
+            .send_event(BackendEvent::CloseRequested)
+            .unwrap();
+    }
+}
+
 /// The settings used by the [`WindowContext`] when creating the window.
 #[derive(Clone, Eq, PartialEq)]
 pub struct WindowSettings {
@@ -262,27 +267,27 @@ enum BackendEvent {
     CloseRequested,
 }
 
-impl rwh_06::HasWindowHandle for WindowContext {
+impl rwh_06::HasWindowHandle for WindowContext<context_state::Running> {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(self.maybe_window())
     }
 }
 
-impl rwh_06::HasDisplayHandle for WindowContext {
+impl rwh_06::HasDisplayHandle for WindowContext<context_state::Running> {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasDisplayHandle::display_handle(self.maybe_window())
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for WindowContext {
+unsafe impl rwh_05::HasRawWindowHandle for WindowContext<context_state::Running> {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
         rwh_05::HasRawWindowHandle::raw_window_handle(self.maybe_window())
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for WindowContext {
+unsafe impl rwh_05::HasRawDisplayHandle for WindowContext<context_state::Running> {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         rwh_05::HasRawDisplayHandle::raw_display_handle(self.maybe_window())
     }
