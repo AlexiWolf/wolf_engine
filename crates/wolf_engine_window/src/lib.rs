@@ -34,6 +34,12 @@
 //!     _ => (),
 //! });
 //! ```
+//!
+//! # Drawing on the Window
+//!
+//! Like [Winit](winit), this crate doesn't provide its own rendering functions.  Instead, it
+//! integrates with the [`raw_window_handle`] crate in order to interoperate with external
+//! rendering libraries.
 
 use winit::{
     dpi::PhysicalSize,
