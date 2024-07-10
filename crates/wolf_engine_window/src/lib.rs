@@ -129,7 +129,7 @@ impl WindowContextBuilder {
 
 pub mod context_state {
     pub struct Inactive;
-    pub struct Running;
+    pub struct Active;
 }
 
 /// Provides a simple window-system.
@@ -157,7 +157,7 @@ impl WindowContext {
 }
 
 impl WindowContext<context_state::Inactive> {
-    fn create_running_context(self) -> WindowContext<context_state::Running> {
+    fn create_running_context(self) -> WindowContext<context_state::Active> {
         WindowContext {
             event_loop: self.event_loop,
             event_loop_proxy: self.event_loop_proxy,
@@ -169,7 +169,7 @@ impl WindowContext<context_state::Inactive> {
 
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(WindowEvent, &WindowContext<context_state::Running>)>(
+    pub fn run<F: FnMut(WindowEvent, &WindowContext<context_state::Active>)>(
         mut self,
         mut event_handler: F,
     ) {
@@ -227,7 +227,7 @@ impl WindowContext<context_state::Inactive> {
     }
 }
 
-impl WindowContext<context_state::Running> {
+impl WindowContext<context_state::Active> {
     /// Get the current size of the window.
     ///
     /// # Panics
@@ -278,27 +278,27 @@ enum BackendEvent {
     CloseRequested,
 }
 
-impl rwh_06::HasWindowHandle for WindowContext<context_state::Running> {
+impl rwh_06::HasWindowHandle for WindowContext<context_state::Active> {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(self.window())
     }
 }
 
-impl rwh_06::HasDisplayHandle for WindowContext<context_state::Running> {
+impl rwh_06::HasDisplayHandle for WindowContext<context_state::Active> {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasDisplayHandle::display_handle(self.window())
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for WindowContext<context_state::Running> {
+unsafe impl rwh_05::HasRawWindowHandle for WindowContext<context_state::Active> {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
         rwh_05::HasRawWindowHandle::raw_window_handle(self.window())
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for WindowContext<context_state::Running> {
+unsafe impl rwh_05::HasRawDisplayHandle for WindowContext<context_state::Active> {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         rwh_05::HasRawDisplayHandle::raw_display_handle(self.window())
     }
