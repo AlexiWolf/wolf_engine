@@ -1,3 +1,4 @@
+//! Provides a simple, high-level window system.
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
