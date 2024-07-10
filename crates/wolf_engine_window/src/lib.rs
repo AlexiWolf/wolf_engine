@@ -15,6 +15,9 @@
 //!
 //! # Running, and Handling Events
 //!
+//! Once you've created the [`WindowContext`], you can call its [`run()`](WindowContext::run())
+//! method to start the window system with the provided event-handling function.
+//!
 //! ```no_run
 //! # use wolf_engine_window::WindowEvent;
 //! #
