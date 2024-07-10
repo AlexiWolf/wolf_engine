@@ -16,6 +16,8 @@
 //! # Running, and Handling Events
 //!
 //! ```no_run
+//! # use wolf_engine_window::WindowEvent;
+//! #
 //! # let window_context = wolf_engine_window::init().build().unwrap();
 //! #
 //! window_context.run(|event, window_context| match event {
