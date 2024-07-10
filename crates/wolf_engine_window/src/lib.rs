@@ -1,4 +1,18 @@
 //! Provides a simple, high-level window system.
+//!
+//! # Initializing the Window System
+//!
+//! You can configure the window, and initialize the window system by calling
+//! the [`init()`] function.
+//!
+//! ```no_run
+//! let window_context = wolf_engine_window::init()
+//!     .with_title("Test Window")
+//!     .with_size((800, 600))
+//!     .build()
+//!     .unwrap();
+//! ```
+//!
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
