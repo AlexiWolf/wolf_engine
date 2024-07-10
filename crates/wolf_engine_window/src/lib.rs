@@ -127,6 +127,11 @@ impl WindowContextBuilder {
     }
 }
 
+pub mod context_state {
+    pub struct Inactive;
+    pub struct Running;
+}
+
 /// Provides a simple window-system.
 ///
 /// Create, and configure the Window Context with [`init()`].
