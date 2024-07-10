@@ -156,8 +156,6 @@ impl WindowContext {
     }
 }
 
-    fn maybe_window(&self) -> &WinitWindow {
-        self.window.as_ref().expect("Window not created yet")
 impl WindowContext<context_state::Inactive> {
     }
 
@@ -240,6 +238,10 @@ impl WindowContext<context_state::Running> {
             .send_event(BackendEvent::CloseRequested)
             .unwrap();
     }
+
+    fn window(&self) -> &WinitWindow {
+        self.window.as_ref().expect("Window not created yet")
+    }
 }
 
 /// The settings used by the [`WindowContext`] when creating the window.
@@ -269,27 +271,27 @@ enum BackendEvent {
 
 impl rwh_06::HasWindowHandle for WindowContext<context_state::Running> {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasWindowHandle::window_handle(self.maybe_window())
+        rwh_06::HasWindowHandle::window_handle(self.window())
     }
 }
 
 impl rwh_06::HasDisplayHandle for WindowContext<context_state::Running> {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasDisplayHandle::display_handle(self.maybe_window())
+        rwh_06::HasDisplayHandle::display_handle(self.window())
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawWindowHandle for WindowContext<context_state::Running> {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        rwh_05::HasRawWindowHandle::raw_window_handle(self.maybe_window())
+        rwh_05::HasRawWindowHandle::raw_window_handle(self.window())
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawDisplayHandle for WindowContext<context_state::Running> {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        rwh_05::HasRawDisplayHandle::raw_display_handle(self.maybe_window())
+        rwh_05::HasRawDisplayHandle::raw_display_handle(self.window())
     }
 }
 
