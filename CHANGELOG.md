@@ -22,6 +22,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
+- Added type-states to `WindowContext`.
+  - Added `context_state` mod.
+    - Added `Inactive` struct.
+    - Added `Active` struct.
+  - Added generic `state` parameter to `WindowContext`.
+  - Moved the following methods to `Inactive` state.
+    - `run()`.
+  - Moved the following methods to the `Active` state.
+    - `size()`.
+    - `close()`.
+  - Moved all `raw_window_handle` trait impls to the `Active` state.
+
+### [0.1] - 2024-07-09
+
 - Added `init()` fn.
 - Added `WindowContext` struct.
 - Added `WindowContextBuilder` struct.
