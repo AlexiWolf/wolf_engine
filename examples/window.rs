@@ -14,8 +14,9 @@ fn main() {
         WindowEvent::Resumed => {
             println!("Hello, world!");
             pixels = Some({
+                let window = context.window();
                 let (width, height) = window.size();
-                let surface_texture = SurfaceTexture::new(width, height, &window);
+                let surface_texture = SurfaceTexture::new(width, height, window);
                 let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
                 pixels.clear_color(Color::RED);
                 pixels
