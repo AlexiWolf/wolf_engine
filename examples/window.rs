@@ -3,14 +3,14 @@ use wolf_engine::window::WindowEvent;
 
 fn main() {
     let mut pixels = None;
-    let window = wolf_engine::window::init()
+    let context = wolf_engine::window::init()
         .with_title("Wolf Engine - Window Example")
         .with_size((800, 600))
         .with_resizable(true)
         .build()
         .unwrap();
 
-    window.run(|event, window| match event {
+    context.run(|event, context| match event {
         WindowEvent::Resumed => {
             println!("Hello, world!");
             pixels = Some({
