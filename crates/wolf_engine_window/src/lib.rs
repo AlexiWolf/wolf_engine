@@ -41,7 +41,10 @@
 //! integrates with the [`raw_window_handle`] crate in order to interoperate with external
 //! rendering libraries.
 
-use std::marker::PhantomData;
+use std::{
+    marker::PhantomData,
+    sync::{Arc, Weak},
+};
 
 use winit::{
     dpi::PhysicalSize,
@@ -143,7 +146,7 @@ pub mod context_state {
 pub struct WindowContext<State = context_state::Inactive> {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
-    window: Option<WinitWindow>,
+    window: Option<Arc<WinitWindow>>,
     window_settings: WindowSettings,
     _state: PhantomData<State>,
 }
@@ -192,7 +195,7 @@ impl WindowContext<context_state::Inactive> {
                     }
                 }
                 WinitEvent::Resumed => {
-                    context.window = Some(
+                    context.window = Some(Arc::new(
                         event_loop
                             .create_window(
                                 WindowAttributes::default()
@@ -205,7 +208,7 @@ impl WindowContext<context_state::Inactive> {
                                     .with_visible(context.window_settings.is_visible),
                             )
                             .expect("Window creation failed"),
-                    );
+                    ));
                     (event_handler)(WindowEvent::Resumed, &context);
                 }
                 WinitEvent::WindowEvent {
