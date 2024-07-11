@@ -256,8 +256,9 @@ impl WindowContext<context_state::Active> {
             .unwrap();
     }
 
-    pub fn window(&self) -> &WinitWindow {
-        self.window.as_ref().expect("Window not created yet")
+    pub fn window(&self) -> Window {
+        let window = self.window.as_ref().expect("Window not created yet");
+        Window::new(&window)
     }
 }
 
