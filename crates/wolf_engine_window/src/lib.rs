@@ -286,9 +286,18 @@ enum BackendEvent {
     CloseRequested,
 }
 
-pub struct Window {}
+pub struct Window {
+    inner: Weak<WinitWindow>,
+}
 
-impl Window {}
+impl Window {
+    fn new(inner: &Arc<WinitWindow>) -> Self {
+        Self {
+            inner: Arc::downgrade(inner),
+        }
+    }
+
+}
 
 impl rwh_06::HasWindowHandle for Window {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
