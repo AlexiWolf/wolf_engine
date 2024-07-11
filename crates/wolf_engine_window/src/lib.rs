@@ -253,7 +253,7 @@ impl WindowContext<context_state::Active> {
             .unwrap();
     }
 
-    fn window(&self) -> &WinitWindow {
+    pub fn window(&self) -> &WinitWindow {
         self.window.as_ref().expect("Window not created yet")
     }
 }
