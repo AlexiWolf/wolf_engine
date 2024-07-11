@@ -287,29 +287,29 @@ pub struct Window {}
 
 impl Window {}
 
-impl rwh_06::HasWindowHandle for WindowContext<context_state::Active> {
+impl rwh_06::HasWindowHandle for Window {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasWindowHandle::window_handle(self.window())
+        todo!()
     }
 }
 
-impl rwh_06::HasDisplayHandle for WindowContext<context_state::Active> {
+impl rwh_06::HasDisplayHandle for Window {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasDisplayHandle::display_handle(self.window())
+        todo!()
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for WindowContext<context_state::Active> {
+unsafe impl rwh_05::HasRawWindowHandle for Window {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        rwh_05::HasRawWindowHandle::raw_window_handle(self.window())
+        rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner.upgrade().unwrap())
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for WindowContext<context_state::Active> {
+unsafe impl rwh_05::HasRawDisplayHandle for Window {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        rwh_05::HasRawDisplayHandle::raw_display_handle(self.window())
+        rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner.upgrade().unwrap())
     }
 }
 
