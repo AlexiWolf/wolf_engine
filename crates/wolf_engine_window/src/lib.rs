@@ -283,6 +283,10 @@ enum BackendEvent {
     CloseRequested,
 }
 
+pub struct Window {}
+
+impl Window {}
+
 impl rwh_06::HasWindowHandle for WindowContext<context_state::Active> {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(self.window())
