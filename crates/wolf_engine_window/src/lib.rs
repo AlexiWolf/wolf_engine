@@ -236,17 +236,6 @@ impl WindowContext<context_state::Inactive> {
 }
 
 impl WindowContext<context_state::Active> {
-    /// Get the current size of the window.
-    ///
-    /// # Panics
-    ///
-    /// - Will panic if the window has not been created yet.  This happens on
-    /// [`WindowEvent::Resumed`].
-    pub fn size(&self) -> (u32, u32) {
-        let size = self.window().inner_size();
-        (size.width, size.height)
-    }
-
     /// Close the current window.
     ///
     /// The window system will stop after this.
@@ -298,6 +287,12 @@ impl Window {
         }
     }
 
+    /// Get the current size of the window.
+    pub fn size(&self) -> (u32, u32) {
+        let window = self.inner.upgrade().unwrap();
+        let size = window.inner_size();
+        (size.width, size.height)
+    }
 }
 
 impl rwh_06::HasWindowHandle for Window {
