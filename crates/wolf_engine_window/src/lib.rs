@@ -233,15 +233,6 @@ impl WindowContext<context_state::Inactive> {
 }
 
 impl WindowContext<context_state::Active> {
-    /// Close the current window.
-    ///
-    /// The window system will stop after this.
-    pub fn close(&self) {
-        self.event_loop_proxy
-            .send_event(BackendEvent::CloseRequested)
-            .unwrap();
-    }
-
     /// Access the [`Window`].
     pub fn window(&self) -> Window {
         let window = self.window.as_ref().expect("Window not created yet");
@@ -294,6 +285,15 @@ impl Window {
     pub fn size(&self) -> (u32, u32) {
         let size = self.inner.inner_size();
         (size.width, size.height)
+    }
+
+    /// Close the current window.
+    ///
+    /// The window system will stop after this.
+    pub fn close(&self) {
+        self.event_loop_proxy
+            .send_event(BackendEvent::CloseRequested)
+            .unwrap();
     }
 }
 
@@ -365,7 +365,7 @@ mod window_init_tests {
         let mut has_quit = false;
 
         context.run(|event, window| match event {
-            WindowEvent::Resumed => window.close(),
+            WindowEvent::Resumed => window.window().close(),
             WindowEvent::Closed => *&mut has_quit = true,
             _ => (),
         });
