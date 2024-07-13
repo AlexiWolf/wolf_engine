@@ -236,7 +236,7 @@ impl WindowContext<context_state::Active> {
     /// Access the [`Window`].
     pub fn window(&self) -> Window {
         let window = self.window.as_ref().expect("Window not created yet");
-        Window::new(&window, self.event_loop_proxy.clone())
+        Window::new(window.clone(), self.event_loop_proxy.clone())
     }
 }
 
@@ -276,9 +276,9 @@ pub struct Window {
 }
 
 impl Window {
-    fn new(inner: &Arc<WinitWindow>, event_loop_proxy: EventLoopProxy<BackendEvent>) -> Self {
+    fn new(inner: Arc<WinitWindow>, event_loop_proxy: EventLoopProxy<BackendEvent>) -> Self {
         Self {
-            inner: Arc::clone(inner),
+            inner,
             event_loop_proxy,
         }
     }
