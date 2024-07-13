@@ -29,10 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added generic `state` parameter to `WindowContext`.
   - Moved the following methods to `Inactive` state.
     - `run()`.
-  - Moved the following methods to the `Active` state.
+- Added `Window` struct.
+  - Added `WindowContext::window()` accessor to `Active` state.
+  - Moved window-related methods from `WindowContext` to the `Window` struct.
     - `size()`.
     - `close()`.
-  - Moved all `raw_window_handle` trait impls to the `Active` state.
+    - All `raw_window_handle` trait impls.
+
 
 ### [0.1] - 2024-07-09
 

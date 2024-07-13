@@ -41,7 +41,7 @@
 //! integrates with the [`raw_window_handle`] crate in order to interoperate with external
 //! rendering libraries.
 
-use std::marker::PhantomData;
+use std::{marker::PhantomData, sync::Arc};
 
 use winit::{
     dpi::PhysicalSize,
@@ -143,7 +143,7 @@ pub mod context_state {
 pub struct WindowContext<State = context_state::Inactive> {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
-    window: Option<WinitWindow>,
+    window: Option<Arc<WinitWindow>>,
     window_settings: WindowSettings,
     _state: PhantomData<State>,
 }
@@ -192,7 +192,7 @@ impl WindowContext<context_state::Inactive> {
                     }
                 }
                 WinitEvent::Resumed => {
-                    context.window = Some(
+                    context.window = Some(Arc::new(
                         event_loop
                             .create_window(
                                 WindowAttributes::default()
@@ -205,7 +205,7 @@ impl WindowContext<context_state::Inactive> {
                                     .with_visible(context.window_settings.is_visible),
                             )
                             .expect("Window creation failed"),
-                    );
+                    ));
                     (event_handler)(WindowEvent::Resumed, &context);
                 }
                 WinitEvent::WindowEvent {
@@ -233,28 +233,10 @@ impl WindowContext<context_state::Inactive> {
 }
 
 impl WindowContext<context_state::Active> {
-    /// Get the current size of the window.
-    ///
-    /// # Panics
-    ///
-    /// - Will panic if the window has not been created yet.  This happens on
-    /// [`WindowEvent::Resumed`].
-    pub fn size(&self) -> (u32, u32) {
-        let size = self.window().inner_size();
-        (size.width, size.height)
-    }
-
-    /// Close the current window.
-    ///
-    /// The window system will stop after this.
-    pub fn close(&self) {
-        self.event_loop_proxy
-            .send_event(BackendEvent::CloseRequested)
-            .unwrap();
-    }
-
-    fn window(&self) -> &WinitWindow {
-        self.window.as_ref().expect("Window not created yet")
+    /// Access the [`Window`].
+    pub fn window(&self) -> Window {
+        let window = self.window.as_ref().expect("Window not created yet");
+        Window::new(window.clone(), self.event_loop_proxy.clone())
     }
 }
 
@@ -283,29 +265,63 @@ enum BackendEvent {
     CloseRequested,
 }
 
-impl rwh_06::HasWindowHandle for WindowContext<context_state::Active> {
+/// A window.
+///
+/// Windows are created by the [`WindowContext`], and can be accessed by calling
+/// [`WindowContext::window()`].
+#[derive(Clone, Debug)]
+pub struct Window {
+    inner: Arc<WinitWindow>,
+    event_loop_proxy: EventLoopProxy<BackendEvent>,
+}
+
+impl Window {
+    fn new(inner: Arc<WinitWindow>, event_loop_proxy: EventLoopProxy<BackendEvent>) -> Self {
+        Self {
+            inner,
+            event_loop_proxy,
+        }
+    }
+
+    /// Get the current size of the window.
+    pub fn size(&self) -> (u32, u32) {
+        let size = self.inner.inner_size();
+        (size.width, size.height)
+    }
+
+    /// Close the current window.
+    ///
+    /// The window system will stop after this.
+    pub fn close(&self) {
+        self.event_loop_proxy
+            .send_event(BackendEvent::CloseRequested)
+            .unwrap();
+    }
+}
+
+impl rwh_06::HasWindowHandle for Window {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasWindowHandle::window_handle(self.window())
+        rwh_06::HasWindowHandle::window_handle(&self.inner)
     }
 }
 
-impl rwh_06::HasDisplayHandle for WindowContext<context_state::Active> {
+impl rwh_06::HasDisplayHandle for Window {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasDisplayHandle::display_handle(self.window())
+        rwh_06::HasDisplayHandle::display_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for WindowContext<context_state::Active> {
+unsafe impl rwh_05::HasRawWindowHandle for Window {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        rwh_05::HasRawWindowHandle::raw_window_handle(self.window())
+        rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for WindowContext<context_state::Active> {
+unsafe impl rwh_05::HasRawDisplayHandle for Window {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        rwh_05::HasRawDisplayHandle::raw_display_handle(self.window())
+        rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner)
     }
 }
 
@@ -351,7 +367,7 @@ mod window_init_tests {
         let mut has_quit = false;
 
         context.run(|event, window| match event {
-            WindowEvent::Resumed => window.close(),
+            WindowEvent::Resumed => window.window().close(),
             WindowEvent::Closed => *&mut has_quit = true,
             _ => (),
         });
