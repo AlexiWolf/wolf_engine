@@ -273,6 +273,7 @@ enum BackendEvent {
     CloseRequested,
 }
 
+#[derive(Clone, Debug)]
 pub struct Window {
     inner: Arc<WinitWindow>,
 }
