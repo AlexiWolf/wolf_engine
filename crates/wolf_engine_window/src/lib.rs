@@ -277,20 +277,19 @@ enum BackendEvent {
 }
 
 pub struct Window {
-    inner: Weak<WinitWindow>,
+    inner: Arc<WinitWindow>,
 }
 
 impl Window {
     fn new(inner: &Arc<WinitWindow>) -> Self {
         Self {
-            inner: Arc::downgrade(inner),
+            inner: Arc::clone(inner),
         }
     }
 
     /// Get the current size of the window.
     pub fn size(&self) -> (u32, u32) {
-        let window = self.inner.upgrade().unwrap();
-        let size = window.inner_size();
+        let size = self.inner.inner_size();
         (size.width, size.height)
     }
 }
