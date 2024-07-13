@@ -41,10 +41,7 @@
 //! integrates with the [`raw_window_handle`] crate in order to interoperate with external
 //! rendering libraries.
 
-use std::{
-    marker::PhantomData,
-    sync::{Arc, Weak},
-};
+use std::{marker::PhantomData, sync::Arc};
 
 use winit::{
     dpi::PhysicalSize,
