@@ -273,6 +273,10 @@ enum BackendEvent {
     CloseRequested,
 }
 
+/// A window.
+///
+/// Windows are created by the [`WindowContext`], and can be accessed by calling
+/// [`WindowContext::window()`].
 #[derive(Clone, Debug)]
 pub struct Window {
     inner: Arc<WinitWindow>,
