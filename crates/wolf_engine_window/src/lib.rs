@@ -296,27 +296,27 @@ impl Window {
 
 impl rwh_06::HasWindowHandle for Window {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        todo!()
+        rwh_06::HasWindowHandle::window_handle(&self.inner)
     }
 }
 
 impl rwh_06::HasDisplayHandle for Window {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        todo!()
+        rwh_06::HasDisplayHandle::display_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawWindowHandle for Window {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner.upgrade().unwrap())
+        rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner)
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawDisplayHandle for Window {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner.upgrade().unwrap())
+        rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner)
     }
 }
 
