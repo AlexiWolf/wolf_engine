@@ -1,5 +1,5 @@
 pub trait Game {
-    fn setup(&mut self, context: &Context) {}
+    fn setup(&mut self, context: &mut Context) {}
 }
 
 pub struct Context {}
