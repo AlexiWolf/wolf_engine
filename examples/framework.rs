@@ -1,6 +1,9 @@
 use wolf_engine::framework::*;
 
-pub fn main() {}
+pub fn main() {
+    let engine = wolf_engine::framework::init().build().unwrap();
+    engine.run(MyGame::new())
+}
 
 pub struct MyGame;
 
