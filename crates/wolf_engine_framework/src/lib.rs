@@ -2,13 +2,11 @@ pub fn init() -> EngineBuilder {
     EngineBuilder
 }
 
-pub struct Engine;
-
-impl Engine {
-    pub fn run<G: Game>(self, game: G) {
-        todo!()
-    }
+pub fn run<G: Game>(engine: Engine, game: G) {
+    todo!()
 }
+
+pub struct Engine;
 
 pub struct EngineBuilder;
 
