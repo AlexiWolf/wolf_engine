@@ -14,4 +14,5 @@ categories = ["game-development", "game-engines"]
 wolf_engine_window = { version = "0.1.0", path = "../wolf_engine_window" }
 
 [dev-dependencies]
+mockall = "0.13.0"
 ntest = "0.9.3"
