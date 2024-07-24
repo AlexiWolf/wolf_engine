@@ -1,0 +1,13 @@
+[package]
+name = "wolf_engine_framework"
+description = "A high-level game framework."
+version = "0.1.0"
+edition = "2021"
+authors = ["AlexiWolf <alexi@wolvesin.space>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/AlexiWolf/wolf_engine"
+homepage = "https://github.com/AlexiWolf/wolf_engine"
+keywords = ["wolf-engine", "gamedev", "windowing"]
+categories = ["game-development", "game-engines"]
+
+[dependencies]
