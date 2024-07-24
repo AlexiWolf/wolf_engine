@@ -15,6 +15,7 @@ members = ["crates/*"]
 
 [dependencies]
 wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events" }
+wolf_engine_framework = { version = "0.1.0", path = "crates/wolf_engine_framework", optional = true }
 wolf_engine_input = { version = "0.1.2", path = "crates/wolf_engine_input", optional = true }
 wolf_engine_window = { version = "0.1.0", path = "crates/wolf_engine_window", optional = true }
 
