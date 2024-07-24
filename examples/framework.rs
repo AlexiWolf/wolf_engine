@@ -1,4 +1,4 @@
-pub use wolf_engine::framework::Game;
+pub use wolf_engine::framework::*;
 
 pub fn main() {}
 
