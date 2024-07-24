@@ -5,7 +5,13 @@ pub fn main() {
     engine.run(MyGame::new())
 }
 
-pub struct MyGame;
+pub struct MyGame {}
+
+impl MyGame {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
 
 impl Game for MyGame {
     fn setup(&mut self, context: &mut Context) {}
