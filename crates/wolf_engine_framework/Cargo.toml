@@ -11,3 +11,5 @@ keywords = ["wolf-engine", "gamedev", "windowing"]
 categories = ["game-development", "game-engines"]
 
 [dependencies]
+wolf_engine_window = { version = "0.1.0", path = "../wolf_engine_window" }
+
