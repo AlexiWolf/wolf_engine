@@ -1,3 +1,7 @@
+pub fn init() -> EngineBuilder {
+    EngineBuilder
+}
+
 pub struct Engine;
 
 impl Engine {
