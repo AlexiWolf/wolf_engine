@@ -28,6 +28,7 @@ pub fn run<G: Game>(engine: Engine, mut game: G) {
             game.render(&mut context);
             game.update(&mut context);
         }
+        WindowEvent::Resized(width, height) => game.resized(&mut context, (width, height)),
         WindowEvent::Closed => game.shutdown(&mut context),
         _ => (),
     })
