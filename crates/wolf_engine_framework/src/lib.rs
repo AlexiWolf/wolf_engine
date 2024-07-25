@@ -10,7 +10,7 @@ pub fn run<G: Game>(engine: Engine, game: G) {
 }
 
 pub struct Engine {
-    event_loop: EventLoop,
+    event_receiver: MpscEventReceiver<Event>,
     context: Context,
     window_context: WindowContext,
 }
