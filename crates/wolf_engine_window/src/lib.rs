@@ -43,9 +43,10 @@
 
 use std::{marker::PhantomData, sync::Arc};
 
+use cfg_if::cfg_if;
 use winit::{
     dpi::PhysicalSize,
-    error::EventLoopError,
+    error::{EventLoopError, NotSupportedError},
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::{ControlFlow, EventLoop, EventLoopProxy},
     window::{Window as WinitWindow, WindowAttributes},
@@ -121,7 +122,29 @@ impl WindowContextBuilder {
         }
     }
 
-    #[allow(deprecated)]
+    #[doc(hidden)]
+    #[cfg(test)]
+    pub fn build_any_thread(self) -> Result<WindowContext, EventLoopError> {
+        #[cfg(target_os = "windows")]
+        use winit::platform::windows::EventLoopBuilderExtWindows;
+        #[cfg(target_os = "linux")]
+        use winit::platform::x11::EventLoopBuilderExtX11;
+
+        cfg_if! {
+            if #[cfg(any(target_os = "linux", target_os = "windows"))] {
+                match EventLoop::with_user_event()
+                    .with_any_thread(true)
+                    .build() {
+                    Ok(event_loop) => Ok(self.build_with_event_loop(event_loop)),
+                    Err(error) => Err(error),
+                }
+            } else {
+                Err(EventLoopError::NotSupported(NotSupportedError))
+            }
+
+        }
+    }
+
     fn build_with_event_loop(self, event_loop: EventLoop<BackendEvent>) -> WindowContext {
         WindowContext::new(event_loop, self.window_settings)
     }
@@ -330,12 +353,6 @@ mod window_init_tests {
     #[cfg(any(target_os = "linux", target_os = "windows"))]
     use super::*;
 
-    #[cfg(target_os = "linux")]
-    use winit::platform::x11::EventLoopBuilderExtX11;
-
-    #[cfg(target_os = "windows")]
-    use winit::platform::windows::EventLoopBuilderExtWindows;
-
     #[test]
     fn should_set_builder_settings() {
         let context_builder = crate::init()
@@ -356,13 +373,10 @@ mod window_init_tests {
     #[test]
     #[ntest::timeout(1000)]
     fn should_run_and_quit() {
-        let event_loop = EventLoop::with_user_event()
-            .with_any_thread(true)
-            .build()
-            .unwrap();
         let context = crate::init()
             .with_visible(false)
-            .build_with_event_loop(event_loop);
+            .build_any_thread()
+            .unwrap();
 
         let mut has_quit = false;
 
@@ -376,5 +390,12 @@ mod window_init_tests {
             has_quit,
             "The window system has not quit, or did not run properly."
         );
+    }
+
+    #[cfg(not(any(target_os = "linux", target_os = "windows")))]
+    #[test]
+    fn should_fail_threadded_build_on_unsupported_platforms() {
+        let result = crate::init().with_visible(false).build_any_thread();
+        assert!(result.is_err());
     }
 }
