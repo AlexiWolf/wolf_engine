@@ -9,9 +9,9 @@ pub fn run<G: Game>(engine: Engine, game: G) {
 }
 
 pub struct Engine {
-    window_context: WindowContext,
     event_loop: EventLoop,
     context: Context,
+    window_context: WindowContext,
 }
 
 pub struct EngineBuilder;
