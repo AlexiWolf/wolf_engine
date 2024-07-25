@@ -14,7 +14,11 @@ pub fn run<G: Game>(engine: Engine, mut game: G) {
     let window_context = engine.window_context;
 
     window_context.run(|event, window_context| match event {
-        WindowEvent::Resumed => game.setup(&mut context),
+        WindowEvent::Resumed => {
+            let window = window_context.window();
+            context.insert_window(window);
+            game.setup(&mut context);
+        }
         WindowEvent::RedrawRequested => {
             while let Some(event) = event_receiver.next_event() {
                 match event {
