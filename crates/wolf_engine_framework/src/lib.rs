@@ -18,6 +18,9 @@ impl EngineBuilder {
 
 pub trait Game {
     fn setup(&mut self, context: &mut Context) {}
+    fn shutdown(&mut self, context: &mut Context) {}
+    fn update(&mut self, context: &mut Context);
+    fn render(&mut self, context: &mut Context);
 }
 
 pub struct Context {}
