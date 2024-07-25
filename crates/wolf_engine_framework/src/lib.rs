@@ -1,16 +1,24 @@
 use wolf_engine_events::mpsc::{event_queue, MpscEventReceiver, MpscEventSender};
-use wolf_engine_window::WindowContext;
+use wolf_engine_window::{WindowContext, WindowEvent};
 
 pub fn init() -> EngineBuilder {
     EngineBuilder
 }
 
-pub fn run<G: Game>(engine: Engine, game: G) {
+pub fn run<G: Game>(engine: Engine, mut game: G) {
     let mut context = engine.context;
     let mut event_receiver = engine.event_receiver;
     let window_context = engine.window_context;
 
-    window_context.run(|event, window_context| {})
+    window_context.run(|event, window_context| match event {
+        WindowEvent::Resumed => game.setup(&mut context),
+        WindowEvent::RedrawRequested => {
+            game.render(&mut context);
+            game.update(&mut context);
+        }
+        WindowEvent::Closed => game.shutdown(&mut context),
+        _ => (),
+    })
 }
 
 pub struct Engine {
