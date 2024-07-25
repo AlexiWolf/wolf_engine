@@ -30,6 +30,10 @@ impl Game for MyGame {
 
     fn update(&mut self, _context: &mut Context) {}
 
+    fn input(&mut self, _context: &mut Context, input: Input) {
+        println!("Input: {:?}", input);
+    }
+
     fn render(&mut self, _context: &mut Context) {
         if let Some(pixels) = self.pixels.as_ref() {
             pixels.render().unwrap();
