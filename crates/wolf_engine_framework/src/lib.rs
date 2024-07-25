@@ -38,7 +38,6 @@ pub trait Game {
     fn render(&mut self, context: &mut Context);
 }
 
-struct EventLoop {}
 
 pub struct Context {}
 
