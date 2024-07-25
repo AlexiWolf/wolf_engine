@@ -71,6 +71,7 @@ impl EngineBuilder {
     }
 }
 
+#[cfg_attr(test, mockall::automock)]
 pub trait Game {
     fn setup(&mut self, context: &mut Context) {}
     fn shutdown(&mut self, context: &mut Context) {}
@@ -116,28 +117,33 @@ impl Context {
 
 #[cfg(test)]
 mod framework_tests {
+    use std::sync::{Arc, Mutex};
+
     use super::*;
-
-    #[derive(Default)]
-    struct CallTestGame {
-        update: u32,
-    }
-
-    impl Game for CallTestGame {
-        fn update(&mut self, context: &mut Context) {
-            if self.update < 100 {
-                self.update += 1;
-            } else {
-                context.quit();
-            }
-        }
-        fn render(&mut self, _context: &mut Context) {}
-    }
 
     #[test]
     #[ntest::timeout(100)]
     fn should_run_and_quit() {
+        let updates = Arc::new(Mutex::new(0));
+        let mut game = MockGame::new();
+
+        game.expect_setup().once().return_const(());
+        game.expect_shutdown().once().return_const(());
+        game.expect_update()
+            // Engine tends to respond to shutdowns a few frames later.
+            // This is a bit of wiggle-room in how many frames it takes.
+            .times(100..110)
+            .returning(move |context| {
+                let mut updates = updates.lock().unwrap();
+                if *updates < 100 {
+                    *updates += 1;
+                } else {
+                    context.quit()
+                }
+            });
+        game.expect_render().times(1..).return_const(());
+
         let engine = crate::init().build_any_thread().unwrap();
-        crate::run(engine, CallTestGame::default());
+        crate::run(engine, game);
     }
 }
