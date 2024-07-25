@@ -24,3 +24,4 @@ wolf_engine_input = { version = "0.1.2", path = "../wolf_engine_input", features
 
 [dev-dependencies]
 ntest = "0.9.3"
+cfg-if = "1.0.0"
