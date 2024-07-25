@@ -6,7 +6,11 @@ pub fn init() -> EngineBuilder {
 }
 
 pub fn run<G: Game>(engine: Engine, game: G) {
-    todo!()
+    let mut context = engine.context;
+    let mut event_receiver = engine.event_receiver;
+    let window_context = engine.window_context;
+
+    window_context.run(|event, window_context| {})
 }
 
 pub struct Engine {
