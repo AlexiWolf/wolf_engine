@@ -1,4 +1,4 @@
-use pixels::Pixels;
+use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine::framework::*;
 
 pub fn main() {
@@ -18,9 +18,19 @@ impl MyGame {
 
 impl Game for MyGame {
     fn setup(&mut self, context: &mut Context) {
-        let window = context.window();
+        self.pixels = Some({
+            let window = context.window();
+            let (width, height) = window.size();
+            let surface_texture = SurfaceTexture::new(width, height, &window);
+            let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
+            pixels.clear_color(Color::RED);
+            pixels
+        });
     }
-    fn shutdown(&mut self, context: &mut Context) {}
-    fn update(&mut self, context: &mut Context) {}
-    fn render(&mut self, context: &mut Context) {}
+    fn update(&mut self, _context: &mut Context) {}
+    fn render(&mut self, _context: &mut Context) {
+        if let Some(pixels) = self.pixels.as_ref() {
+            pixels.render().unwrap();
+        }
+    }
 }
