@@ -130,8 +130,9 @@ mod framework_tests {
         game.expect_setup().once().return_const(());
         game.expect_shutdown().once().return_const(());
         game.expect_update()
-            // Engine tends to respond to shutdowns a few frames later.
-            // This is a bit of wiggle-room in how many frames it takes.
+            // The engine tends to respond to shutdowns a few frames late, and I don't think this
+            // is a problem.
+            // This range allows a bit of wiggle-room in how exactly how many frames it takes.
             .times(100..110)
             .returning(move |context| {
                 let mut updates = updates.lock().unwrap();
