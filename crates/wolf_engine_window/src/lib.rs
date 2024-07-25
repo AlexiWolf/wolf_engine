@@ -122,7 +122,6 @@ impl WindowContextBuilder {
     }
 
     #[doc(hidden)]
-    #[cfg(test)]
     pub fn build_any_thread(self) -> Result<WindowContext, EventLoopError> {
         use cfg_if::cfg_if;
         #[cfg(target_os = "windows")]
