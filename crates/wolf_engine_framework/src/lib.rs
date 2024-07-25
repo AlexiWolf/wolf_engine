@@ -6,7 +6,8 @@ pub fn run<G: Game>(engine: Engine, game: G) {
     todo!()
 }
 
-pub struct Engine;
+pub struct Engine {
+    EventLoop: EventLoop,
 
 pub struct EngineBuilder;
 
@@ -22,6 +23,8 @@ pub trait Game {
     fn update(&mut self, context: &mut Context);
     fn render(&mut self, context: &mut Context);
 }
+
+struct EventLoop {}
 
 pub struct Context {}
 
