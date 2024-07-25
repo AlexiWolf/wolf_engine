@@ -1,5 +1,6 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine::framework::*;
+use wolf_engine::input::Input;
 
 pub fn main() {
     let engine = wolf_engine::framework::init().build().unwrap();
