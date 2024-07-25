@@ -43,10 +43,9 @@
 
 use std::{marker::PhantomData, sync::Arc};
 
-use cfg_if::cfg_if;
 use winit::{
     dpi::PhysicalSize,
-    error::{EventLoopError, NotSupportedError},
+    error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::{ControlFlow, EventLoop, EventLoopProxy},
     window::{Window as WinitWindow, WindowAttributes},
@@ -125,6 +124,7 @@ impl WindowContextBuilder {
     #[doc(hidden)]
     #[cfg(test)]
     pub fn build_any_thread(self) -> Result<WindowContext, EventLoopError> {
+        use cfg_if::cfg_if;
         #[cfg(target_os = "windows")]
         use winit::platform::windows::EventLoopBuilderExtWindows;
         #[cfg(target_os = "linux")]
