@@ -25,6 +25,10 @@ pub trait Game {
 
 pub struct Context {}
 
+impl Context {
+    pub fn quit(&self) {}
+}
+
 #[cfg(test)]
 mod framework_tests {
     use super::*;
