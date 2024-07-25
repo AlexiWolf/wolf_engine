@@ -89,6 +89,13 @@ impl Context {
         }
     }
 
+    pub fn window(&self) -> Window {
+        self.window
+            .as_ref()
+            .expect("There is no Window yet")
+            .clone()
+    }
+
     pub fn quit(&self) {
         self.event_sender.send_event(Event::Quit).unwrap();
     }
