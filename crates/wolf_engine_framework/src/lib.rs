@@ -107,19 +107,10 @@ mod framework_tests {
 
     #[derive(Default)]
     struct CallTestGame {
-        setup: u32,
-        shutdown: u32,
         update: u32,
-        render: u32,
     }
 
     impl Game for CallTestGame {
-        fn setup(&mut self, _context: &mut Context) {
-            self.setup += 1;
-        }
-        fn shutdown(&mut self, _context: &mut Context) {
-            self.shutdown += 1;
-        }
         fn update(&mut self, context: &mut Context) {
             if self.update < 100 {
                 self.update += 1;
@@ -127,14 +118,12 @@ mod framework_tests {
                 context.quit();
             }
         }
-        fn render(&mut self, _context: &mut Context) {
-            self.render += 1;
-        }
+        fn render(&mut self, _context: &mut Context) {}
     }
 
     #[test]
     #[ntest::timeout(100)]
-    fn should_follow_method_call_expectations() {
+    fn should_run_and_quit() {
         let engine = crate::init().build_any_thread().unwrap();
         crate::run(engine, CallTestGame::default());
     }
