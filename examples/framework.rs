@@ -1,8 +1,8 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
-use wolf_engine::framework::*;
-use wolf_engine::input::Input;
+use wolf_engine_framework::*;
 use wolf_engine_input::keyboard::KeyCode;
 use wolf_engine_input::ButtonState;
+use wolf_engine_input::Input;
 
 pub fn main() {
     let engine = wolf_engine::framework::init().build().unwrap();
