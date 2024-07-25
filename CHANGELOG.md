@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_window]
 
-### [Unreleased]
+### [0.2] - 2024-07-25
 
 - Added type-states to `WindowContext`.
   - Added `context_state` mod.
