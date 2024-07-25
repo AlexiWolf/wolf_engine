@@ -73,6 +73,7 @@ pub trait Game {
     fn shutdown(&mut self, context: &mut Context) {}
     fn update(&mut self, context: &mut Context);
     fn render(&mut self, context: &mut Context);
+    fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {}
 }
 
 #[non_exhaustive]
