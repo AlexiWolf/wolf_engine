@@ -83,12 +83,13 @@ pub trait Game {
         let _ = context;
         let _ = input;
     }
-    fn update(&mut self, context: &mut Context);
-    fn render(&mut self, context: &mut Context);
     fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {
         let _ = context;
         let _ = new_size;
     }
+
+    fn update(&mut self, context: &mut Context);
+    fn render(&mut self, context: &mut Context);
 }
 
 #[non_exhaustive]
