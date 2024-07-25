@@ -100,6 +100,10 @@ impl Context {
             .clone()
     }
 
+    pub fn insert_window(&mut self, window: Window) {
+        self.window = Some(window);
+    }
+
     pub fn quit(&self) {
         self.event_sender.send_event(Event::Quit).unwrap();
     }
