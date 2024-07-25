@@ -2,6 +2,7 @@ use wolf_engine_events::{
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
     EventReceiver, EventSender,
 };
+use wolf_engine_input::Input;
 use wolf_engine_window::{Window, WindowContext, WindowEvent};
 
 pub fn init() -> EngineBuilder {
@@ -72,6 +73,7 @@ impl EngineBuilder {
 pub trait Game {
     fn setup(&mut self, context: &mut Context) {}
     fn shutdown(&mut self, context: &mut Context) {}
+    fn input(&mut self, context: &mut Context, input: Input) {}
     fn update(&mut self, context: &mut Context);
     fn render(&mut self, context: &mut Context);
     fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {}
