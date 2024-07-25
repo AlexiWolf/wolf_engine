@@ -1,3 +1,4 @@
+use wolf_engine_events::mpsc::{event_queue, MpscEventReceiver, MpscEventSender};
 use wolf_engine_window::WindowContext;
 
 pub fn init() -> EngineBuilder {
@@ -18,7 +19,15 @@ pub struct EngineBuilder;
 
 impl EngineBuilder {
     pub fn build(self) -> Result<Engine, ()> {
-        todo!()
+        let (event_sender, event_receiver) = event_queue::<Event>();
+        let context = Context::new(event_sender);
+        let window_context = wolf_engine_window::init().build().unwrap();
+        let engine = Engine {
+            event_receiver,
+            context,
+            window_context,
+        };
+        Ok(engine)
     }
 }
 
