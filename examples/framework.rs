@@ -27,12 +27,15 @@ impl Game for MyGame {
             pixels
         });
     }
+
     fn update(&mut self, _context: &mut Context) {}
+
     fn render(&mut self, _context: &mut Context) {
         if let Some(pixels) = self.pixels.as_ref() {
             pixels.render().unwrap();
         }
     }
+
     fn resized(&mut self, _context: &mut Context, new_size: (u32, u32)) {
         if let Some(pixels) = self.pixels.as_mut() {
             let (width, height) = new_size;
