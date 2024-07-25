@@ -2,7 +2,7 @@ use wolf_engine_events::{
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
     EventReceiver, EventSender,
 };
-use wolf_engine_window::{WindowContext, WindowEvent};
+use wolf_engine_window::{Window, WindowContext, WindowEvent};
 
 pub fn init() -> EngineBuilder {
     EngineBuilder
@@ -78,11 +78,15 @@ enum Event {
 
 pub struct Context {
     event_sender: MpscEventSender<Event>,
+    window: Option<Window>,
 }
 
 impl Context {
     fn new(event_sender: MpscEventSender<Event>) -> Self {
-        Self { event_sender }
+        Self {
+            event_sender,
+            window: None,
+        }
     }
 }
 
