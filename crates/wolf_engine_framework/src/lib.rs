@@ -73,12 +73,22 @@ impl EngineBuilder {
 
 #[cfg_attr(test, mockall::automock)]
 pub trait Game {
-    fn setup(&mut self, context: &mut Context) {}
-    fn shutdown(&mut self, context: &mut Context) {}
-    fn input(&mut self, context: &mut Context, input: Input) {}
+    fn setup(&mut self, context: &mut Context) {
+        let _ = context;
+    }
+    fn shutdown(&mut self, context: &mut Context) {
+        let _ = context;
+    }
+    fn input(&mut self, context: &mut Context, input: Input) {
+        let _ = context;
+        let _ = input;
+    }
     fn update(&mut self, context: &mut Context);
     fn render(&mut self, context: &mut Context);
-    fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {}
+    fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {
+        let _ = context;
+        let _ = new_size;
+    }
 }
 
 #[non_exhaustive]
