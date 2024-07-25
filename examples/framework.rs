@@ -33,4 +33,11 @@ impl Game for MyGame {
             pixels.render().unwrap();
         }
     }
+    fn resized(&mut self, _context: &mut Context, new_size: (u32, u32)) {
+        if let Some(pixels) = self.pixels.as_mut() {
+            let (width, height) = new_size;
+            pixels.resize_buffer(width, height).unwrap();
+            pixels.resize_surface(width, height).unwrap();
+        }
+    }
 }
