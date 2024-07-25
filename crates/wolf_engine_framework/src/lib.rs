@@ -71,7 +71,9 @@ pub trait Game {
     fn render(&mut self, context: &mut Context);
 }
 
-enum Event {}
+enum Event {
+    Quit,
+}
 
 pub struct Context {
     event_sender: MpscEventSender<Event>,
