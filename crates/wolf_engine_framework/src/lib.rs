@@ -71,6 +71,7 @@ pub trait Game {
     fn render(&mut self, context: &mut Context);
 }
 
+#[non_exhaustive]
 enum Event {
     Quit,
 }
