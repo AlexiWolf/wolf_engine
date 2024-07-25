@@ -1,3 +1,5 @@
+use wolf_engine_window::WindowContext;
+
 pub fn init() -> EngineBuilder {
     EngineBuilder
 }
@@ -7,8 +9,9 @@ pub fn run<G: Game>(engine: Engine, game: G) {
 }
 
 pub struct Engine {
-    EventLoop: EventLoop,
+    event_loop: EventLoop,
     context: Context,
+}
 
 pub struct EngineBuilder;
 
