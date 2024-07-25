@@ -1,4 +1,7 @@
-use wolf_engine_events::mpsc::{event_queue, MpscEventReceiver, MpscEventSender};
+use wolf_engine_events::{
+    mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
+    EventReceiver, EventSender,
+};
 use wolf_engine_window::{WindowContext, WindowEvent};
 
 pub fn init() -> EngineBuilder {
@@ -13,6 +16,11 @@ pub fn run<G: Game>(engine: Engine, mut game: G) {
     window_context.run(|event, window_context| match event {
         WindowEvent::Resumed => game.setup(&mut context),
         WindowEvent::RedrawRequested => {
+            while let Some(event) = event_receiver.next_event() {
+                match event {
+                    Event::Quit => window_context.window().close(),
+                }
+            }
             game.render(&mut context);
             game.update(&mut context);
         }
@@ -76,7 +84,9 @@ impl Context {
 }
 
 impl Context {
-    pub fn quit(&self) {}
+    pub fn quit(&self) {
+        self.event_sender.send_event(Event::Quit).unwrap();
+    }
 }
 
 #[cfg(test)]
