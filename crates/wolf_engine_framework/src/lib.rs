@@ -38,6 +38,7 @@ pub trait Game {
     fn render(&mut self, context: &mut Context);
 }
 
+enum Event {}
 
 pub struct Context {}
 
