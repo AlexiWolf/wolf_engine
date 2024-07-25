@@ -88,9 +88,7 @@ impl Context {
             window: None,
         }
     }
-}
 
-impl Context {
     pub fn quit(&self) {
         self.event_sender.send_event(Event::Quit).unwrap();
     }
