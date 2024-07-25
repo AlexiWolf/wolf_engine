@@ -23,15 +23,28 @@ pub struct EngineBuilder;
 
 impl EngineBuilder {
     pub fn build(self) -> Result<Engine, ()> {
+        let window_context = wolf_engine_window::init().build().unwrap();
+        Ok(Self::setup_engine(window_context))
+    }
+
+    #[cfg(test)]
+    #[doc(hidden)]
+    pub fn build_any_thread(self) -> Result<Engine, ()> {
+        let window_context = wolf_engine_window::init()
+            .with_visible(false)
+            .build_any_thread()
+            .unwrap();
+        Ok(Self::setup_engine(window_context))
+    }
+
+    fn setup_engine(window_context: WindowContext) -> Engine {
         let (event_sender, event_receiver) = event_queue::<Event>();
         let context = Context::new(event_sender);
-        let window_context = wolf_engine_window::init().build().unwrap();
-        let engine = Engine {
+        Engine {
             event_receiver,
             context,
             window_context,
-        };
-        Ok(engine)
+        }
     }
 }
 
@@ -92,7 +105,7 @@ mod framework_tests {
     #[test]
     #[ntest::timeout(100)]
     fn should_follow_method_call_expectations() {
-        let engine = crate::init().build().unwrap();
+        let engine = crate::init().build_any_thread().unwrap();
         crate::run(engine, CallTestGame::default());
     }
 }
