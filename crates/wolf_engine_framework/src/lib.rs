@@ -24,3 +24,42 @@ pub trait Game {
 }
 
 pub struct Context {}
+
+#[cfg(test)]
+mod framework_tests {
+    use super::*;
+
+    #[derive(Default)]
+    struct CallTestGame {
+        setup: u32,
+        shutdown: u32,
+        update: u32,
+        render: u32,
+    }
+
+    impl Game for CallTestGame {
+        fn setup(&mut self, _context: &mut Context) {
+            self.setup += 1;
+        }
+        fn shutdown(&mut self, _context: &mut Context) {
+            self.shutdown += 1;
+        }
+        fn update(&mut self, context: &mut Context) {
+            if self.update < 100 {
+                self.update += 1;
+            } else {
+                context.quit();
+            }
+        }
+        fn render(&mut self, _context: &mut Context) {
+            self.render += 1;
+        }
+    }
+
+    #[test]
+    #[ntest::timeout(100)]
+    fn should_follow_method_call_expectations() {
+        let engine = crate::init().build().unwrap();
+        crate::run(engine, CallTestGame::default());
+    }
+}
