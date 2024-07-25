@@ -15,4 +15,7 @@ impl MyGame {
 
 impl Game for MyGame {
     fn setup(&mut self, context: &mut Context) {}
+    fn shutdown(&mut self, context: &mut Context) {}
+    fn update(&mut self, context: &mut Context) {}
+    fn render(&mut self, context: &mut Context) {}
 }
