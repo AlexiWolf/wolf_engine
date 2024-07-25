@@ -40,7 +40,15 @@ pub trait Game {
 
 enum Event {}
 
-pub struct Context {}
+pub struct Context {
+    event_sender: MpscEventSender<Event>,
+}
+
+impl Context {
+    fn new(event_sender: MpscEventSender<Event>) -> Self {
+        Self { event_sender }
+    }
+}
 
 impl Context {
     pub fn quit(&self) {}
