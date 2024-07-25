@@ -8,6 +8,7 @@ pub fn run<G: Game>(engine: Engine, game: G) {
 
 pub struct Engine {
     EventLoop: EventLoop,
+    context: Context,
 
 pub struct EngineBuilder;
 
