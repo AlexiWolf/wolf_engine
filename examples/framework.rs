@@ -1,6 +1,8 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine::framework::*;
 use wolf_engine::input::Input;
+use wolf_engine_input::keyboard::KeyCode;
+use wolf_engine_input::ButtonState;
 
 pub fn main() {
     let engine = wolf_engine::framework::init().build().unwrap();
@@ -8,12 +10,16 @@ pub fn main() {
 }
 
 pub struct MyGame {
+    color: Color,
     pixels: Option<Pixels>,
 }
 
 impl MyGame {
     pub fn new() -> Self {
-        Self { pixels: None }
+        Self {
+            pixels: None,
+            color: Color::RED,
+        }
     }
 }
 
@@ -23,8 +29,7 @@ impl Game for MyGame {
             let window = context.window();
             let (width, height) = window.size();
             let surface_texture = SurfaceTexture::new(width, height, &window);
-            let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
-            pixels.clear_color(Color::RED);
+            let pixels = Pixels::new(width, height, surface_texture).unwrap();
             pixels
         });
     }
@@ -33,10 +38,24 @@ impl Game for MyGame {
 
     fn input(&mut self, _context: &mut Context, input: Input) {
         println!("Input: {:?}", input);
+        match input {
+            Input::Keyboard {
+                state: ButtonState::Down,
+                keycode: Some(KeyCode::Space),
+                ..
+            } => self.color = Color::BLUE,
+            Input::Keyboard {
+                state: ButtonState::Up,
+                keycode: Some(KeyCode::Space),
+                ..
+            } => self.color = Color::RED,
+            _ => (),
+        }
     }
 
     fn render(&mut self, _context: &mut Context) {
-        if let Some(pixels) = self.pixels.as_ref() {
+        if let Some(pixels) = self.pixels.as_mut() {
+            pixels.clear_color(self.color);
             pixels.render().unwrap();
         }
     }
