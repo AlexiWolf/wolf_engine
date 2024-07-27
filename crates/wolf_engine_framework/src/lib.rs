@@ -100,10 +100,10 @@ impl EngineBuilder {
 
 /// Type-states used by the [`Game`] struct.
 pub mod game_state {
-    /// Indicates the [`Game`] has not been loaded yet.
+    /// Indicates the [`Game`](crate::Game) has not been loaded yet.
     pub struct Unloaded;
 
-    /// Indicates the [`Game`] has been loaded.
+    /// Indicates the [`Game`](crate::Game) has been loaded.
     pub struct Loaded;
 }
 
