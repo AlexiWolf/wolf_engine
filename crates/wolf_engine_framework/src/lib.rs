@@ -14,7 +14,7 @@ pub fn init() -> EngineBuilder {
     EngineBuilder
 }
 
-/// Run the [`Engine`] with the provided [`Game`].
+/// Run the provided [`Game`].
 pub fn run<E: EventHandler>(engine: Engine, game: Game<E>) {
     let mut context = engine.context;
     let mut event_receiver = engine.event_receiver;
