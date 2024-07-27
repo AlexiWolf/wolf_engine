@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use wolf_engine_events::{
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
     EventReceiver, EventSender,
@@ -69,6 +70,16 @@ impl EngineBuilder {
             window_context,
         }
     }
+}
+
+pub mod game_state {
+    pub struct Unloaded;
+    pub struct Loaded;
+}
+
+pub struct Game<E: EventHandler, State = game_state::Unloaded> {
+    event_handler: E,
+    _state: PhantomData<State>,
 }
 
 #[cfg_attr(test, mockall::automock)]
