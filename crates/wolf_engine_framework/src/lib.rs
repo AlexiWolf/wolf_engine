@@ -83,6 +83,15 @@ pub struct Game<E: EventHandler, State = game_state::Unloaded> {
     _state: PhantomData<State>,
 }
 
+impl<E: EventHandler> Game<E> {
+    pub fn new(event_handler: E) -> Game<E, game_state::Unloaded> {
+        Game {
+            event_handler,
+            _state: PhantomData,
+        }
+    }
+}
+
 #[cfg_attr(test, mockall::automock)]
 pub trait EventHandler {
     fn setup(&mut self, context: &mut Context) {
