@@ -1,3 +1,5 @@
+//! Provides a high-level game framework.
+
 use std::marker::PhantomData;
 
 use wolf_engine_events::{
@@ -7,10 +9,12 @@ use wolf_engine_events::{
 use wolf_engine_input::Input;
 use wolf_engine_window::{Window, WindowContext, WindowEvent};
 
+/// Initialize the [`Engine`].
 pub fn init() -> EngineBuilder {
     EngineBuilder
 }
 
+/// Run the [`Engine`] with the provided [`Game`].
 pub fn run<E: EventHandler>(engine: Engine, game: Game<E>) {
     let mut context = engine.context;
     let mut event_receiver = engine.event_receiver;
@@ -94,17 +98,29 @@ impl EngineBuilder {
     }
 }
 
+/// Type-states used by the [`Game`] struct.
 pub mod game_state {
+    /// Indicates the [`Game`] has not been loaded yet.
     pub struct Unloaded;
+
+    /// Indicates the [`Game`] has been loaded.
     pub struct Loaded;
 }
 
+/// Provides a wrapper around an [`EventHandler`] which implements a program lifetime for the game
+/// using type-states.
+///
+/// This wrapper ensures the following invariants are true:
+/// - The [`setup()`](EventHandler::setup()) method is always the first method called.
+/// - The [`shutdown()`](EventHandler::shutdown()) is always the last method called.
+/// - Each of these methods are only called a single time each through the life of the program.
 pub struct Game<E: EventHandler, State = game_state::Unloaded> {
     event_handler: E,
     _state: PhantomData<State>,
 }
 
 impl<E: EventHandler> Game<E> {
+    /// Create a new game instance.
     pub fn new(event_handler: E) -> Game<E, game_state::Unloaded> {
         Game {
             event_handler,
@@ -114,6 +130,12 @@ impl<E: EventHandler> Game<E> {
 }
 
 impl<E: EventHandler> Game<E, game_state::Unloaded> {
+    /// Run one-time setup at the beginning of the program's lifecycle.
+    ///
+    /// This method must be called before any other methods can be called.
+    ///
+    /// Calling this method will consume the [`Unloaded`](game_state::Unloaded) game, and return
+    /// it in the [`Loaded`](game_state::Loaded) state.
     pub fn setup(mut self, context: &mut Context) -> Game<E, game_state::Loaded> {
         self.event_handler.setup(context);
         Game::<E, game_state::Loaded> {
@@ -124,45 +146,63 @@ impl<E: EventHandler> Game<E, game_state::Unloaded> {
 }
 
 impl<E: EventHandler> Game<E, game_state::Loaded> {
+    /// Handle an input event.
     pub fn input(&mut self, context: &mut Context, input: Input) {
         self.event_handler.input(context, input);
     }
 
+    /// Handle a resized event.
     pub fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {
         self.event_handler.resized(context, new_size);
     }
 
+    /// Update the game's state.
     pub fn update(&mut self, context: &mut Context) {
         self.event_handler.update(context);
     }
 
+    /// Render the game to the screen.
     pub fn render(&mut self, context: &mut Context) {
         self.event_handler.render(context);
     }
 
+    /// Run one-time teardown at the end of the program's lifecycle.
+    ///
+    /// Calling this method will consume the game, and drop it.
     pub fn shutdown(mut self, context: &mut Context) {
         self.event_handler.shutdown(context);
     }
 }
 
+/// A general-purpose event-handler.
 #[cfg_attr(test, mockall::automock)]
 pub trait EventHandler {
+    /// Run one-time setup when the engine starts.
     fn setup(&mut self, context: &mut Context) {
         let _ = context;
     }
+
+    /// Run one-time teardown when the engine quits.
     fn shutdown(&mut self, context: &mut Context) {
         let _ = context;
     }
+
+    /// Handle input events.
     fn input(&mut self, context: &mut Context, input: Input) {
         let _ = context;
         let _ = input;
     }
+
+    /// Handle [`Resized`](wolf_engine_window::WindowEvent::Resized) events.
     fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {
         let _ = context;
         let _ = new_size;
     }
 
+    /// Run, and update state.
     fn update(&mut self, context: &mut Context);
+
+    /// Render to the screen.
     fn render(&mut self, context: &mut Context);
 }
 
