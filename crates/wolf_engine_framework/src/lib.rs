@@ -136,11 +136,12 @@ mod framework_tests {
     #[ntest::timeout(100)]
     fn should_run_and_quit() {
         let updates = Arc::new(Mutex::new(0));
-        let mut game = MockEventHandler::new();
+        let mut event_handler = MockEventHandler::new();
 
-        game.expect_setup().once().return_const(());
-        game.expect_shutdown().once().return_const(());
-        game.expect_update()
+        event_handler.expect_setup().once().return_const(());
+        event_handler.expect_shutdown().once().return_const(());
+        event_handler
+            .expect_update()
             // The engine tends to respond to shutdowns a few frames late, and I don't think this
             // is a problem.
             // This range allows a bit of wiggle-room in how exactly how many frames it takes.
@@ -153,9 +154,10 @@ mod framework_tests {
                     context.quit()
                 }
             });
-        game.expect_render().times(1..).return_const(());
+        event_handler.expect_render().times(1..).return_const(());
 
+        let game = Game::new(event_handler);
         let engine = crate::init().build_any_thread().unwrap();
-        crate::run(engine, game);
+        crate::run(engine, event_handler);
     }
 }
