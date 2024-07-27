@@ -108,8 +108,8 @@ pub mod game_state {
     pub struct Loaded;
 }
 
-/// Provides a wrapper around an [`EventHandler`] which implements a program lifetime for the game
-/// using type-states.
+/// Provides a wrapper around an [`EventHandler`] implementing a life-cycle for the game using
+/// type-states.
 ///
 /// This wrapper ensures the following invariants are true:
 /// - The [`setup()`](EventHandler::setup()) method is always the first method called.
