@@ -92,6 +92,29 @@ impl<E: EventHandler> Game<E> {
     }
 }
 
+impl<E: EventHandler> Game<E, game_state::Unloaded> {
+    pub fn setup(mut self, context: &mut Context) -> Game<E, game_state::Loaded> {
+        Game::<E, game_state::Loaded> {
+            event_handler: self.event_handler,
+            _state: PhantomData,
+        }
+    }
+}
+
+impl<E: EventHandler> Game<E, game_state::Loaded> {
+    pub fn input(&mut self, context: &mut Context, input: Input) {
+
+    pub fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {
+    }
+
+    pub fn update(&mut self, context: &mut Context) {
+    }
+    pub fn render(&mut self, context: &mut Context) {
+    }
+    pub fn shutdown(mut self, context: &mut Context) {
+    }
+}
+
 #[cfg_attr(test, mockall::automock)]
 pub trait EventHandler {
     fn setup(&mut self, context: &mut Context) {
