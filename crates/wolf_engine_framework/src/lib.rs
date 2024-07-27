@@ -94,6 +94,7 @@ impl<E: EventHandler> Game<E> {
 
 impl<E: EventHandler> Game<E, game_state::Unloaded> {
     pub fn setup(mut self, context: &mut Context) -> Game<E, game_state::Loaded> {
+        self.event_handler.setup(context);
         Game::<E, game_state::Loaded> {
             event_handler: self.event_handler,
             _state: PhantomData,
@@ -103,15 +104,23 @@ impl<E: EventHandler> Game<E, game_state::Unloaded> {
 
 impl<E: EventHandler> Game<E, game_state::Loaded> {
     pub fn input(&mut self, context: &mut Context, input: Input) {
+        self.event_handler.input(context, input);
+    }
 
     pub fn resized(&mut self, context: &mut Context, new_size: (u32, u32)) {
+        self.event_handler.resized(context, new_size);
     }
 
     pub fn update(&mut self, context: &mut Context) {
+        self.event_handler.update(context);
     }
+
     pub fn render(&mut self, context: &mut Context) {
+        self.event_handler.render(context);
     }
+
     pub fn shutdown(mut self, context: &mut Context) {
+        self.event_handler.shutdown(context);
     }
 }
 
