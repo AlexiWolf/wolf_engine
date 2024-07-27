@@ -11,16 +11,20 @@ pub fn init() -> EngineBuilder {
     EngineBuilder
 }
 
-pub fn run<E: EventHandler>(engine: Engine, mut game: Game<E>) {
+pub fn run<E: EventHandler>(engine: Engine, game: Game<E>) {
     let mut context = engine.context;
     let mut event_receiver = engine.event_receiver;
     let window_context = engine.window_context;
+    let mut unloaded_game = Some(game);
+    let mut loaded_game = None;
 
     window_context.run(|event, window_context| match event {
         WindowEvent::Resumed => {
+            let game = std::mem::take(&mut unloaded_game)
+                .expect("game should not have been previously loaded");
             let window = window_context.window();
             context.insert_window(window);
-            game.setup(&mut context);
+            loaded_game = Some(game.setup(&mut context));
         }
         WindowEvent::RedrawRequested => {
             while let Some(event) = event_receiver.next_event() {
@@ -28,12 +32,29 @@ pub fn run<E: EventHandler>(engine: Engine, mut game: Game<E>) {
                     Event::Quit => window_context.window().close(),
                 }
             }
+            let game = loaded_game
+                .as_mut()
+                .expect("game should have been loaded on Resume");
             game.render(&mut context);
             game.update(&mut context);
         }
-        WindowEvent::Input(input) => game.input(&mut context, input),
-        WindowEvent::Resized(width, height) => game.resized(&mut context, (width, height)),
-        WindowEvent::Closed => game.shutdown(&mut context),
+        WindowEvent::Input(input) => {
+            let game = loaded_game
+                .as_mut()
+                .expect("game should have been loaded on Resume");
+            game.input(&mut context, input);
+        }
+        WindowEvent::Resized(width, height) => {
+            let game = loaded_game
+                .as_mut()
+                .expect("game should have been loaded on Resume");
+            game.resized(&mut context, (width, height));
+        }
+        WindowEvent::Closed => {
+            let game =
+                std::mem::take(&mut loaded_game).expect("game should have been loaded on Resume");
+            game.shutdown(&mut context);
+        }
         _ => (),
     })
 }
