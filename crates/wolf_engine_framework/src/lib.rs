@@ -69,6 +69,7 @@ pub struct Engine {
     window_context: WindowContext,
 }
 
+/// Provides a way to configure the engine.
 pub struct EngineBuilder;
 
 impl EngineBuilder {
@@ -211,6 +212,7 @@ enum Event {
     Quit,
 }
 
+/// Provides a container for engine-state.
 pub struct Context {
     event_sender: MpscEventSender<Event>,
     window: Option<Window>,
