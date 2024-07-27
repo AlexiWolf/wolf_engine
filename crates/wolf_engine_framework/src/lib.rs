@@ -9,7 +9,7 @@ pub fn init() -> EngineBuilder {
     EngineBuilder
 }
 
-pub fn run<G: Game>(engine: Engine, mut game: G) {
+pub fn run<G: EventHandler>(engine: Engine, mut game: G) {
     let mut context = engine.context;
     let mut event_receiver = engine.event_receiver;
     let window_context = engine.window_context;
@@ -72,7 +72,7 @@ impl EngineBuilder {
 }
 
 #[cfg_attr(test, mockall::automock)]
-pub trait Game {
+pub trait EventHandler {
     fn setup(&mut self, context: &mut Context) {
         let _ = context;
     }
@@ -136,7 +136,7 @@ mod framework_tests {
     #[ntest::timeout(100)]
     fn should_run_and_quit() {
         let updates = Arc::new(Mutex::new(0));
-        let mut game = MockGame::new();
+        let mut game = MockEventHandler::new();
 
         game.expect_setup().once().return_const(());
         game.expect_shutdown().once().return_const(());

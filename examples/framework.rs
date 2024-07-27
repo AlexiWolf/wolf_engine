@@ -23,7 +23,7 @@ impl MyGame {
     }
 }
 
-impl Game for MyGame {
+impl EventHandler for MyGame {
     fn setup(&mut self, context: &mut Context) {
         self.pixels = Some({
             let window = context.window();
