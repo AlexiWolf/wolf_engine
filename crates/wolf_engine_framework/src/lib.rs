@@ -1,4 +1,5 @@
 use std::marker::PhantomData;
+
 use wolf_engine_events::{
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
     EventReceiver, EventSender,
@@ -169,6 +170,6 @@ mod framework_tests {
 
         let game = Game::new(event_handler);
         let engine = crate::init().build_any_thread().unwrap();
-        crate::run(engine, event_handler);
+        crate::run(engine, game);
     }
 }
