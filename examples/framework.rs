@@ -15,11 +15,11 @@ pub struct MyGame {
 }
 
 impl MyGame {
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> Game<Self, game_state::Unloaded> {
+        Game::new(Self {
             pixels: None,
             color: Color::RED,
-        }
+        })
     }
 }
 
