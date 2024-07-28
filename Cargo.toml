@@ -20,6 +20,7 @@ wolf_engine_input = { version = "0.1.2", path = "crates/wolf_engine_input", opti
 wolf_engine_window = { version = "0.1.0", path = "crates/wolf_engine_window", optional = true }
 
 [features]
+default = ["framework", "rwh_06", "rwh_05"]
 framework = ["dep:wolf_engine_framework", "window", "input", "winit"]
 input = ["wolf_engine_input"]
 rwh_05 = ["wolf_engine_window/rwh_05"]
