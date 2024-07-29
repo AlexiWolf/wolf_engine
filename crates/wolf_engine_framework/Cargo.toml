@@ -1,7 +1,7 @@
 [package]
 name = "wolf_engine_framework"
 description = "A high-level game framework."
-version = "0.1.0"
+version = "0.26.0"
 edition = "2021"
 authors = ["AlexiWolf <alexi@wolvesin.space>"]
 license = "MIT OR Apache-2.0"
