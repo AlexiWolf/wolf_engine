@@ -17,6 +17,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `wolf_engine_window` crate.
   - Added public re-export of `wolf_engine_window` as `window`.
   - Added `window` feature to enable the `window` module.
+- Added `wolf_engine_framework` crate.
+  - Added public re-export of `wolf_engine_framework` as `framework`.
+  - Added `framework` feature to enable the `framework` module.
+  - Added `framework` to the `default` feature-set.
+
+## [wolf_engine_framework]
+
+- Added `Context` struct.
+- Added `Engine` struct.
+- Added `EngineBuilder` struct.
+- Added `Game` struct.
+  - Added `game_state` module.
+    - Added `Unloaded` type-state.
+    - Added `Loaded` type-state.
+- Added `EventHandler` trait.
+- Added `init()` function.
+- Added `run()` function.
 
 ## [wolf_engine_window]
 
@@ -35,7 +52,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `size()`.
     - `close()`.
     - All `raw_window_handle` trait impls.
-
 
 ### [0.1] - 2024-07-09
 
