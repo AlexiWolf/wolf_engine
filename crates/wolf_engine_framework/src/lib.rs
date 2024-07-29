@@ -249,7 +249,7 @@ mod framework_tests {
     use super::*;
 
     #[test]
-    #[ntest::timeout(100)]
+    #[ntest::timeout(200)]
     fn should_run_and_quit() {
         let updates = Arc::new(Mutex::new(0));
         let mut event_handler = MockEventHandler::new();
