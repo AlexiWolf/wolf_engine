@@ -138,6 +138,7 @@ impl WindowContextBuilder {
                     Err(error) => Err(error),
                 }
             } else {
+                use winit::error::{EventLoopError, NotSupportedError};
                 Err(EventLoopError::NotSupported(NotSupportedError))
             }
 
