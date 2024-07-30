@@ -346,14 +346,12 @@ mod window_init_tests {
     use winit::platform::windows::EventLoopBuilderExtWindows;
 
     #[test]
-    fn should_set_builder_settings() {
-        let context_builder = crate::init()
+    fn should_set_settings_values() {
+        let window_settings = WindowSettings::default()
             .with_title("Custom Test Title")
             .with_size((123, 123))
             .with_resizable(false)
             .with_visible(false);
-
-        let window_settings = context_builder.window_settings;
 
         assert_eq!(window_settings.title, "Custom Test Title");
         assert_eq!(window_settings.size, (123, 123));
