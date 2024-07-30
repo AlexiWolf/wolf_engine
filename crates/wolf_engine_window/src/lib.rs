@@ -366,15 +366,13 @@ mod window_init_tests {
             .with_any_thread(true)
             .build()
             .unwrap();
-        let context = crate::init()
-            .with_visible(false)
-            .build_with_event_loop(event_loop);
+        let context = crate::init().build_with_event_loop(event_loop);
 
         let mut has_quit = false;
 
-        context.run(|event, window| match event {
-            WindowEvent::Resumed => window.window().close(),
-            WindowEvent::Closed => *&mut has_quit = true,
+        context.run(|event, context| match event {
+            WindowEvent::Resumed => context.exit(),
+            WindowEvent::Exited => *&mut has_quit = true,
             _ => (),
         });
 
