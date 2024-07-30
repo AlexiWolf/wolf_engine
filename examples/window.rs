@@ -27,18 +27,18 @@ fn main() {
                 pixels
             });
         }
-        WindowEvent::RedrawRequested => {
+        WindowEvent::RedrawRequested(_id) => {
             if let Some(pixels) = &pixels {
                 pixels.render().unwrap();
             }
         }
-        WindowEvent::Resized(width, height) => {
+        WindowEvent::Resized(_id, width, height) => {
             if let Some(pixels) = &mut pixels {
                 pixels.resize_buffer(width, height).unwrap();
                 pixels.resize_surface(width, height).unwrap();
             }
         }
-        WindowEvent::Input(input) => println!("{:?}", input),
+        WindowEvent::Input(_id, input) => println!("{:?}", input),
         WindowEvent::Closed => println!("Goodbye, World!"),
         _ => (),
     });
