@@ -2,17 +2,22 @@ use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine::window::WindowEvent;
 
 fn main() {
+    let context = wolf_engine::window::init().build().unwrap();
+
     let mut pixels = None;
-    let context = wolf_engine::window::init()
-        .with_title("Wolf Engine - Window Example")
-        .with_size((800, 600))
-        .with_resizable(true)
-        .build()
-        .unwrap();
+    let mut window = None;
 
     context.run(|event, context| match event {
         WindowEvent::Resumed => {
             println!("Hello, world!");
+            window = context
+                .create_window(
+                    WindowSettings::default()
+                        .with_title("Wolf Engine - Window Example")
+                        .with_size((800, 600))
+                        .with_resizable(true),
+                )
+                .expect("window creation succeeded");
             pixels = Some({
                 let window = context.window();
                 let (width, height) = window.size();
