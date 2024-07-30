@@ -233,6 +233,10 @@ impl WindowContext<context_state::Inactive> {
 }
 
 impl WindowContext<context_state::Active> {
+    pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, ()> {
+        todo!()
+    }
+
     /// Access the [`Window`].
     pub fn window(&self) -> Window {
         let window = self.window.as_ref().expect("Window not created yet");
