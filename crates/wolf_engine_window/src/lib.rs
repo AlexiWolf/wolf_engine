@@ -71,6 +71,7 @@ pub enum WindowEvent {
     Resized(u32, u32),
     Closed,
     Input(Input),
+    Exited,
 }
 
 type WinitEventLoop = winit::event_loop::EventLoop<BackendEvent>;
