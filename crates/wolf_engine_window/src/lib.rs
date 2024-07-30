@@ -89,30 +89,6 @@ impl WindowContextBuilder {
         }
     }
 
-    /// Set the window's title.
-    pub fn with_title(mut self, title: &str) -> Self {
-        self.window_settings.title = title.to_string();
-        self
-    }
-
-    /// Set the window's size.
-    pub fn with_size(mut self, size: (u32, u32)) -> Self {
-        self.window_settings.size = size;
-        self
-    }
-
-    /// Set whether or not the window should be resizable.
-    pub fn with_resizable(mut self, is_resizable: bool) -> Self {
-        self.window_settings.is_resizable = is_resizable;
-        self
-    }
-
-    /// Set whether or not the window should be visible.
-    pub fn with_visible(mut self, is_visible: bool) -> Self {
-        self.window_settings.is_visible = is_visible;
-        self
-    }
-
     /// Initialize the window system.
     pub fn build(self) -> Result<WindowContext, EventLoopError> {
         match EventLoop::with_user_event().build() {
@@ -251,6 +227,32 @@ pub struct WindowSettings {
     pub size: (u32, u32),
     pub is_resizable: bool,
     pub is_visible: bool,
+}
+
+impl WindowSettings {
+    /// Set the window's title.
+    pub fn with_title(mut self, title: &str) -> Self {
+        self.title = title.to_string();
+        self
+    }
+
+    /// Set the window's size.
+    pub fn with_size(mut self, size: (u32, u32)) -> Self {
+        self.size = size;
+        self
+    }
+
+    /// Set whether or not the window should be resizable.
+    pub fn with_resizable(mut self, is_resizable: bool) -> Self {
+        self.is_resizable = is_resizable;
+        self
+    }
+
+    /// Set whether or not the window should be visible.
+    pub fn with_visible(mut self, is_visible: bool) -> Self {
+        self.is_visible = is_visible;
+        self
+    }
 }
 
 impl Default for WindowSettings {
