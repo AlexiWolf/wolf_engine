@@ -19,9 +19,10 @@ fn main() {
                 )
                 .expect("window creation succeeded");
             pixels = Some({
+                let window = window.as_ref().unwrap();
                 let window = context.window();
                 let (width, height) = window.size();
-                let surface_texture = SurfaceTexture::new(width, height, &window);
+                let surface_texture = SurfaceTexture::new(width, height, window);
                 let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
                 pixels.clear_color(Color::RED);
                 pixels
