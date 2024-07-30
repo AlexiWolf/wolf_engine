@@ -10,14 +10,16 @@ fn main() {
     context.run(|event, context| match event {
         WindowEvent::Resumed => {
             println!("Hello, world!");
-            window = context
-                .create_window(
-                    WindowSettings::default()
-                        .with_title("Wolf Engine - Window Example")
-                        .with_size((800, 600))
-                        .with_resizable(true),
-                )
-                .expect("window creation succeeded");
+            window = Some(
+                context
+                    .create_window(
+                        WindowSettings::default()
+                            .with_title("Wolf Engine - Window Example")
+                            .with_size((800, 600))
+                            .with_resizable(true),
+                    )
+                    .expect("window creation succeeded"),
+            );
             pixels = Some({
                 let window = window.as_ref().unwrap();
                 let window = context.window();
