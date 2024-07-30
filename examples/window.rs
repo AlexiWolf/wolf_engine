@@ -1,5 +1,6 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine::window::WindowEvent;
+use wolf_engine_window::WindowSettings;
 
 fn main() {
     let context = wolf_engine::window::init().build().unwrap();
