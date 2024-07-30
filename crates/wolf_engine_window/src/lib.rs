@@ -149,7 +149,7 @@ impl WindowContext<context_state::Inactive> {
         let mut context = self.create_running_context();
         let _ = event_loop.run(|event, event_loop| {
             if let Some(input) = event.to_input() {
-                (event_handler)(WindowEvent::Input(input), &context);
+                (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
             }
             match event {
                 WinitEvent::NewEvents(..) => {
@@ -178,11 +178,14 @@ impl WindowContext<context_state::Inactive> {
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::RedrawRequested,
                     ..
-                } => (event_handler)(WindowEvent::RedrawRequested, &context),
+                } => (event_handler)(WindowEvent::RedrawRequested(Uuid::new_v4()), &context),
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::Resized(size),
                     ..
-                } => (event_handler)(WindowEvent::Resized(size.width, size.height), &context),
+                } => (event_handler)(
+                    WindowEvent::Resized(Uuid::new_v4(), size.width, size.height),
+                    &context,
+                ),
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::CloseRequested,
                     ..
@@ -191,7 +194,7 @@ impl WindowContext<context_state::Inactive> {
                     event_loop.exit();
                 }
                 WinitEvent::LoopExiting => {
-                    (event_handler)(WindowEvent::Closed, &context);
+                    (event_handler)(WindowEvent::Closed(Uuid::new_v4()), &context);
                 }
                 _ => (),
             }
