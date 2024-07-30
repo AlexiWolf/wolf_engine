@@ -162,16 +162,6 @@ impl WindowContext {
 }
 
 impl WindowContext<context_state::Inactive> {
-    fn create_running_context(self) -> WindowContext<context_state::Active> {
-        WindowContext {
-            event_loop: self.event_loop,
-            event_loop_proxy: self.event_loop_proxy,
-            window: self.window,
-            window_settings: self.window_settings,
-            _state: PhantomData,
-        }
-    }
-
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext<context_state::Active>)>(
@@ -229,6 +219,16 @@ impl WindowContext<context_state::Inactive> {
                 _ => (),
             }
         });
+    }
+
+    fn create_running_context(self) -> WindowContext<context_state::Active> {
+        WindowContext {
+            event_loop: self.event_loop,
+            event_loop_proxy: self.event_loop_proxy,
+            window: self.window,
+            window_settings: self.window_settings,
+            _state: PhantomData,
+        }
     }
 }
 
