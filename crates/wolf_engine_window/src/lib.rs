@@ -43,6 +43,7 @@
 
 use std::{marker::PhantomData, sync::Arc};
 
+use uuid::Uuid;
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
@@ -67,10 +68,10 @@ pub fn init() -> WindowContextBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Resumed,
-    RedrawRequested,
-    Resized(u32, u32),
-    Closed,
-    Input(Input),
+    RedrawRequested(Uuid),
+    Resized(Uuid, u32, u32),
+    Closed(Uuid),
+    Input(Uuid, Input),
     Exited,
 }
 
