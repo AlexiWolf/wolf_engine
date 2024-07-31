@@ -135,10 +135,11 @@ impl WindowContext {
         }
     }
 
-    pub fn create_window(&self, window_settings: WindowSettings) {
-        self.event_loop_proxy
-            .send_event(BackendEvent::WindowCreationRequested(window_settings))
-            .expect("window event-loop is still alive")
+    pub fn create_window(
+        &self,
+        window_settings: WindowSettings,
+    ) -> Result<Window, WindowCreationError> {
+        todo!()
     }
 }
 
