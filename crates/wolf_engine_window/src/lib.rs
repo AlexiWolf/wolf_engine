@@ -180,9 +180,7 @@ impl<'event_loop> WindowContext<'event_loop> {
     }
 
     pub fn exit(&self) {
-        let _ = self
-            .event_loop_proxy
-            .send_event(BackendEvent::ExitRequested);
+        self.event_loop.exit();
     }
 }
 
