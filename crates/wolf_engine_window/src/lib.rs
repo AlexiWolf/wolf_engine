@@ -2,21 +2,19 @@
 //!
 //! # Initializing the Window System
 //!
-//! You can configure the window, and initialize the window system by calling
-//! the [`init()`] function.
+//! Initialize the window system by calling the [`init()`] function.
 //!
 //! ```no_run
-//! let window_context = wolf_engine_window::init()
-//!     .with_title("Test Window")
-//!     .with_size((800, 600))
-//!     .build()
-//!     .unwrap();
+//! let window_context = wolf_engine_window::init().build().unwrap();
 //! ```
 //!
-//! # Running, and Handling Events
+//! # Configuring the Window, and Handling Events
 //!
 //! Once you've created the [`WindowContext`], you can call its [`run()`](WindowContext::run())
-//! method to start the window system with the provided event-handling function.
+//! method to start the window system with the provided event-handling function.  
+//!
+//! A [`Window`] can only be created after the window context has been activated by the
+//! [`run()`](WindowContext::run()) method.
 //!
 //! ```no_run
 //! # use wolf_engine_window::WindowEvent;
@@ -24,13 +22,14 @@
 //! # let window_context = wolf_engine_window::init().build().unwrap();
 //! #
 //! window_context.run(|event, window_context| match event {
-//!     // The window is created on Resumed, so this is where you can set up rendering.
+//!     // The application has started.
+//!     // This is where you should do setup for your game, like creating the window, and setting
+//!     // up the renderer.
 //!     WindowEvent::Resumed => println!("Hello, world!"),
-//!     // The window should be redrawn.  This is where you can put your main render code.
-//!     // Redraws are automatically requsted each frame.
-//!     WindowEvent::RedrawRequested => (),
-//!     // The window has closed, and the loop will exit.
-//!     WindowEvent::Closed => println!("Goodbye, World!"),
+//!     // A window should be redrawn.
+//!     WindowEvent::RedrawRequested(uuid) => (),
+//!     // The window context has stopped, and the loop will exit.
+//!     WindowEvent::Exited => println!("Goodbye, World!"),
 //!     _ => (),
 //! });
 //! ```
