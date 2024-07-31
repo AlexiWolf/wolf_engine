@@ -67,7 +67,7 @@ pub fn init() -> WindowContextBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Resumed,
-    WindowCreated(Result<Window, ()>),
+    WindowCreated(Result<Window, WindowCreationError>),
     RedrawRequested(Uuid),
     Resized(Uuid, u32, u32),
     Closed(Uuid),
@@ -160,12 +160,11 @@ impl WindowContext<context_state::Inactive> {
                 }
                 WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
                 WinitEvent::UserEvent(BackendEvent::WindowCreationRequested(window_settings)) => {
-                    let window = Window::new(Arc::new(
-                        event_loop
-                            .create_window(window_settings.into())
-                            .expect("window creation succeeded"),
-                    ));
-                    (event_handler)(WindowEvent::WindowCreated(Ok(window)), &context);
+                    let window_result = match event_loop.create_window(window_settings.into()) {
+                        Ok(winit_window) => Ok(Window::new(Arc::new(winit_window))),
+                        Err(_) => Err(WindowCreationError::Unknown),
+                    };
+                    (event_handler)(WindowEvent::WindowCreated(window_result), &context);
                 }
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::RedrawRequested,
@@ -268,6 +267,11 @@ impl Into<WindowAttributes> for WindowSettings {
 enum BackendEvent {
     WindowCreationRequested(WindowSettings),
     ExitRequested,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum WindowCreationError {
+    Unknown,
 }
 
 /// A window.
