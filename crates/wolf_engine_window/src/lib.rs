@@ -173,7 +173,10 @@ impl<'event_loop> WindowContext<'event_loop> {
         &self,
         window_settings: WindowSettings,
     ) -> Result<Window, WindowCreationError> {
-        todo!()
+        match self.event_loop.create_window(window_settings.into()) {
+            Ok(winit_window) => Ok(Window::new(Arc::new(winit_window))),
+            Err(_) => Err(WindowCreationError::Unknown),
+        }
     }
 
     pub fn exit(&self) {
