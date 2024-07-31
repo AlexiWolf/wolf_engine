@@ -158,13 +158,6 @@ impl EventLoop {
             }
         });
     }
-
-    fn create_running_context(self) -> EventLoop {
-        EventLoop {
-            event_loop: self.event_loop,
-            event_loop_proxy: self.event_loop_proxy,
-        }
-    }
 }
 
 pub struct WindowContext<'event_loop> {
