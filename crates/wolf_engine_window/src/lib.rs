@@ -124,7 +124,7 @@ impl EventLoop {
 impl EventLoop {
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(WindowEvent, &EventLoop)>(mut self, mut event_handler: F) {
+    pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
         let context = self.create_running_context();
         let _ = event_loop.run(|event, event_loop| {
