@@ -44,11 +44,10 @@ use std::{marker::PhantomData, sync::Arc};
 
 use uuid::Uuid;
 use winit::{
-    dpi::PhysicalSize,
     error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::{ControlFlow, EventLoop, EventLoopProxy},
-    window::{Window as WinitWindow, WindowAttributes},
+    window::Window as WinitWindow,
 };
 
 pub use winit;
