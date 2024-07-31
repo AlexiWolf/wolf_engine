@@ -44,10 +44,11 @@ use std::{marker::PhantomData, sync::Arc};
 
 use uuid::Uuid;
 use winit::{
+    dpi::PhysicalSize,
     error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::{ControlFlow, EventLoop, EventLoopProxy},
-    window::Window as WinitWindow,
+    window::{Window as WinitWindow, WindowAttributes},
 };
 
 pub use winit;
@@ -250,6 +251,16 @@ impl Default for WindowSettings {
             is_resizable: true,
             is_visible: true,
         }
+    }
+}
+
+impl Into<WindowAttributes> for WindowSettings {
+    fn into(self) -> WindowAttributes {
+        WindowAttributes::default()
+            .with_title(self.title)
+            .with_inner_size(PhysicalSize::new(self.size.0, self.size.1))
+            .with_resizable(self.is_resizable)
+            .with_visible(self.is_visible)
     }
 }
 
