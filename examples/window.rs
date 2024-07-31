@@ -5,22 +5,20 @@ use wolf_engine_window::WindowSettings;
 fn main() {
     let context = wolf_engine::window::init().build().unwrap();
 
+    context.create_window(
+        WindowSettings::default()
+            .with_title("Wolf Engine - Window Example")
+            .with_size((800, 600))
+            .with_resizable(true),
+    );
+
     let mut pixels = None;
     let mut window = None;
 
     context.run(|event, context| match event {
-        WindowEvent::Resumed => {
+        WindowEvent::WindowCreated(window_result) => {
             println!("Hello, world!");
-            window = Some(
-                context
-                    .create_window(
-                        WindowSettings::default()
-                            .with_title("Wolf Engine - Window Example")
-                            .with_size((800, 600))
-                            .with_resizable(true),
-                    )
-                    .expect("window creation succeeded"),
-            );
+            window = Some(window_result.expect("window creation succeeded"));
             pixels = Some({
                 let window = window.as_ref().unwrap();
                 let (width, height) = window.size();
