@@ -171,8 +171,9 @@ impl WindowContext<context_state::Inactive> {
                 | WinitEvent::UserEvent(BackendEvent::CloseRequested) => {
                     event_loop.exit();
                 }
+                WinitEvent::UserEvent(BackendEvent::ExitRequested) => event_loop.exit(),
                 WinitEvent::LoopExiting => {
-                    (event_handler)(WindowEvent::Closed(Uuid::new_v4()), &context);
+                    (event_handler)(WindowEvent::Exited, &context);
                 }
                 _ => (),
             }
@@ -193,7 +194,11 @@ impl WindowContext<context_state::Active> {
         todo!()
     }
 
-    pub fn exit(&self) {}
+    pub fn exit(&self) {
+        let _ = self
+            .event_loop_proxy
+            .send_event(BackendEvent::ExitRequested);
+    }
 }
 
 /// The settings used by the [`WindowContext`] when creating the window.
@@ -245,6 +250,7 @@ impl Default for WindowSettings {
 #[derive(Clone, Copy, Debug)]
 enum BackendEvent {
     CloseRequested,
+    ExitRequested,
 }
 
 /// A window.
