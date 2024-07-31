@@ -76,7 +76,7 @@ pub enum WindowEvent {
     Exited,
 }
 
-type WinitEventLoop = winit::event_loop::EventLoop<BackendEvent>;
+type WinitEventLoop = winit::event_loop::EventLoop<()>;
 
 /// Provides a way to configure the [`WindowContext`].
 ///
@@ -111,15 +111,12 @@ impl WindowContextBuilder {
 /// Create, and configure the Window Context with [`init()`].
 pub struct EventLoop {
     event_loop: Option<WinitEventLoop>,
-    event_loop_proxy: EventLoopProxy<BackendEvent>,
 }
 
 impl EventLoop {
     fn new(event_loop: WinitEventLoop) -> Self {
-        let event_loop_proxy = event_loop.create_proxy();
         Self {
             event_loop: Some(event_loop),
-            event_loop_proxy,
         }
     }
 }
@@ -139,13 +136,6 @@ impl EventLoop {
                     event_loop.set_control_flow(ControlFlow::Poll);
                 }
                 WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
-                WinitEvent::UserEvent(BackendEvent::WindowCreationRequested(window_settings)) => {
-                    let window_result = match event_loop.create_window(window_settings.into()) {
-                        Ok(winit_window) => Ok(Window::new(Arc::new(winit_window))),
-                        Err(_) => Err(WindowCreationError::Unknown),
-                    };
-                    (event_handler)(WindowEvent::WindowCreated(window_result), &context);
-                }
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::RedrawRequested,
                     ..
@@ -161,7 +151,6 @@ impl EventLoop {
                     event: WinitWindowEvent::CloseRequested,
                     ..
                 } => event_loop.exit(),
-                WinitEvent::UserEvent(BackendEvent::ExitRequested) => event_loop.exit(),
                 WinitEvent::LoopExiting => {
                     (event_handler)(WindowEvent::Exited, &context);
                 }
@@ -255,12 +244,6 @@ impl Into<WindowAttributes> for WindowSettings {
             .with_resizable(self.is_resizable)
             .with_visible(self.is_visible)
     }
-}
-
-#[derive(Clone, Debug)]
-enum BackendEvent {
-    WindowCreationRequested(WindowSettings),
-    ExitRequested,
 }
 
 #[derive(Error, Copy, Clone, Debug, PartialEq, Eq)]
