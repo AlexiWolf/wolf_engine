@@ -106,23 +106,12 @@ impl WindowContextBuilder {
     }
 }
 
-/// Type-states used by the [`WindowContext`].
-pub mod context_state {
-
-    /// Indicates the context has not run yet.
-    pub struct Inactive;
-
-    /// Indicates the context has run, and the window has been created.
-    pub struct Active;
-}
-
 /// Provides a simple window-system.
 ///
 /// Create, and configure the Window Context with [`init()`].
-pub struct EventLoop<State = context_state::Inactive> {
+pub struct EventLoop {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
-    _state: PhantomData<State>,
 }
 
 impl EventLoop {
@@ -131,18 +120,14 @@ impl EventLoop {
         Self {
             event_loop: Some(event_loop),
             event_loop_proxy,
-            _state: PhantomData,
         }
     }
 }
 
-impl EventLoop<context_state::Inactive> {
+impl EventLoop {
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(WindowEvent, &EventLoop<context_state::Active>)>(
-        mut self,
-        mut event_handler: F,
-    ) {
+    pub fn run<F: FnMut(WindowEvent, &EventLoop)>(mut self, mut event_handler: F) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
         let context = self.create_running_context();
         let _ = event_loop.run(|event, event_loop| {
@@ -185,16 +170,15 @@ impl EventLoop<context_state::Inactive> {
         });
     }
 
-    fn create_running_context(self) -> EventLoop<context_state::Active> {
+    fn create_running_context(self) -> EventLoop {
         EventLoop {
             event_loop: self.event_loop,
             event_loop_proxy: self.event_loop_proxy,
-            _state: PhantomData,
         }
     }
 }
 
-impl EventLoop<context_state::Active> {
+impl EventLoop {
     pub fn create_window(
         &self,
         window_settings: WindowSettings,
