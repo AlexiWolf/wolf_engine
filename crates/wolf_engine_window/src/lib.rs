@@ -101,7 +101,7 @@ impl WindowContextBuilder {
 
     #[allow(deprecated)]
     fn build_with_event_loop(self, event_loop: EventLoop<BackendEvent>) -> WindowContext {
-        WindowContext::new(event_loop, self.window_settings)
+        WindowContext::new(event_loop)
     }
 }
 
@@ -121,19 +121,15 @@ pub mod context_state {
 pub struct WindowContext<State = context_state::Inactive> {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
-    window: Option<Arc<WinitWindow>>,
-    window_settings: WindowSettings,
     _state: PhantomData<State>,
 }
 
 impl WindowContext {
-    fn new(event_loop: WinitEventLoop, window_settings: WindowSettings) -> Self {
+    fn new(event_loop: WinitEventLoop) -> Self {
         let event_loop_proxy = event_loop.create_proxy();
         Self {
             event_loop: Some(event_loop),
             event_loop_proxy,
-            window: None,
-            window_settings,
             _state: PhantomData,
         }
     }
@@ -147,7 +143,7 @@ impl WindowContext<context_state::Inactive> {
         mut event_handler: F,
     ) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
-        let mut context = self.create_running_context();
+        let context = self.create_running_context();
         let _ = event_loop.run(|event, event_loop| {
             if let Some(input) = event.to_input() {
                 (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
@@ -155,27 +151,8 @@ impl WindowContext<context_state::Inactive> {
             match event {
                 WinitEvent::NewEvents(..) => {
                     event_loop.set_control_flow(ControlFlow::Poll);
-                    if let Some(window) = &context.window {
-                        window.request_redraw();
-                    }
                 }
-                WinitEvent::Resumed => {
-                    context.window = Some(Arc::new(
-                        event_loop
-                            .create_window(
-                                WindowAttributes::default()
-                                    .with_title(&context.window_settings.title)
-                                    .with_inner_size(PhysicalSize::new(
-                                        context.window_settings.size.0,
-                                        context.window_settings.size.1,
-                                    ))
-                                    .with_resizable(context.window_settings.is_resizable)
-                                    .with_visible(context.window_settings.is_visible),
-                            )
-                            .expect("Window creation failed"),
-                    ));
-                    (event_handler)(WindowEvent::Resumed, &context);
-                }
+                WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::RedrawRequested,
                     ..
@@ -206,8 +183,6 @@ impl WindowContext<context_state::Inactive> {
         WindowContext {
             event_loop: self.event_loop,
             event_loop_proxy: self.event_loop_proxy,
-            window: self.window,
-            window_settings: self.window_settings,
             _state: PhantomData,
         }
     }
@@ -219,12 +194,6 @@ impl WindowContext<context_state::Active> {
     }
 
     pub fn exit(&self) {}
-
-    /// Access the [`Window`].
-    pub fn window(&self) -> Window {
-        let window = self.window.as_ref().expect("Window not created yet");
-        Window::new(window.clone(), self.event_loop_proxy.clone())
-    }
 }
 
 /// The settings used by the [`WindowContext`] when creating the window.
