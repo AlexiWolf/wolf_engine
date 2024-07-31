@@ -126,8 +126,8 @@ impl EventLoop {
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
         let event_loop = std::mem::take(&mut self.event_loop).unwrap();
-        let context = self.create_running_context();
         let _ = event_loop.run(|event, event_loop| {
+            let context = WindowContext::new(event_loop);
             if let Some(input) = event.to_input() {
                 (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
             }
