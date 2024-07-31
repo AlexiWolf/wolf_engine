@@ -134,13 +134,6 @@ impl WindowContext {
             _state: PhantomData,
         }
     }
-
-    pub fn create_window(
-        &self,
-        window_settings: WindowSettings,
-    ) -> Result<Window, WindowCreationError> {
-        todo!()
-    }
 }
 
 impl WindowContext<context_state::Inactive> {
@@ -202,6 +195,13 @@ impl WindowContext<context_state::Inactive> {
 }
 
 impl WindowContext<context_state::Active> {
+    pub fn create_window(
+        &self,
+        window_settings: WindowSettings,
+    ) -> Result<Window, WindowCreationError> {
+        todo!()
+    }
+
     pub fn exit(&self) {
         let _ = self
             .event_loop_proxy
