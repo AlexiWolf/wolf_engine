@@ -42,6 +42,7 @@
 
 use std::{marker::PhantomData, sync::Arc};
 
+use thiserror::Error;
 use uuid::Uuid;
 use winit::{
     dpi::PhysicalSize,
@@ -269,8 +270,9 @@ enum BackendEvent {
     ExitRequested,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Error, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum WindowCreationError {
+    #[error("window creation failed for an unknown reason")]
     Unknown,
 }
 
