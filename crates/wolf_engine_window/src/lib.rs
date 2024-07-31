@@ -247,7 +247,6 @@ impl Default for WindowSettings {
 
 #[derive(Clone, Copy, Debug)]
 enum BackendEvent {
-    CloseRequested,
     ExitRequested,
 }
 
@@ -258,14 +257,12 @@ enum BackendEvent {
 #[derive(Clone, Debug)]
 pub struct Window {
     inner: Arc<WinitWindow>,
-    event_loop_proxy: EventLoopProxy<BackendEvent>,
 }
 
 impl Window {
-    fn new(inner: Arc<WinitWindow>, event_loop_proxy: EventLoopProxy<BackendEvent>) -> Self {
+    fn new(inner: Arc<WinitWindow>) -> Self {
         Self {
             inner,
-            event_loop_proxy,
         }
     }
 
@@ -273,15 +270,6 @@ impl Window {
     pub fn size(&self) -> (u32, u32) {
         let size = self.inner.inner_size();
         (size.width, size.height)
-    }
-
-    /// Close the current window.
-    ///
-    /// The window system will stop after this.
-    pub fn close(&self) {
-        self.event_loop_proxy
-            .send_event(BackendEvent::CloseRequested)
-            .unwrap();
     }
 }
 
