@@ -66,6 +66,7 @@ pub fn init() -> WindowContextBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Resumed,
+    WindowCreated(Result<Window, ()>),
     RedrawRequested(Uuid),
     Resized(Uuid, u32, u32),
     Closed(Uuid),
@@ -131,6 +132,12 @@ impl WindowContext {
             _state: PhantomData,
         }
     }
+
+    pub fn create_window(&self, window_settings: WindowSettings) {
+        self.event_loop_proxy
+            .send_event(BackendEvent::WindowCreationRequested(window_settings))
+            .expect("window event-loop is still alive")
+    }
 }
 
 impl WindowContext<context_state::Inactive> {
@@ -165,10 +172,7 @@ impl WindowContext<context_state::Inactive> {
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::CloseRequested,
                     ..
-                }
-                | WinitEvent::UserEvent(BackendEvent::CloseRequested) => {
-                    event_loop.exit();
-                }
+                } => event_loop.exit(),
                 WinitEvent::UserEvent(BackendEvent::ExitRequested) => event_loop.exit(),
                 WinitEvent::LoopExiting => {
                     (event_handler)(WindowEvent::Exited, &context);
@@ -188,10 +192,6 @@ impl WindowContext<context_state::Inactive> {
 }
 
 impl WindowContext<context_state::Active> {
-    pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, ()> {
-        todo!()
-    }
-
     pub fn exit(&self) {
         let _ = self
             .event_loop_proxy
@@ -247,6 +247,7 @@ impl Default for WindowSettings {
 
 #[derive(Clone, Copy, Debug)]
 enum BackendEvent {
+    WindowCreationRequested(WindowSettings),
     ExitRequested,
 }
 
@@ -256,12 +257,14 @@ enum BackendEvent {
 /// [`WindowContext::window()`].
 #[derive(Clone, Debug)]
 pub struct Window {
+    uuid: Uuid,
     inner: Arc<WinitWindow>,
 }
 
 impl Window {
     fn new(inner: Arc<WinitWindow>) -> Self {
         Self {
+            uuid: Uuid::new_v4(),
             inner,
         }
     }
