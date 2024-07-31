@@ -110,14 +110,12 @@ impl WindowContextBuilder {
 ///
 /// Create, and configure the Window Context with [`init()`].
 pub struct EventLoop {
-    event_loop: Option<WinitEventLoop>,
+    event_loop: WinitEventLoop,
 }
 
 impl EventLoop {
     fn new(event_loop: WinitEventLoop) -> Self {
-        Self {
-            event_loop: Some(event_loop),
-        }
+        Self { event_loop }
     }
 }
 
@@ -125,8 +123,7 @@ impl EventLoop {
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
-        let event_loop = std::mem::take(&mut self.event_loop).unwrap();
-        let _ = event_loop.run(|event, event_loop| {
+        let _ = self.event_loop.run(|event, event_loop| {
             let context = WindowContext::new(event_loop);
             if let Some(input) = event.to_input() {
                 (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
