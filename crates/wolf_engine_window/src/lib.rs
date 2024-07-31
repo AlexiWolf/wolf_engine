@@ -48,7 +48,7 @@ use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
-    event_loop::{ControlFlow, EventLoopProxy},
+    event_loop::{ActiveEventLoop, ControlFlow, EventLoopProxy},
     window::{Window as WinitWindow, WindowAttributes},
 };
 
@@ -178,7 +178,15 @@ impl EventLoop {
     }
 }
 
-impl EventLoop {
+pub struct WindowContext<'event_loop> {
+    event_loop: &'event_loop ActiveEventLoop,
+}
+
+impl<'event_loop> WindowContext<'event_loop> {
+    fn new(event_loop: &'event_loop ActiveEventLoop) -> Self {
+        Self { event_loop }
+    }
+
     pub fn create_window(
         &self,
         window_settings: WindowSettings,
