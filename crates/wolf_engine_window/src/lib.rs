@@ -125,7 +125,7 @@ pub struct WindowContext<State = context_state::Inactive> {
     _state: PhantomData<State>,
 }
 
-impl WindowContext {
+impl EventLoop {
     fn new(event_loop: WinitEventLoop) -> Self {
         let event_loop_proxy = event_loop.create_proxy();
         Self {
@@ -136,10 +136,10 @@ impl WindowContext {
     }
 }
 
-impl WindowContext<context_state::Inactive> {
+impl EventLoop<context_state::Inactive> {
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(WindowEvent, &WindowContext<context_state::Active>)>(
+    pub fn run<F: FnMut(WindowEvent, &EventLoop<context_state::Active>)>(
         mut self,
         mut event_handler: F,
     ) {
@@ -185,8 +185,8 @@ impl WindowContext<context_state::Inactive> {
         });
     }
 
-    fn create_running_context(self) -> WindowContext<context_state::Active> {
-        WindowContext {
+    fn create_running_context(self) -> EventLoop<context_state::Active> {
+        EventLoop {
             event_loop: self.event_loop,
             event_loop_proxy: self.event_loop_proxy,
             _state: PhantomData,
@@ -194,7 +194,7 @@ impl WindowContext<context_state::Inactive> {
     }
 }
 
-impl WindowContext<context_state::Active> {
+impl EventLoop<context_state::Active> {
     pub fn create_window(
         &self,
         window_settings: WindowSettings,
@@ -365,7 +365,7 @@ mod window_init_tests {
     #[test]
     #[ntest::timeout(1000)]
     fn should_run_and_quit() {
-        let event_loop = EventLoop::with_user_event()
+        let event_loop = WinitEventLoop::with_user_event()
             .with_any_thread(true)
             .build()
             .unwrap();
