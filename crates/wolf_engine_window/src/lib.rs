@@ -158,6 +158,14 @@ impl WindowContext<context_state::Inactive> {
                     event_loop.set_control_flow(ControlFlow::Poll);
                 }
                 WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
+                WinitEvent::UserEvent(BackendEvent::WindowCreationRequested(window_settings)) => {
+                    let window = Window::new(Arc::new(
+                        event_loop
+                            .create_window(window_settings.into())
+                            .expect("window creation succeeded"),
+                    ));
+                    (event_handler)(WindowEvent::WindowCreated(Ok(window)), &context);
+                }
                 WinitEvent::WindowEvent {
                     event: WinitWindowEvent::RedrawRequested,
                     ..
