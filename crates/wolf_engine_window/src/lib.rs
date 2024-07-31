@@ -48,7 +48,7 @@ use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
-    event_loop::{ControlFlow, EventLoop, EventLoopProxy},
+    event_loop::{ControlFlow, EventLoopProxy},
     window::{Window as WinitWindow, WindowAttributes},
 };
 
@@ -93,16 +93,16 @@ impl WindowContextBuilder {
     }
 
     /// Initialize the window system.
-    pub fn build(self) -> Result<WindowContext, EventLoopError> {
-        match EventLoop::with_user_event().build() {
+    pub fn build(self) -> Result<EventLoop, EventLoopError> {
+        match WinitEventLoop::with_user_event().build() {
             Ok(event_loop) => Ok(self.build_with_event_loop(event_loop)),
             Err(error) => Err(error),
         }
     }
 
     #[allow(deprecated)]
-    fn build_with_event_loop(self, event_loop: EventLoop<BackendEvent>) -> WindowContext {
-        WindowContext::new(event_loop)
+    fn build_with_event_loop(self, event_loop: WinitEventLoop) -> EventLoop {
+        EventLoop::new(event_loop)
     }
 }
 
@@ -119,7 +119,7 @@ pub mod context_state {
 /// Provides a simple window-system.
 ///
 /// Create, and configure the Window Context with [`init()`].
-pub struct WindowContext<State = context_state::Inactive> {
+pub struct EventLoop<State = context_state::Inactive> {
     event_loop: Option<WinitEventLoop>,
     event_loop_proxy: EventLoopProxy<BackendEvent>,
     _state: PhantomData<State>,
