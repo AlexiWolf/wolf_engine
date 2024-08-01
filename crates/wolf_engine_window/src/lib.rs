@@ -344,7 +344,12 @@ mod window_init_tests {
         let mut has_quit = false;
 
         context.run(|event, context| match event {
-            WindowEvent::Resumed => context.exit(),
+            WindowEvent::Resumed => {
+                let _window = context
+                    .create_window(WindowSettings::default().with_visible(false))
+                    .expect("window creation succeeded");
+                context.exit();
+            }
             WindowEvent::Exited => *&mut has_quit = true,
             _ => (),
         });
