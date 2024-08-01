@@ -20,6 +20,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_window]
 
+### [Unreleased]
+
+- Renamed `WindowContextBuilder` to `EventLoopBuilder`.
+- Added multi-window support.
+  - Moved the window setup methods from `EventLoopBuilder` to `WindowSettings`.
+  - Added `WindowContext::create_window()` method for creating windows.
+  - Added `Uuid` fields to window-specific `WindowEvent` variants.
+- Removed type-states from `WindowContext`.
+  - Added `EventLoop` struct.
+  - Removed `context_state` module.
+
 ### [0.2] - 2024-07-25
 
 - Added type-states to `WindowContext`.
