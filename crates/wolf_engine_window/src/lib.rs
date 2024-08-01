@@ -163,6 +163,9 @@ impl EventLoop {
                             WindowEvent::Resized(uuid, size.width, size.height),
                             &context,
                         ),
+                        WinitWindowEvent::CloseRequested => {
+                            (event_handler)(WindowEvent::Closed(uuid), &context)
+                        }
                         _ => (),
                     }
                 }
