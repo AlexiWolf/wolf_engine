@@ -52,7 +52,7 @@
 
 use std::{
     collections::HashMap,
-    sync::{Arc, RwLock},
+    sync::{Arc, RwLock, Weak},
 };
 
 use thiserror::Error;
@@ -137,12 +137,24 @@ impl EventLoop {
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(self, mut event_handler: F) {
         let window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>> =
             Arc::new(RwLock::new(HashMap::new()));
+        let windows: Arc<RwLock<HashMap<Uuid, Weak<WinitWindow>>>> =
+            Arc::new(RwLock::new(HashMap::new()));
         let _ = self.event_loop.run(|event, event_loop| {
-            let context = WindowContext::new(event_loop, window_ids.clone());
+            let context = WindowContext::new(event_loop, window_ids.clone(), windows.clone());
 
             match event {
                 WinitEvent::NewEvents(..) => {
                     event_loop.set_control_flow(ControlFlow::Poll);
+
+                    windows
+                        .read()
+                        .expect("write-lock was acquired")
+                        .iter()
+                        .for_each(|(_, window)| {
+                            if let Some(window) = window.upgrade() {
+                                window.request_redraw();
+                            }
+                        });
                 }
                 WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
                 WinitEvent::LoopExiting => (event_handler)(WindowEvent::Exited, &context),
@@ -188,16 +200,19 @@ impl EventLoop {
 pub struct WindowContext<'event_loop> {
     event_loop: &'event_loop ActiveEventLoop,
     window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
+    windows: Arc<RwLock<HashMap<Uuid, Weak<WinitWindow>>>>,
 }
 
 impl<'event_loop> WindowContext<'event_loop> {
     fn new(
         event_loop: &'event_loop ActiveEventLoop,
         window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
+        windows: Arc<RwLock<HashMap<Uuid, Weak<WinitWindow>>>>,
     ) -> Self {
         Self {
             event_loop,
             window_ids,
+            windows,
         }
     }
 
@@ -209,11 +224,18 @@ impl<'event_loop> WindowContext<'event_loop> {
         match self.event_loop.create_window(window_settings.into()) {
             Ok(winit_window) => {
                 let window_id = winit_window.id();
-                let window = Window::new(Arc::new(winit_window));
+                let window_arc = Arc::new(winit_window);
+                let window_weak = Arc::downgrade(&window_arc);
+                let window = Window::new(window_arc);
+
                 self.window_ids
                     .write()
                     .expect("write-lock was acquired")
                     .insert(window_id, window.uuid);
+                self.windows
+                    .write()
+                    .expect("write-lock was acquired")
+                    .insert(window.id(), window_weak);
                 Ok(window)
             }
             Err(_) => Err(WindowCreationError::Unknown),
