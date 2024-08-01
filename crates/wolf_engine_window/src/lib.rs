@@ -8,13 +8,12 @@
 //! let window_context = wolf_engine_window::init().build().unwrap();
 //! ```
 //!
-//! # Configuring the Window, and Handling Events
-//!
 //! Once you've created the [`WindowContext`], you can call its [`run()`](EventLoop::run())
 //! method to start the window system with the provided event-handling function.  
 //!
 //! A [`Window`] can only be created after the window context has been activated by the
 //! [`run()`](EventLoop::run()) method.
+//! # Handling Events, and Creating Window
 //!
 //! ```no_run
 //! # use wolf_engine_window::WindowEvent;
