@@ -75,7 +75,7 @@ pub enum WindowEvent {
     RedrawRequested(Uuid),
     Resized(Uuid, u32, u32),
     Closed(Uuid),
-    Input(Uuid, Input),
+    Input(Option<Uuid>, Input),
     Exited,
 }
 
