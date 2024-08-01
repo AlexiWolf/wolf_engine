@@ -47,9 +47,8 @@
 //!
 //! # Drawing on the Window
 //!
-//! Like [Winit](winit), this crate doesn't provide its own rendering functions.  Instead, it
-//! integrates with the [`raw_window_handle`] crate in order to interoperate with external
-//! rendering libraries.
+//! This crate doesn't provide its own rendering functions.  Instead, it implements
+//! [`raw_window_handle`] traits in order for compatibility with external rendering libraries.
 
 use std::{
     collections::HashMap,
