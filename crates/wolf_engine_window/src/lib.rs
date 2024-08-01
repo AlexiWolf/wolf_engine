@@ -40,7 +40,11 @@
 //! integrates with the [`raw_window_handle`] crate in order to interoperate with external
 //! rendering libraries.
 
-use std::{collections::HashMap, marker::PhantomData, sync::Arc};
+use std::{
+    collections::HashMap,
+    marker::PhantomData,
+    sync::{Arc, RwLock},
+};
 
 use thiserror::Error;
 use uuid::Uuid;
@@ -123,9 +127,10 @@ impl EventLoop {
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
-        let mut window_ids: HashMap<WindowId, Uuid> = HashMap::new();
+        let window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>> =
+            Arc::new(RwLock::new(HashMap::new()));
         let _ = self.event_loop.run(|event, event_loop| {
-            let context = WindowContext::new(event_loop, &mut window_ids);
+            let context = WindowContext::new(event_loop, window_ids.clone());
             if let Some(input) = event.to_input() {
                 (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
             }
@@ -141,8 +146,10 @@ impl EventLoop {
                     event: window_event,
                 } => {
                     let uuid = window_ids
+                        .read()
+                        .expect("read-lock was acquired")
                         .get(&window_id)
-                        .expect("the window's uuid has been inserted on creation")
+                        .expect("the uuid was inserted on window creation")
                         .to_owned();
                     match window_event {
                         WinitWindowEvent::RedrawRequested => {
@@ -162,14 +169,14 @@ impl EventLoop {
 }
 
 pub struct WindowContext<'event_loop> {
-    window_ids: &'event_loop HashMap<WindowId, Uuid>,
     event_loop: &'event_loop ActiveEventLoop,
+    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
 }
 
 impl<'event_loop> WindowContext<'event_loop> {
     fn new(
         event_loop: &'event_loop ActiveEventLoop,
-        window_ids: &'event_loop HashMap<WindowId, Uuid>,
+        window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
     ) -> Self {
         Self {
             event_loop,
@@ -182,7 +189,15 @@ impl<'event_loop> WindowContext<'event_loop> {
         window_settings: WindowSettings,
     ) -> Result<Window, WindowCreationError> {
         match self.event_loop.create_window(window_settings.into()) {
-            Ok(winit_window) => Ok(Window::new(Arc::new(winit_window))),
+            Ok(winit_window) => {
+                let window_id = winit_window.id();
+                let window = Window::new(Arc::new(winit_window));
+                self.window_ids
+                    .write()
+                    .expect("write-lock was acquired")
+                    .insert(window_id, window.uuid);
+                Ok(window)
+            }
             Err(_) => Err(WindowCreationError::Unknown),
         }
     }
