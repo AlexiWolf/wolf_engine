@@ -119,9 +119,7 @@ impl EventLoopBuilder {
     }
 }
 
-/// Provides a simple window-system.
-///
-/// Create, and configure the Window Context with [`init()`].
+/// Provides the main-loop for the program.
 pub struct EventLoop {
     event_loop: WinitEventLoop,
 }
@@ -133,7 +131,7 @@ impl EventLoop {
 }
 
 impl EventLoop {
-    /// Run the event-loop, passing events to the provided `event_handler`.
+    /// Run the main-loop, passing events to the provided callback.
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(self, mut event_handler: F) {
         let window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>> =
