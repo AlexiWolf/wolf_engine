@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
-use uuid::Uuid;
 use wolf_engine::window::WindowEvent;
-use wolf_engine_window::{Window, WindowContext, WindowSettings};
+use wolf_engine_window::{Uuid, Window, WindowContext, WindowSettings};
 
 fn main() {
     let context = wolf_engine::window::init().build().unwrap();

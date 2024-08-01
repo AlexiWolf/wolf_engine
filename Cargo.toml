@@ -29,7 +29,6 @@ window = ["wolf_engine_window"]
 [dev-dependencies]
 winit = "0.30"
 pixels = "0.13.0"
-uuid = "1.10.0"
 
 [[example]]
 name = "input"
