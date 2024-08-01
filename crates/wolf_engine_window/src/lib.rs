@@ -130,9 +130,6 @@ impl EventLoop {
             Arc::new(RwLock::new(HashMap::new()));
         let _ = self.event_loop.run(|event, event_loop| {
             let context = WindowContext::new(event_loop, window_ids.clone());
-            if let Some(input) = event.to_input() {
-                (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
-            }
 
             match event {
                 WinitEvent::NewEvents(..) => {
@@ -140,6 +137,11 @@ impl EventLoop {
                 }
                 WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
                 WinitEvent::LoopExiting => (event_handler)(WindowEvent::Exited, &context),
+                WinitEvent::DeviceEvent { event, .. } => {
+                    if let Some(input) = event.to_input() {
+                        (event_handler)(WindowEvent::Input(None, input), &context);
+                    }
+                }
                 WinitEvent::WindowEvent {
                     window_id,
                     event: window_event,
@@ -150,6 +152,9 @@ impl EventLoop {
                         .get(&window_id)
                         .expect("the uuid was inserted on window creation")
                         .to_owned();
+                    if let Some(input) = event.to_input() {
+                        (event_handler)(WindowEvent::Input(Some(uuid), input), &context);
+                    }
                     match window_event {
                         WinitWindowEvent::RedrawRequested => {
                             (event_handler)(WindowEvent::RedrawRequested(uuid), &context)
