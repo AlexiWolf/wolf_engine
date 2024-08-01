@@ -42,7 +42,6 @@
 
 use std::{
     collections::HashMap,
-    marker::PhantomData,
     sync::{Arc, RwLock},
 };
 
@@ -52,7 +51,7 @@ use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
-    event_loop::{ActiveEventLoop, ControlFlow, EventLoopProxy},
+    event_loop::{ActiveEventLoop, ControlFlow},
     window::{Window as WinitWindow, WindowAttributes, WindowId},
 };
 
@@ -126,7 +125,7 @@ impl EventLoop {
 impl EventLoop {
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
+    pub fn run<F: FnMut(WindowEvent, &WindowContext)>(self, mut event_handler: F) {
         let window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>> =
             Arc::new(RwLock::new(HashMap::new()));
         let _ = self.event_loop.run(|event, event_loop| {
