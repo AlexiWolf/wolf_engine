@@ -125,7 +125,7 @@ impl EventLoop {
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
         let mut window_ids: HashMap<WindowId, Uuid> = HashMap::new();
         let _ = self.event_loop.run(|event, event_loop| {
-            let context = WindowContext::new(event_loop);
+            let context = WindowContext::new(event_loop, &mut window_ids);
             if let Some(input) = event.to_input() {
                 (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
             }
@@ -162,12 +162,19 @@ impl EventLoop {
 }
 
 pub struct WindowContext<'event_loop> {
+    window_ids: &'event_loop HashMap<WindowId, Uuid>,
     event_loop: &'event_loop ActiveEventLoop,
 }
 
 impl<'event_loop> WindowContext<'event_loop> {
-    fn new(event_loop: &'event_loop ActiveEventLoop) -> Self {
-        Self { event_loop }
+    fn new(
+        event_loop: &'event_loop ActiveEventLoop,
+        window_ids: &'event_loop HashMap<WindowId, Uuid>,
+    ) -> Self {
+        Self {
+            event_loop,
+            window_ids,
+        }
     }
 
     pub fn create_window(
