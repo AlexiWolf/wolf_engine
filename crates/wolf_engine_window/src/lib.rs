@@ -56,7 +56,6 @@ use std::{
 };
 
 use thiserror::Error;
-use uuid::Uuid;
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
@@ -65,7 +64,9 @@ use winit::{
     window::{Window as WinitWindow, WindowAttributes, WindowId},
 };
 
+pub use uuid::Uuid;
 pub use winit;
+
 use wolf_engine_input::{Input, ToInput};
 
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
