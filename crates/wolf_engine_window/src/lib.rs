@@ -280,8 +280,10 @@ impl Into<WindowAttributes> for WindowSettings {
     }
 }
 
+/// Indicates why a window could not be created.
 #[derive(Error, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum WindowCreationError {
+    /// Window creation failed for an unknown reason.
     #[error("window creation failed for an unknown reason")]
     Unknown,
 }
