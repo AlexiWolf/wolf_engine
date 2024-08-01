@@ -152,7 +152,7 @@ impl EventLoop {
                         .get(&window_id)
                         .expect("the uuid was inserted on window creation")
                         .to_owned();
-                    if let Some(input) = event.to_input() {
+                    if let Some(input) = window_event.to_input() {
                         (event_handler)(WindowEvent::Input(Some(uuid), input), &context);
                     }
                     match window_event {
