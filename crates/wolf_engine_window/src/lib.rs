@@ -374,7 +374,6 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window {
 
 #[cfg(test)]
 mod window_init_tests {
-    #[cfg(any(target_os = "linux", target_os = "windows"))]
     use super::*;
 
     #[cfg(target_os = "linux")]
