@@ -270,13 +270,13 @@ impl Default for WindowSettings {
     }
 }
 
-impl Into<WindowAttributes> for WindowSettings {
-    fn into(self) -> WindowAttributes {
+impl From<WindowSettings> for WindowAttributes {
+    fn from(val: WindowSettings) -> Self {
         WindowAttributes::default()
-            .with_title(self.title)
-            .with_inner_size(PhysicalSize::new(self.size.0, self.size.1))
-            .with_resizable(self.is_resizable)
-            .with_visible(self.is_visible)
+            .with_title(val.title)
+            .with_inner_size(PhysicalSize::new(val.size.0, val.size.1))
+            .with_resizable(val.is_resizable)
+            .with_visible(val.is_visible)
     }
 }
 
