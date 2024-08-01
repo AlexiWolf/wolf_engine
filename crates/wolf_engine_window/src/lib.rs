@@ -13,18 +13,18 @@
 //! # Handling Events, and Creating Window
 //!
 //! ```no_run
-//! # use wolf_engine_window::WindowEvent;
+//! # use wolf_engine_window::{WindowEvent, WindowSettings};
 //! #
 //! # let window_context = wolf_engine_window::init().build().unwrap();
 //! #
 //! let mut window = None;
-//! window_context.run(|event, window_context| match event {
+//! window_context.run(|event, context| match event {
 //!     // The main-loop has started.
 //!     // Do intial setup, like creating windows, render surfaces, ext. here.
 //!     WindowEvent::Resumed => {
-//!         println!("Hello, world!"),
+//!         println!("Hello, world!");
 //!         window = Some(
-//!             window_context.create_window(
+//!             context.create_window(
 //!                 WindowSettings::default()
 //!                     .with_title("Example Window")
 //!                     .with_size((800, 600)),
