@@ -10,11 +10,11 @@
 //!
 //! # Configuring the Window, and Handling Events
 //!
-//! Once you've created the [`WindowContext`], you can call its [`run()`](WindowContext::run())
+//! Once you've created the [`WindowContext`], you can call its [`run()`](EventLoop::run())
 //! method to start the window system with the provided event-handling function.  
 //!
 //! A [`Window`] can only be created after the window context has been activated by the
-//! [`run()`](WindowContext::run()) method.
+//! [`run()`](EventLoop::run()) method.
 //!
 //! ```no_run
 //! # use wolf_engine_window::WindowEvent;
@@ -277,9 +277,6 @@ pub enum WindowCreationError {
 }
 
 /// A window.
-///
-/// Windows are created by the [`WindowContext`], and can be accessed by calling
-/// [`WindowContext::window()`].
 #[derive(Clone, Debug)]
 pub struct Window {
     uuid: Uuid,
