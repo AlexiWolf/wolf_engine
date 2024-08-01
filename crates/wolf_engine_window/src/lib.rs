@@ -92,7 +92,7 @@ pub enum WindowEvent {
 
 type WinitEventLoop = winit::event_loop::EventLoop<()>;
 
-/// Provides a way to configure the [`WindowContext`].
+/// Provides a way to configure the window system.
 ///
 /// Create a new builder by calling [`init()`].
 pub struct EventLoopBuilder {
@@ -120,7 +120,7 @@ impl EventLoopBuilder {
     }
 }
 
-/// Provides the main-loop for the program.
+/// The main-loop of the window system.
 pub struct EventLoop {
     event_loop: WinitEventLoop,
 }
@@ -196,7 +196,7 @@ impl EventLoop {
     }
 }
 
-/// Provides a link to the window system.
+/// A link to the window system.
 pub struct WindowContext<'event_loop> {
     event_loop: &'event_loop ActiveEventLoop,
     window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
