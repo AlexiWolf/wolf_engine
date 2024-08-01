@@ -40,7 +40,7 @@
 //! integrates with the [`raw_window_handle`] crate in order to interoperate with external
 //! rendering libraries.
 
-use std::{marker::PhantomData, sync::Arc};
+use std::{collections::HashMap, marker::PhantomData, sync::Arc};
 
 use thiserror::Error;
 use uuid::Uuid;
@@ -49,7 +49,7 @@ use winit::{
     error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::{ActiveEventLoop, ControlFlow, EventLoopProxy},
-    window::{Window as WinitWindow, WindowAttributes},
+    window::{Window as WinitWindow, WindowAttributes, WindowId},
 };
 
 pub use winit;
@@ -123,33 +123,37 @@ impl EventLoop {
     /// Run the event-loop, passing events to the provided `event_handler`.
     #[allow(deprecated)]
     pub fn run<F: FnMut(WindowEvent, &WindowContext)>(mut self, mut event_handler: F) {
+        let mut window_ids: HashMap<WindowId, Uuid> = HashMap::new();
         let _ = self.event_loop.run(|event, event_loop| {
             let context = WindowContext::new(event_loop);
             if let Some(input) = event.to_input() {
                 (event_handler)(WindowEvent::Input(Uuid::new_v4(), input), &context);
             }
+
             match event {
                 WinitEvent::NewEvents(..) => {
                     event_loop.set_control_flow(ControlFlow::Poll);
                 }
                 WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
+                WinitEvent::LoopExiting => (event_handler)(WindowEvent::Exited, &context),
                 WinitEvent::WindowEvent {
-                    event: WinitWindowEvent::RedrawRequested,
-                    ..
-                } => (event_handler)(WindowEvent::RedrawRequested(Uuid::new_v4()), &context),
-                WinitEvent::WindowEvent {
-                    event: WinitWindowEvent::Resized(size),
-                    ..
-                } => (event_handler)(
-                    WindowEvent::Resized(Uuid::new_v4(), size.width, size.height),
-                    &context,
-                ),
-                WinitEvent::WindowEvent {
-                    event: WinitWindowEvent::CloseRequested,
-                    ..
-                } => event_loop.exit(),
-                WinitEvent::LoopExiting => {
-                    (event_handler)(WindowEvent::Exited, &context);
+                    window_id,
+                    event: window_event,
+                } => {
+                    let uuid = window_ids
+                        .get(&window_id)
+                        .expect("the window's uuid has been inserted on creation")
+                        .to_owned();
+                    match window_event {
+                        WinitWindowEvent::RedrawRequested => {
+                            (event_handler)(WindowEvent::RedrawRequested(uuid), &context)
+                        }
+                        WinitWindowEvent::Resized(size) => (event_handler)(
+                            WindowEvent::Resized(uuid, size.width, size.height),
+                            &context,
+                        ),
+                        _ => (),
+                    }
                 }
                 _ => (),
             }
