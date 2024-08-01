@@ -17,14 +17,29 @@
 //! #
 //! # let window_context = wolf_engine_window::init().build().unwrap();
 //! #
+//! let mut window = None;
 //! window_context.run(|event, window_context| match event {
-//!     // The application has started.
-//!     // This is where you should do setup for your game, like creating the window, and setting
-//!     // up the renderer.
-//!     WindowEvent::Resumed => println!("Hello, world!"),
+//!     // The main-loop has started.
+//!     // Do intial setup, like creating windows, render surfaces, ext. here.
+//!     WindowEvent::Resumed => {
+//!         println!("Hello, world!"),
+//!         window = Some(
+//!             window_context.create_window(
+//!                 WindowSettings::default()
+//!                     .with_title("Example Window")
+//!                     .with_size((800, 600)),
+//!             )
+//!         );
+//!     }
 //!     // A window should be redrawn.
-//!     WindowEvent::RedrawRequested(uuid) => (),
-//!     // The window context has stopped, and the loop will exit.
+//!     WindowEvent::RedrawRequested(_window_id) => {
+//!         // Render code goes here!
+//!     },
+//!     // A window has / should close.
+//!     WindowEvent::Closed(_window_id) => {
+//!         context.exit(); // Stop the event loop.
+//!     }
+//!     // The main-loop will stop.
 //!     WindowEvent::Exited => println!("Goodbye, World!"),
 //!     _ => (),
 //! });
