@@ -312,6 +312,10 @@ impl Window {
         }
     }
 
+    pub fn id(&self) -> Uuid {
+        self.uuid
+    }
+
     /// Get the current size of the window.
     pub fn size(&self) -> (u32, u32) {
         let size = self.inner.inner_size();
