@@ -90,7 +90,7 @@ pub enum WindowEvent {
     Exited,
 }
 
-/// Indicates why a window could not be created.
+/// A general-purpose error for the Window system.
 #[derive(Error, Debug)]
 pub enum WindowError {
     #[error("Operation is unsupported by the OS")]
@@ -101,6 +101,7 @@ pub enum WindowError {
     Unknown,
 }
 
+/// Indicates an operation is unsupported by the OS.
 #[derive(Error, Debug)]
 #[error(transparent)]
 pub struct OsError {
@@ -108,6 +109,7 @@ pub struct OsError {
     error: anyhow::Error,
 }
 
+/// Indicates an operation is unsupported by specific back-end system.
 #[derive(Error, Debug)]
 #[error(transparent)]
 pub struct UnsupportedError {
