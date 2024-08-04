@@ -130,6 +130,10 @@ impl EventLoopBuilder {
                 EventLoopError::Os(error) => {
                     Err(WindowError::OsError(OsError::from(anyhow!(error))))
                 }
+                EventLoopError::RecreationAttempt => Err(UnsupportedError::from(anyhow!(
+                    "Only 1 EventLoop can exist at a time"
+                ))
+                .into()),
                 error => panic!("Unhandled Error: {error}"),
             },
         }
