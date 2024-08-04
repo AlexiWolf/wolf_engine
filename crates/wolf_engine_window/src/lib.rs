@@ -97,6 +97,13 @@ pub struct InitError {
     error: EventLoopError,
 }
 
+/// Indicates why a window could not be created.
+#[derive(Error, Copy, Clone, Debug, PartialEq, Eq)]
+pub enum WindowCreationError {
+    #[error("window creation failed for an unknown reason")]
+    Unknown,
+}
+
 type WinitEventLoop = winit::event_loop::EventLoop<()>;
 
 /// Provides a way to configure the window system.
@@ -309,14 +316,6 @@ impl From<WindowSettings> for WindowAttributes {
             .with_resizable(val.is_resizable)
             .with_visible(val.is_visible)
     }
-}
-
-/// Indicates why a window could not be created.
-#[derive(Error, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum WindowCreationError {
-    /// Window creation failed for an unknown reason.
-    #[error("window creation failed for an unknown reason")]
-    Unknown,
 }
 
 /// A window.
