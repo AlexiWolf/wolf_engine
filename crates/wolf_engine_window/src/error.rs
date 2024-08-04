@@ -5,8 +5,6 @@ pub enum WindowError {
     OsError(#[from] OsError),
     #[error("Operation is unsupported by the window system.")]
     UnsupportedError(#[from] UnsupportedError),
-    #[error("Unknown error.")]
-    Unknown,
 }
 
 /// Indicates an operation is unsupported by the OS.
