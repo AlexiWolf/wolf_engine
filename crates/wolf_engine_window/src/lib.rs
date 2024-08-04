@@ -66,7 +66,6 @@ use winit::{
 };
 
 pub use uuid::Uuid;
-pub use winit;
 
 use wolf_engine_input::{Input, ToInput};
 
