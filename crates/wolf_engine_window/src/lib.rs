@@ -82,7 +82,7 @@ pub fn init() -> EventLoopBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Resumed,
-    WindowCreated(Result<Window, WindowCreationError>),
+    WindowCreated(Result<Window, WindowError>),
     RedrawRequested(Uuid),
     Resized(Uuid, u32, u32),
     Closed(Uuid),
@@ -90,18 +90,20 @@ pub enum WindowEvent {
     Exited,
 }
 
+/// Indicates why a window could not be created.
+#[derive(Error, Debug)]
+pub enum WindowError {
+    #[error("Failed to initialize the window system.")]
+    InitError(#[from] InitError),
+    #[error("window creation failed for an unknown reason")]
+    Unknown,
+}
+
 #[derive(Error, Debug)]
 #[error("Failed to initialize the window system.")]
 pub struct InitError {
     #[from]
     error: EventLoopError,
-}
-
-/// Indicates why a window could not be created.
-#[derive(Error, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum WindowCreationError {
-    #[error("window creation failed for an unknown reason")]
-    Unknown,
 }
 
 type WinitEventLoop = winit::event_loop::EventLoop<()>;
@@ -231,10 +233,7 @@ impl<'event_loop> WindowContext<'event_loop> {
     }
 
     /// Create a new [`Window`].
-    pub fn create_window(
-        &self,
-        window_settings: WindowSettings,
-    ) -> Result<Window, WindowCreationError> {
+    pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, WindowError> {
         match self.event_loop.create_window(window_settings.into()) {
             Ok(winit_window) => {
                 let window_id = winit_window.id();
@@ -252,7 +251,7 @@ impl<'event_loop> WindowContext<'event_loop> {
                     .insert(window.id(), window_weak);
                 Ok(window)
             }
-            Err(_) => Err(WindowCreationError::Unknown),
+            Err(error) => Err(WindowError::from(error)),
         }
     }
 
