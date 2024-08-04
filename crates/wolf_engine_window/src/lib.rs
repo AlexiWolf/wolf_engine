@@ -95,7 +95,7 @@ pub enum WindowEvent {
 pub enum WindowError {
     #[error("Failed to initialize the window system.")]
     InitError(#[from] InitError),
-    #[error("window creation failed for an unknown reason")]
+    #[error("Unknown error.")]
     Unknown,
 }
 
