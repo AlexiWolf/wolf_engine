@@ -123,7 +123,7 @@ impl EventLoopBuilder {
     }
 
     /// Initialize the window system.
-    pub fn build(self) -> Result<EventLoop, InitError> {
+    pub fn build(self) -> Result<EventLoop, WindowError> {
         match WinitEventLoop::with_user_event().build() {
             Ok(event_loop) => Ok(self.build_with_event_loop(event_loop)),
             Err(error) => Err(InitError::from(error)),
