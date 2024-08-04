@@ -55,6 +55,7 @@ use std::{
     sync::{Arc, RwLock, Weak},
 };
 
+use anyhow::anyhow;
 use thiserror::Error;
 use winit::{
     dpi::PhysicalSize,
@@ -251,7 +252,7 @@ impl<'event_loop> WindowContext<'event_loop> {
                     .insert(window.id(), window_weak);
                 Ok(window)
             }
-            Err(error) => Err(WindowError::from(error)),
+            Err(error) => Err(WindowError::OsError(OsError::from(anyhow!("{}", error)))),
         }
     }
 
