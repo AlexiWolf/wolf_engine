@@ -95,6 +95,8 @@ pub enum WindowEvent {
 pub enum WindowError {
     #[error("Operation is unsupported by the OS")]
     OsError(#[from] OsError),
+    #[error("Operation is unsupported by the window system.")]
+    UnsupportedError(#[from] UnsupportedError),
     #[error("Unknown error.")]
     Unknown,
 }
@@ -102,6 +104,13 @@ pub enum WindowError {
 #[derive(Error, Debug)]
 #[error(transparent)]
 pub struct OsError {
+    #[from]
+    error: anyhow::Error,
+}
+
+#[derive(Error, Debug)]
+#[error(transparent)]
+pub struct UnsupportedError {
     #[from]
     error: anyhow::Error,
 }
