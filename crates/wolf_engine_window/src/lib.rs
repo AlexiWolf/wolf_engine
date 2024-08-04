@@ -83,7 +83,6 @@ pub fn init() -> EventLoopBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Resumed,
-    WindowCreated(Result<Window, WindowError>),
     RedrawRequested(Uuid),
     Resized(Uuid, u32, u32),
     Closed(Uuid),
