@@ -90,6 +90,13 @@ pub enum WindowEvent {
     Exited,
 }
 
+#[derive(Error, Debug)]
+#[error("Failed to initialize the window system.")]
+pub struct InitError {
+    #[from]
+    error: EventLoopError,
+}
+
 type WinitEventLoop = winit::event_loop::EventLoop<()>;
 
 /// Provides a way to configure the window system.
@@ -107,10 +114,10 @@ impl EventLoopBuilder {
     }
 
     /// Initialize the window system.
-    pub fn build(self) -> Result<EventLoop, EventLoopError> {
+    pub fn build(self) -> Result<EventLoop, InitError> {
         match WinitEventLoop::with_user_event().build() {
             Ok(event_loop) => Ok(self.build_with_event_loop(event_loop)),
-            Err(error) => Err(error),
+            Err(error) => Err(InitError::from(error)),
         }
     }
 
