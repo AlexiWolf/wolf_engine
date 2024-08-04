@@ -55,7 +55,8 @@ use std::{
     sync::{Arc, RwLock, Weak},
 };
 
-use thiserror::Error;
+use anyhow::anyhow;
+use error::{OsError, UnsupportedError, WindowError};
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
@@ -65,9 +66,11 @@ use winit::{
 };
 
 pub use uuid::Uuid;
-pub use winit;
 
 use wolf_engine_input::{Input, ToInput};
+
+/// Error-types used by the window system.
+pub mod error;
 
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
 pub mod raw_window_handle;
@@ -82,7 +85,6 @@ pub fn init() -> EventLoopBuilder {
 #[non_exhaustive]
 pub enum WindowEvent {
     Resumed,
-    WindowCreated(Result<Window, WindowCreationError>),
     RedrawRequested(Uuid),
     Resized(Uuid, u32, u32),
     Closed(Uuid),
@@ -107,10 +109,19 @@ impl EventLoopBuilder {
     }
 
     /// Initialize the window system.
-    pub fn build(self) -> Result<EventLoop, EventLoopError> {
+    pub fn build(self) -> Result<EventLoop, WindowError> {
         match WinitEventLoop::with_user_event().build() {
             Ok(event_loop) => Ok(self.build_with_event_loop(event_loop)),
-            Err(error) => Err(error),
+            Err(error) => match error {
+                EventLoopError::Os(error) => {
+                    Err(WindowError::OsError(OsError::from(anyhow!(error))))
+                }
+                EventLoopError::RecreationAttempt => Err(UnsupportedError::from(anyhow!(
+                    "Only 1 EventLoop can exist at a time"
+                ))
+                .into()),
+                error => panic!("Unhandled Error: {error}"),
+            },
         }
     }
 
@@ -217,10 +228,7 @@ impl<'event_loop> WindowContext<'event_loop> {
     }
 
     /// Create a new [`Window`].
-    pub fn create_window(
-        &self,
-        window_settings: WindowSettings,
-    ) -> Result<Window, WindowCreationError> {
+    pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, WindowError> {
         match self.event_loop.create_window(window_settings.into()) {
             Ok(winit_window) => {
                 let window_id = winit_window.id();
@@ -238,7 +246,7 @@ impl<'event_loop> WindowContext<'event_loop> {
                     .insert(window.id(), window_weak);
                 Ok(window)
             }
-            Err(_) => Err(WindowCreationError::Unknown),
+            Err(error) => Err(WindowError::OsError(OsError::from(anyhow!("{}", error)))),
         }
     }
 
@@ -302,14 +310,6 @@ impl From<WindowSettings> for WindowAttributes {
             .with_resizable(val.is_resizable)
             .with_visible(val.is_visible)
     }
-}
-
-/// Indicates why a window could not be created.
-#[derive(Error, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum WindowCreationError {
-    /// Window creation failed for an unknown reason.
-    #[error("window creation failed for an unknown reason")]
-    Unknown,
 }
 
 /// A window.
