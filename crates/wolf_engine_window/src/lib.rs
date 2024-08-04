@@ -93,19 +93,10 @@ pub enum WindowEvent {
 /// Indicates why a window could not be created.
 #[derive(Error, Debug)]
 pub enum WindowError {
-    #[error("Failed to initialize the window system.")]
-    InitError(#[from] InitError),
     #[error("Operation is unsupported by the OS")]
     OsError(#[from] OsError),
     #[error("Unknown error.")]
     Unknown,
-}
-
-#[derive(Error, Debug)]
-#[error("Failed to initialize the window system.")]
-pub struct InitError {
-    #[from]
-    error: EventLoopError,
 }
 
 #[derive(Error, Debug)]
