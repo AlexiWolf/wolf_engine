@@ -30,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed type-states from `WindowContext`.
   - Added `EventLoop` struct.
   - Removed `context_state` module.
+- Improved error-handling.
+  - Added `error` module.
+  - Added `WindowError` enum.
+    - Added `OsError` variant / struct.
+    - Added `UnsupportedError` variant / struct.
+- Removed public re-export of `winit` crate.
 
 ### [0.2] - 2024-07-25
 
