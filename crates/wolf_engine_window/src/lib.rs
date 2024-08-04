@@ -127,7 +127,10 @@ impl EventLoopBuilder {
         match WinitEventLoop::with_user_event().build() {
             Ok(event_loop) => Ok(self.build_with_event_loop(event_loop)),
             Err(error) => match error {
-                error => panic!("Unhandled Error: {error:?}"),
+                EventLoopError::Os(error) => {
+                    Err(WindowError::OsError(OsError::from(anyhow!(error))))
+                }
+                error => panic!("Unhandled Error: {error}"),
             },
         }
     }
