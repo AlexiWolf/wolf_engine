@@ -56,7 +56,7 @@ use std::{
 };
 
 use anyhow::anyhow;
-use thiserror::Error;
+use error::{OsError, UnsupportedError, WindowError};
 use winit::{
     dpi::PhysicalSize,
     error::EventLoopError,
@@ -69,6 +69,9 @@ pub use uuid::Uuid;
 pub use winit;
 
 use wolf_engine_input::{Input, ToInput};
+
+/// Error-types used by the window system.
+pub mod error;
 
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
 pub mod raw_window_handle;
@@ -88,33 +91,6 @@ pub enum WindowEvent {
     Closed(Uuid),
     Input(Option<Uuid>, Input),
     Exited,
-}
-
-/// A general-purpose error for the Window system.
-#[derive(Error, Debug)]
-pub enum WindowError {
-    #[error("Operation is unsupported by the OS")]
-    OsError(#[from] OsError),
-    #[error("Operation is unsupported by the window system.")]
-    UnsupportedError(#[from] UnsupportedError),
-    #[error("Unknown error.")]
-    Unknown,
-}
-
-/// Indicates an operation is unsupported by the OS.
-#[derive(Error, Debug)]
-#[error(transparent)]
-pub struct OsError {
-    #[from]
-    error: anyhow::Error,
-}
-
-/// Indicates an operation is unsupported by specific back-end system.
-#[derive(Error, Debug)]
-#[error(transparent)]
-pub struct UnsupportedError {
-    #[from]
-    error: anyhow::Error,
 }
 
 type WinitEventLoop = winit::event_loop::EventLoop<()>;
