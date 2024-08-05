@@ -53,22 +53,18 @@
 //! This crate doesn't provide its own rendering functions.  Instead, it implements
 //! [`raw_window_handle`] traits in order for compatibility with external rendering libraries.
 
-use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock, Weak},
-};
+use std::sync::Arc;
 
-use anyhow::anyhow;
-use error::{OsError, WindowError};
 use event::EventLoopBuilder;
 use winit::{
     dpi::PhysicalSize,
-    event_loop::ActiveEventLoop,
-    window::{Window as WinitWindow, WindowAttributes, WindowId},
+    window::{Window as WinitWindow, WindowAttributes},
 };
 
-pub mod event;
+mod context;
+pub use context::*;
 
+pub mod event;
 pub use uuid::Uuid;
 
 /// Error-types used by the window system.
@@ -79,55 +75,6 @@ pub mod raw_window_handle;
 /// Initialize the window system.
 pub fn init() -> EventLoopBuilder {
     EventLoopBuilder::new()
-}
-
-/// A link to the window system.
-pub struct WindowContext<'event_loop> {
-    event_loop: &'event_loop ActiveEventLoop,
-    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
-    windows: Arc<RwLock<HashMap<Uuid, Weak<WinitWindow>>>>,
-}
-
-impl<'event_loop> WindowContext<'event_loop> {
-    fn new(
-        event_loop: &'event_loop ActiveEventLoop,
-        window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
-        windows: Arc<RwLock<HashMap<Uuid, Weak<WinitWindow>>>>,
-    ) -> Self {
-        Self {
-            event_loop,
-            window_ids,
-            windows,
-        }
-    }
-
-    /// Create a new [`Window`].
-    pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, WindowError> {
-        match self.event_loop.create_window(window_settings.into()) {
-            Ok(winit_window) => {
-                let window_id = winit_window.id();
-                let window_arc = Arc::new(winit_window);
-                let window_weak = Arc::downgrade(&window_arc);
-                let window = Window::new(window_arc);
-
-                self.window_ids
-                    .write()
-                    .expect("write-lock was acquired")
-                    .insert(window_id, window.uuid);
-                self.windows
-                    .write()
-                    .expect("write-lock was acquired")
-                    .insert(window.id(), window_weak);
-                Ok(window)
-            }
-            Err(error) => Err(WindowError::OsError(OsError::from(anyhow!("{}", error)))),
-        }
-    }
-
-    /// Stops the event loop.
-    pub fn exit(&self) {
-        self.event_loop.exit();
-    }
 }
 
 /// The settings used by the [`WindowContext`] when creating the window.
@@ -202,7 +149,7 @@ impl PartialEq for Window {
 impl Eq for Window {}
 
 impl Window {
-    fn new(inner: Arc<WinitWindow>) -> Self {
+    pub(crate) fn new(inner: Arc<WinitWindow>) -> Self {
         Self {
             uuid: Uuid::new_v4(),
             inner,
