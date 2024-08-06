@@ -1,9 +1,12 @@
-use std::sync::Arc;
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock, Weak},
+};
 
 use uuid::Uuid;
 use winit::{
     dpi::PhysicalSize,
-    window::{Window as WinitWindow, WindowAttributes},
+    window::{Window as WinitWindow, WindowAttributes, WindowId},
 };
 
 /// The settings used by the [`WindowContext`] when creating the window.
@@ -119,5 +122,53 @@ unsafe impl rwh_05::HasRawWindowHandle for Window {
 unsafe impl rwh_05::HasRawDisplayHandle for Window {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner)
+    }
+}
+
+pub(crate) struct WindowStore {
+    pub window_ids: RwLock<HashMap<WindowId, Uuid>>,
+    pub windows: RwLock<HashMap<Uuid, Weak<WinitWindow>>>,
+}
+
+impl WindowStore {
+    pub fn new() -> Self {
+        Self {
+            window_ids: RwLock::new(HashMap::new()),
+            windows: RwLock::new(HashMap::new()),
+        }
+    }
+
+    pub fn insert(&self, window: &Window) {
+        let winit_window = window.inner.clone();
+        self.window_ids
+            .write()
+            .expect("write-lock was acquired")
+            .insert(winit_window.id(), window.id());
+        self.windows
+            .write()
+            .expect("write-lock was acquired")
+            .insert(window.id(), Arc::downgrade(&winit_window));
+    }
+
+    pub fn redraw(&self) {
+        self.windows
+            .read()
+            .expect("write-lock was acquired")
+            .iter()
+            .for_each(|(_, window)| {
+                if let Some(window) = window.upgrade() {
+                    window.request_redraw();
+                }
+            });
+    }
+
+    pub fn uuid_of(&self, winit_id: WindowId) -> Option<Uuid> {
+        Some(
+            self.window_ids
+                .read()
+                .expect("read-lock was acquired")
+                .get(&winit_id)?
+                .to_owned(),
+        )
     }
 }

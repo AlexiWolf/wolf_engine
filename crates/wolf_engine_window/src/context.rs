@@ -1,37 +1,27 @@
-use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock, Weak},
-};
+use std::sync::Arc;
 
 use anyhow::anyhow;
-use uuid::Uuid;
-use winit::{
-    event_loop::ActiveEventLoop,
-    window::{Window as WinitWindow, WindowId},
-};
+use winit::event_loop::ActiveEventLoop;
 
 use crate::{
     error::{OsError, WindowError},
-    Window, WindowSettings,
+    Window, WindowSettings, WindowStore,
 };
 
 /// A link to the window system.
 pub struct WindowContext<'event_loop> {
     event_loop: &'event_loop ActiveEventLoop,
-    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
-    windows: Arc<RwLock<HashMap<Uuid, Weak<WinitWindow>>>>,
+    window_store: Arc<WindowStore>,
 }
 
 impl<'event_loop> WindowContext<'event_loop> {
     pub(crate) fn new(
         event_loop: &'event_loop ActiveEventLoop,
-        window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
-        windows: Arc<RwLock<HashMap<Uuid, Weak<WinitWindow>>>>,
+        window_store: Arc<WindowStore>,
     ) -> Self {
         Self {
             event_loop,
-            window_ids,
-            windows,
+            window_store,
         }
     }
 
@@ -39,19 +29,8 @@ impl<'event_loop> WindowContext<'event_loop> {
     pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, WindowError> {
         match self.event_loop.create_window(window_settings.into()) {
             Ok(winit_window) => {
-                let window_id = winit_window.id();
-                let window_arc = Arc::new(winit_window);
-                let window_weak = Arc::downgrade(&window_arc);
-                let window = Window::new(window_arc);
-
-                self.window_ids
-                    .write()
-                    .expect("write-lock was acquired")
-                    .insert(window_id, window.id());
-                self.windows
-                    .write()
-                    .expect("write-lock was acquired")
-                    .insert(window.id(), window_weak);
+                let window = Window::new(Arc::new(winit_window));
+                self.window_store.insert(&window);
                 Ok(window)
             }
             Err(error) => Err(WindowError::OsError(OsError::from(anyhow!("{}", error)))),
