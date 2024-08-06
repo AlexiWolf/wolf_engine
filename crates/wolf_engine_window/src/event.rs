@@ -1,3 +1,4 @@
+//! Provides an event system for the window crate.
 use std::sync::Arc;
 
 use anyhow::anyhow;
