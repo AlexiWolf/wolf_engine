@@ -9,7 +9,7 @@ use winit::{
     window::{Window as WinitWindow, WindowAttributes, WindowId},
 };
 
-/// The settings used by the [`WindowContext`] when creating the window.
+/// The settings used by the [`WindowContext`](crate::WindowContext) when creating the window.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct WindowSettings {
     pub title: String,

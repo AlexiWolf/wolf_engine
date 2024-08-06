@@ -8,8 +8,10 @@
 //! let window_context = wolf_engine_window::init().build().unwrap();
 //! ```
 //!
-//! Once you've created the [`EventLoop`], you can call its [`run()`](EventLoop::run())
-//! method to start the window system with the provided event-handling function.  
+//! Once you've created the [`EventLoop`](event::EventLoop), you can call its
+//! [`run()`](event::EventLoop::run()) method to start the window system with the provided
+//! event-handling function.  
+//!
 //! # Handling Events, and Creating Window
 //!
 //! ```no_run

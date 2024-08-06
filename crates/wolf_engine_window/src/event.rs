@@ -31,7 +31,7 @@ pub(crate) type WinitEventLoop = winit::event_loop::EventLoop<()>;
 
 /// Provides a way to configure the window system.
 ///
-/// Create a new builder by calling [`init()`].
+/// Create a new builder by calling [`init()`](crate::init()).
 pub struct EventLoopBuilder {
     pub window_settings: WindowSettings,
 }
