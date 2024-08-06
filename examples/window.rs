@@ -1,5 +1,5 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
-use wolf_engine::window::WindowEvent;
+use wolf_engine::window::event::WindowEvent;
 use wolf_engine_window::WindowSettings;
 
 fn main() {
