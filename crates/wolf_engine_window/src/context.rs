@@ -47,7 +47,7 @@ impl<'event_loop> WindowContext<'event_loop> {
                 self.window_ids
                     .write()
                     .expect("write-lock was acquired")
-                    .insert(window_id, window.uuid);
+                    .insert(window_id, window.id());
                 self.windows
                     .write()
                     .expect("write-lock was acquired")
