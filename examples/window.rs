@@ -30,6 +30,7 @@ fn main() {
                 pixels
             });
         }
+        Event::EventsCleared => window.as_ref().unwrap().redraw(),
         Event::WindowEvent(_window_id, event) => match event {
             WindowEvent::RedrawRequested => {
                 if let Some(pixels) = &pixels {

@@ -16,6 +16,7 @@ fn main() {
             create_window(&context, Color::RED, &mut windows, &mut pixels);
             create_window(&context, Color::BLUE, &mut windows, &mut pixels);
         }
+        Event::EventsCleared => windows.values().for_each(|window| window.redraw()),
         Event::WindowEvent(window_id, event) => match event {
             WindowEvent::RedrawRequested => {
                 let pixels = pixels.get(&window_id).unwrap();
