@@ -97,6 +97,11 @@ impl Window {
         let size = self.inner.inner_size();
         (size.width, size.height)
     }
+
+    /// Request a redraw of the window.
+    pub fn redraw(&self) {
+        self.inner.request_redraw();
+    }
 }
 
 impl rwh_06::HasWindowHandle for Window {
