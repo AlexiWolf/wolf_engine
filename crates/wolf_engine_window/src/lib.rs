@@ -17,7 +17,7 @@
 //! ```no_run
 //! # use wolf_engine_window::{
 //! #   WindowSettings,
-//! #   event::Event,
+//! #   event::{Event, WindowEvent},
 //! # };
 //! #
 //! # let window_context = wolf_engine_window::init().build().unwrap();
@@ -36,13 +36,17 @@
 //!             )
 //!         );
 //!     }
-//!     // A window should be redrawn.
-//!     Event::RedrawRequested(_window_id) => {
-//!         // Render code goes here!
-//!     },
-//!     // A window has / should close.
-//!     Event::Closed(_window_id) => {
-//!         context.exit(); // Stop the event loop.
+//!     // Window-specific events.
+//!     Event::WindowEvent(window_id, event) => match event {
+//!         // A window should be redrawn.
+//!         WindowEvent::RedrawRequested => {
+//!             // Render code goes here!
+//!         },
+//!         // A window has / should close.
+//!         WindowEvent::Closed => {
+//!             context.exit(); // Stop the event loop.
+//!         }
+//!         _ => (),
 //!     }
 //!     // The main-loop will stop.
 //!     Event::Exited => println!("Goodbye, World!"),

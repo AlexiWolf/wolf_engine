@@ -1,6 +1,6 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine::window::event::Event;
-use wolf_engine_window::WindowSettings;
+use wolf_engine_window::{event::WindowEvent, WindowSettings};
 
 fn main() {
     let context = wolf_engine::window::init().build().unwrap();
@@ -30,19 +30,22 @@ fn main() {
                 pixels
             });
         }
-        Event::RedrawRequested(_) => {
-            if let Some(pixels) = &pixels {
-                pixels.render().unwrap();
+        Event::WindowEvent(_window_id, event) => match event {
+            WindowEvent::RedrawRequested => {
+                if let Some(pixels) = &pixels {
+                    pixels.render().unwrap();
+                }
             }
-        }
-        Event::Resized(_, width, height) => {
-            if let Some(pixels) = &mut pixels {
-                pixels.resize_buffer(width, height).unwrap();
-                pixels.resize_surface(width, height).unwrap();
+            WindowEvent::Resized(width, height) => {
+                if let Some(pixels) = &mut pixels {
+                    pixels.resize_buffer(width, height).unwrap();
+                    pixels.resize_surface(width, height).unwrap();
+                }
             }
-        }
-        Event::Input(_, input) => println!("Input into window: {:?}", input),
-        Event::Closed(_) => context.exit(),
+            WindowEvent::Input(input) => println!("Input into window: {:?}", input),
+            WindowEvent::Closed => context.exit(),
+            _ => (),
+        },
         Event::Exited => println!("Goodbye, World!"),
         _ => (),
     });
