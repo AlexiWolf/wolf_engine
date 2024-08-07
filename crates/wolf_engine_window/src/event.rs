@@ -20,6 +20,7 @@ use crate::{
 #[non_exhaustive]
 pub enum Event {
     Started,
+    EventsCleared,
     WindowEvent(Uuid, WindowEvent),
     Input(Input),
     Exited,
