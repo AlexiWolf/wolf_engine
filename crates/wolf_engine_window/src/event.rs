@@ -19,7 +19,7 @@ use crate::{
 #[derive(Clone, PartialEq)]
 #[non_exhaustive]
 pub enum WindowEvent {
-    Resumed,
+    Started,
     RedrawRequested(Uuid),
     Resized(Uuid, u32, u32),
     Closed(Uuid),
@@ -90,7 +90,7 @@ impl EventLoop {
                     event_loop.set_control_flow(ControlFlow::Poll);
                     window_store.redraw();
                 }
-                WinitEvent::Resumed => (event_handler)(WindowEvent::Resumed, &context),
+                WinitEvent::Resumed => (event_handler)(WindowEvent::Started, &context),
                 WinitEvent::LoopExiting => (event_handler)(WindowEvent::Exited, &context),
                 WinitEvent::DeviceEvent { event, .. } => {
                     if let Some(input) = event.to_input() {

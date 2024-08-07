@@ -11,7 +11,7 @@ fn main() {
     let mut pixels = HashMap::new();
 
     context.run(|event, context| match event {
-        WindowEvent::Resumed => {
+        WindowEvent::Started => {
             println!("Hello, world!");
             create_window(&context, Color::RED, &mut windows, &mut pixels);
             create_window(&context, Color::BLUE, &mut windows, &mut pixels);

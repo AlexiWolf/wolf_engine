@@ -9,7 +9,7 @@ fn main() {
     let mut window = None;
 
     context.run(|event, context| match event {
-        WindowEvent::Resumed => {
+        WindowEvent::Started => {
             println!("Hello, world!");
             window = Some(
                 context

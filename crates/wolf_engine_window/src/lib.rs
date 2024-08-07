@@ -26,7 +26,7 @@
 //! window_context.run(|event, context| match event {
 //!     // The main-loop has started.
 //!     // Do intial setup, like creating windows, render surfaces, ext. here.
-//!     WindowEvent::Resumed => {
+//!     WindowEvent::Started => {
 //!         println!("Hello, world!");
 //!         window = Some(
 //!             context.create_window(
@@ -114,7 +114,7 @@ mod window_init_tests {
         let mut has_quit = false;
 
         context.run(|event, context| match event {
-            WindowEvent::Resumed => {
+            WindowEvent::Started => {
                 let _window = context
                     .create_window(WindowSettings::default().with_visible(false))
                     .expect("window creation succeeded");
