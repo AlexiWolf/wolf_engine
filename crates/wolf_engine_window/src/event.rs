@@ -90,6 +90,7 @@ impl EventLoop {
     /// Run the main-loop, passing events to the provided callback.
     #[allow(deprecated)]
     pub fn run<F: FnMut(Event, &WindowContext)>(self, mut event_handler: F) {
+        let mut is_first_resume = true;
         let window_ids = Arc::new(WindowIdMap::new());
         let _ = self.event_loop.run(|event, event_loop| {
             let context = WindowContext::new(event_loop, window_ids.clone());
@@ -99,7 +100,12 @@ impl EventLoop {
                     (event_handler)(Event::EventsCleared, &context);
                     event_loop.set_control_flow(ControlFlow::Poll);
                 }
-                WinitEvent::Resumed => (event_handler)(Event::Started, &context),
+                WinitEvent::Resumed => {
+                    if is_first_resume {
+                        is_first_resume = false;
+                        (event_handler)(Event::Started, &context);
+                    }
+                }
                 WinitEvent::LoopExiting => (event_handler)(Event::Exited, &context),
                 WinitEvent::DeviceEvent { event, .. } => {
                     if let Some(input) = event.to_input() {
