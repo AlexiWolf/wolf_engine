@@ -36,6 +36,11 @@
 //!             )
 //!         );
 //!     }
+//!     // All events have been processed.
+//!     Event::EventsCleared => {
+//!         // Start the next frame.
+//!         window.unwrap().redraw();
+//!     }
 //!     // Window-specific events.
 //!     Event::WindowEvent(window_id, event) => match event {
 //!         // A window should be redrawn.
