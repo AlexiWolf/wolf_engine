@@ -95,7 +95,7 @@ impl EventLoop {
             let context = WindowContext::new(event_loop, window_store.clone());
 
             match event {
-                WinitEvent::NewEvents(..) => {
+                WinitEvent::AboutToWait => {
                     event_loop.set_control_flow(ControlFlow::Poll);
                     window_store.redraw();
                 }
