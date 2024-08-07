@@ -33,13 +33,13 @@
 //!                 WindowSettings::default()
 //!                     .with_title("Example Window")
 //!                     .with_size((800, 600)),
-//!             )
+//!             ).unwrap()
 //!         );
 //!     }
 //!     // All events have been processed.
 //!     Event::EventsCleared => {
 //!         // Start the next frame.
-//!         window.unwrap().redraw();
+//!         window.as_ref().unwrap().redraw();
 //!     }
 //!     // Window-specific events.
 //!     Event::WindowEvent(window_id, event) => match event {
