@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    sync::{Arc, RwLock, Weak},
+    sync::{Arc, RwLock},
 };
 
 use uuid::Uuid;
@@ -125,41 +125,22 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window {
     }
 }
 
-pub(crate) struct WindowStore {
+pub(crate) struct WindowIdMap {
     pub window_ids: RwLock<HashMap<WindowId, Uuid>>,
-    pub windows: RwLock<HashMap<Uuid, Weak<WinitWindow>>>,
 }
 
-impl WindowStore {
+impl WindowIdMap {
     pub fn new() -> Self {
         Self {
             window_ids: RwLock::new(HashMap::new()),
-            windows: RwLock::new(HashMap::new()),
         }
     }
 
     pub fn insert(&self, window: &Window) {
-        let winit_window = window.inner.clone();
         self.window_ids
             .write()
             .expect("write-lock was acquired")
-            .insert(winit_window.id(), window.id());
-        self.windows
-            .write()
-            .expect("write-lock was acquired")
-            .insert(window.id(), Arc::downgrade(&winit_window));
-    }
-
-    pub fn redraw(&self) {
-        self.windows
-            .read()
-            .expect("write-lock was acquired")
-            .iter()
-            .for_each(|(_, window)| {
-                if let Some(window) = window.upgrade() {
-                    window.request_redraw();
-                }
-            });
+            .insert(window.inner.id(), window.id());
     }
 
     pub fn uuid_of(&self, winit_id: WindowId) -> Option<Uuid> {
