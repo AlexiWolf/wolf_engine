@@ -36,6 +36,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Added `OsError` variant / struct.
     - Added `UnsupportedError` variant / struct.
 - Removed public re-export of `winit` crate.
+- Added more more clear life-cycle for the window system.
+  - Added a more general `Event` enum, for application-level events.
+  - Renamed `Resumed` event to `Started`.
+  - Added `EventsCleared` event to better indicate the end of a frame.
+- Removed automatic re-drawing for windows.
+  - Added `Window::redraw()` method, so redraws can be triggered manually. 
 
 ### [0.2] - 2024-07-25
 

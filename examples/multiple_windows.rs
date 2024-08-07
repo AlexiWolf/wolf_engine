@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
-use wolf_engine::window::event::WindowEvent;
-use wolf_engine_window::{Uuid, Window, WindowContext, WindowSettings};
+use wolf_engine::window::event::Event;
+use wolf_engine_window::{event::WindowEvent, Uuid, Window, WindowContext, WindowSettings};
 
 fn main() {
     let context = wolf_engine::window::init().build().unwrap();
@@ -11,30 +11,35 @@ fn main() {
     let mut pixels = HashMap::new();
 
     context.run(|event, context| match event {
-        WindowEvent::Resumed => {
+        Event::Started => {
             println!("Hello, world!");
             create_window(&context, Color::RED, &mut windows, &mut pixels);
             create_window(&context, Color::BLUE, &mut windows, &mut pixels);
         }
-        WindowEvent::RedrawRequested(window_id) => {
-            let pixels = pixels.get(&window_id).unwrap();
-            pixels.render().unwrap();
-        }
-        WindowEvent::Resized(window_id, width, height) => {
-            let pixels = pixels.get_mut(&window_id).unwrap();
-            pixels.resize_buffer(width, height).unwrap();
-            pixels.resize_surface(width, height).unwrap();
-        }
-        WindowEvent::Input(window_id, input) => {
-            println!("Input into window, {:?}: {:?}", window_id, input)
-        }
-        WindowEvent::Closed(window_id) => {
-            remove_window(&window_id, &mut windows, &mut pixels);
-            if windows.len() == 0 {
-                context.exit();
+        Event::EventsCleared => windows.values().for_each(|window| window.redraw()),
+        Event::WindowEvent(window_id, event) => match event {
+            WindowEvent::RedrawRequested => {
+                if let Some(pixels) = pixels.get(&window_id) {
+                    pixels.render().unwrap();
+                }
             }
-        }
-        WindowEvent::Exited => println!("Goodbye, World!"),
+            WindowEvent::Resized(width, height) => {
+                let pixels = pixels.get_mut(&window_id).unwrap();
+                pixels.resize_buffer(width, height).unwrap();
+                pixels.resize_surface(width, height).unwrap();
+            }
+            WindowEvent::Input(input) => {
+                println!("Input into window, {:?}: {:?}", window_id, input)
+            }
+            WindowEvent::Closed => {
+                remove_window(&window_id, &mut windows, &mut pixels);
+                if windows.len() == 0 {
+                    context.exit();
+                }
+            }
+            _ => (),
+        },
+        Event::Exited => println!("Goodbye, World!"),
         _ => (),
     });
 }

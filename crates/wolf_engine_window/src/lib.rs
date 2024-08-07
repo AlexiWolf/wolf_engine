@@ -17,7 +17,7 @@
 //! ```no_run
 //! # use wolf_engine_window::{
 //! #   WindowSettings,
-//! #   event::WindowEvent,
+//! #   event::{Event, WindowEvent},
 //! # };
 //! #
 //! # let window_context = wolf_engine_window::init().build().unwrap();
@@ -26,26 +26,35 @@
 //! window_context.run(|event, context| match event {
 //!     // The main-loop has started.
 //!     // Do intial setup, like creating windows, render surfaces, ext. here.
-//!     WindowEvent::Resumed => {
+//!     Event::Started => {
 //!         println!("Hello, world!");
 //!         window = Some(
 //!             context.create_window(
 //!                 WindowSettings::default()
 //!                     .with_title("Example Window")
 //!                     .with_size((800, 600)),
-//!             )
+//!             ).unwrap()
 //!         );
 //!     }
-//!     // A window should be redrawn.
-//!     WindowEvent::RedrawRequested(_window_id) => {
-//!         // Render code goes here!
-//!     },
-//!     // A window has / should close.
-//!     WindowEvent::Closed(_window_id) => {
-//!         context.exit(); // Stop the event loop.
+//!     // All events have been processed.
+//!     Event::EventsCleared => {
+//!         // Start the next frame.
+//!         window.as_ref().unwrap().redraw();
+//!     }
+//!     // Window-specific events.
+//!     Event::WindowEvent(window_id, event) => match event {
+//!         // A window should be redrawn.
+//!         WindowEvent::RedrawRequested => {
+//!             // Render code goes here!
+//!         },
+//!         // A window has / should close.
+//!         WindowEvent::Closed => {
+//!             context.exit(); // Stop the event loop.
+//!         }
+//!         _ => (),
 //!     }
 //!     // The main-loop will stop.
-//!     WindowEvent::Exited => println!("Goodbye, World!"),
+//!     Event::Exited => println!("Goodbye, World!"),
 //!     _ => (),
 //! });
 //! ```
@@ -103,7 +112,7 @@ mod window_init_tests {
     #[test]
     #[ntest::timeout(1000)]
     fn should_run_and_quit() {
-        use crate::event::{WindowEvent, WinitEventLoop};
+        use crate::event::{Event, WinitEventLoop};
 
         let event_loop = WinitEventLoop::with_user_event()
             .with_any_thread(true)
@@ -114,13 +123,13 @@ mod window_init_tests {
         let mut has_quit = false;
 
         context.run(|event, context| match event {
-            WindowEvent::Resumed => {
+            Event::Started => {
                 let _window = context
                     .create_window(WindowSettings::default().with_visible(false))
                     .expect("window creation succeeded");
                 context.exit();
             }
-            WindowEvent::Exited => *&mut has_quit = true,
+            Event::Exited => *&mut has_quit = true,
             _ => (),
         });
 
