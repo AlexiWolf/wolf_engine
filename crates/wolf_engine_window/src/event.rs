@@ -96,6 +96,7 @@ impl EventLoop {
 
             match event {
                 WinitEvent::AboutToWait => {
+                    (event_handler)(Event::EventsCleared, &context);
                     event_loop.set_control_flow(ControlFlow::Poll);
                     window_store.redraw();
                 }
