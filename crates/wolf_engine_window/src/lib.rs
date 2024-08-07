@@ -85,7 +85,7 @@ pub fn init() -> EventLoopBuilder {
 }
 
 #[cfg(test)]
-mod window_init_tests {
+mod window_system_tests {
     use super::*;
 
     #[cfg(target_os = "linux")]
@@ -137,5 +137,47 @@ mod window_init_tests {
             has_quit,
             "The window system has not quit, or did not run properly."
         );
+    }
+
+    #[cfg(any(target_os = "linux", target_os = "windows"))]
+    #[test]
+    #[ntest::timeout(1000)]
+    fn should_not_send_events_for_dropped_windows() {
+        use crate::{
+            event::{Event, WinitEventLoop},
+            WindowSettings,
+        };
+
+        use self::event::WindowEvent;
+
+        let event_loop = WinitEventLoop::with_user_event()
+            .with_any_thread(true)
+            .build()
+            .unwrap();
+        let context = crate::init().build_with_event_loop(event_loop);
+        let mut window = None;
+
+        context.run(|event, context| match event {
+            Event::Started => {
+                window = Some(
+                    context
+                        .create_window(WindowSettings::default().with_visible(false))
+                        .expect("window creation succeeded"),
+                );
+            }
+            Event::EventsCleared => {
+                if let Some(window) = window.as_ref() {
+                    window.redraw();
+                } else {
+                    context.exit();
+                }
+                window = None;
+            }
+            Event::WindowEvent(_, WindowEvent::RedrawRequested) => {
+                let window = window.as_ref().expect("this event is not sent to the user");
+                window.redraw();
+            }
+            _ => (),
+        });
     }
 }
