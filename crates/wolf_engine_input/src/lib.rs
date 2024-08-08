@@ -31,17 +31,6 @@ pub enum Input {
         is_repeat: bool,
     },
 
-    /// A keyboard button was pressed / released.
-    ///
-    /// This event is is not associated with a window.  It may be emitted alongside a normal
-    /// [`Keyboard`](Input::Keyboard) event.  Some window systems may filter out raw events when
-    /// the window is not in-focus.
-    RawKeyboard {
-        state: ButtonState,
-        scancode: u32,
-        keycode: Option<KeyCode>,
-    },
-
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved to a specific point in the window.

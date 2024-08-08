@@ -82,10 +82,11 @@ impl From<RawKeyEvent> for Input {
             KeyCode::Unknown => None,
             keycode => Some(keycode),
         };
-        Input::RawKeyboard {
+        Input::Keyboard {
             state,
             scancode,
             keycode,
+            is_repeat: false,
         }
     }
 }
