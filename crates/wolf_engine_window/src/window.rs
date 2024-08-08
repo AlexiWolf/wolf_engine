@@ -69,6 +69,7 @@ impl From<WindowSettings> for WindowAttributes {
 #[derive(Clone, Debug)]
 pub struct Window {
     uuid: Uuid,
+    id_remover: WindowIdRemover,
     inner: Arc<WinitWindow>,
 }
 
@@ -81,10 +82,11 @@ impl PartialEq for Window {
 impl Eq for Window {}
 
 impl Window {
-    pub(crate) fn new(inner: Arc<WinitWindow>) -> Self {
+    pub(crate) fn new(inner: WinitWindow, id_remover: WindowIdRemover) -> Self {
         Self {
             uuid: Uuid::new_v4(),
-            inner,
+            id_remover,
+            inner: Arc::new(inner),
         }
     }
 
@@ -101,6 +103,15 @@ impl Window {
     /// Request a redraw of the window.
     pub fn redraw(&self) {
         self.inner.request_redraw();
+    }
+}
+
+impl Drop for Window {
+    fn drop(&mut self) {
+        let weak = Arc::downgrade(&self.inner);
+        if weak.strong_count() == 1 {
+            self.id_remover.remove(self);
+        }
     }
 }
 
@@ -130,14 +141,21 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window {
     }
 }
 
+#[derive(Clone, Debug)]
 pub(crate) struct WindowIdMap {
-    pub window_ids: RwLock<HashMap<WindowId, Uuid>>,
+    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
 }
 
 impl WindowIdMap {
     pub fn new() -> Self {
         Self {
-            window_ids: RwLock::new(HashMap::new()),
+            window_ids: Arc::new(RwLock::new(HashMap::new())),
+        }
+    }
+
+    pub fn id_remover(&self) -> WindowIdRemover {
+        WindowIdRemover {
+            window_ids: self.window_ids.clone(),
         }
     }
 
@@ -156,5 +174,21 @@ impl WindowIdMap {
                 .get(&winit_id)?
                 .to_owned(),
         )
+    }
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct WindowIdRemover {
+    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
+}
+
+impl WindowIdRemover {
+    pub fn remove(&self, window: &Window) {
+        let winit_id = window.inner.id();
+        let _ = self
+            .window_ids
+            .write()
+            .expect("write-lock was acquired")
+            .remove(&winit_id);
     }
 }

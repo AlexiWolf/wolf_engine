@@ -19,9 +19,8 @@ fn main() {
         Event::EventsCleared => windows.values().for_each(|window| window.redraw()),
         Event::WindowEvent(window_id, event) => match event {
             WindowEvent::RedrawRequested => {
-                if let Some(pixels) = pixels.get(&window_id) {
-                    pixels.render().unwrap();
-                }
+                let pixels = pixels.get(&window_id).unwrap();
+                pixels.render().unwrap();
             }
             WindowEvent::Resized(width, height) => {
                 let pixels = pixels.get_mut(&window_id).unwrap();

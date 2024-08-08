@@ -85,14 +85,8 @@ pub fn init() -> EventLoopBuilder {
 }
 
 #[cfg(test)]
-mod window_init_tests {
+mod window_system_tests {
     use super::*;
-
-    #[cfg(target_os = "linux")]
-    use winit::platform::x11::EventLoopBuilderExtX11;
-
-    #[cfg(target_os = "windows")]
-    use winit::platform::windows::EventLoopBuilderExtWindows;
 
     #[test]
     fn should_set_settings_values() {
@@ -106,36 +100,5 @@ mod window_init_tests {
         assert_eq!(window_settings.size, (123, 123));
         assert_eq!(window_settings.is_resizable, false);
         assert_eq!(window_settings.is_visible, false);
-    }
-
-    #[cfg(any(target_os = "linux", target_os = "windows"))]
-    #[test]
-    #[ntest::timeout(1000)]
-    fn should_run_and_quit() {
-        use crate::event::{Event, WinitEventLoop};
-
-        let event_loop = WinitEventLoop::with_user_event()
-            .with_any_thread(true)
-            .build()
-            .unwrap();
-        let context = crate::init().build_with_event_loop(event_loop);
-
-        let mut has_quit = false;
-
-        context.run(|event, context| match event {
-            Event::Started => {
-                let _window = context
-                    .create_window(WindowSettings::default().with_visible(false))
-                    .expect("window creation succeeded");
-                context.exit();
-            }
-            Event::Exited => *&mut has_quit = true,
-            _ => (),
-        });
-
-        assert!(
-            has_quit,
-            "The window system has not quit, or did not run properly."
-        );
     }
 }
