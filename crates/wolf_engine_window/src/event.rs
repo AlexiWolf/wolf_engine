@@ -1,5 +1,4 @@
 //! Provides an event system for the window crate.
-use std::sync::Arc;
 
 use anyhow::anyhow;
 use uuid::Uuid;
@@ -7,6 +6,7 @@ use winit::{
     error::EventLoopError,
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::ControlFlow,
+    window::WindowId,
 };
 use wolf_engine_input::{Input, ToInput};
 
@@ -54,7 +54,7 @@ impl EventLoopBuilder {
 
     /// Initialize the window system.
     pub fn build(self) -> Result<EventLoop, WindowError> {
-        match WinitEventLoop::with_user_event().build() {
+        match WinitEventLoop::new() {
             Ok(event_loop) => Ok(EventLoop::new(event_loop)),
             Err(error) => match error {
                 EventLoopError::Os(error) => {
@@ -86,10 +86,9 @@ impl EventLoop {
     #[allow(deprecated)]
     pub fn run<F: FnMut(Event, &WindowContext)>(self, mut event_handler: F) {
         let mut is_first_resume = true;
-        let window_ids = Arc::new(WindowIdMap::new());
+        let window_ids = WindowIdMap::new();
         let _ = self.event_loop.run(|event, event_loop| {
             let context = WindowContext::new(event_loop, window_ids.clone());
-
             match event {
                 WinitEvent::AboutToWait => {
                     (event_handler)(Event::EventsCleared, &context);
@@ -114,6 +113,7 @@ impl EventLoop {
                     let uuid = window_ids
                         .uuid_of(window_id)
                         .expect("window exists in store if processing events for it");
+
                     if let Some(input) = window_event.to_input() {
                         (event_handler)(
                             Event::WindowEvent(uuid, WindowEvent::Input(input)),
