@@ -90,6 +90,7 @@ impl Window {
         }
     }
 
+    /// Get the uuid of the window.
     pub fn id(&self) -> Uuid {
         self.uuid
     }
@@ -98,6 +99,11 @@ impl Window {
     pub fn size(&self) -> (u32, u32) {
         let size = self.inner.inner_size();
         (size.width, size.height)
+    }
+
+    /// Set the title of the window.
+    pub fn set_title(&self, new_title: &str) {
+        self.inner.set_title(new_title);
     }
 
     /// Request a redraw of the window.

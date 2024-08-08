@@ -22,26 +22,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
-- Renamed `WindowContextBuilder` to `EventLoopBuilder`.
-- Added multi-window support.
-  - Moved the window setup methods from `EventLoopBuilder` to `WindowSettings`.
-  - Added `WindowContext::create_window()` method for creating windows.
-  - Added `Uuid` fields to window-specific `WindowEvent` variants.
-- Removed type-states from `WindowContext`.
-  - Added `EventLoop` struct.
+- Added support for multiple windows.
+  - Moved window-creation, and config from `init()` to 
+    `WindowContext::create_window()`.
+  - Moved the window config-builder methods from `EventLoopBuilder` to 
+    `WindowSettings`.
+  - Moved general application-level events to `Event`, and window-specific 
+    events to `WindowEvent`
+- Added additional window config options.
+  - Added `Window::set_title()` method.  
+- Added a more clear application life-cycle. 
+  - Added `EventsCleared` event to indicate when a new frame should begin.
+  - Renamed `Resumed` event to `Started` to better match the `Exited` event.
+- Added better error-handling when initializing the window system, and 
+  creating windows.
+
+- Changed to a separate `WindowContext`, and `EventLoop`.
+  - Renamed `WindowContextBuilder` to `EventLoopBuilder`.
+  - Moved `run()` method from `WindowContext` to `EventLoop`.
   - Removed `context_state` module.
-- Improved error-handling.
-  - Added `error` module.
-  - Added `WindowError` enum.
-    - Added `OsError` variant / struct.
-    - Added `UnsupportedError` variant / struct.
-- Removed public re-export of `winit` crate.
-- Added more more clear life-cycle for the window system.
-  - Added a more general `Event` enum, for application-level events.
-  - Renamed `Resumed` event to `Started`.
-  - Added `EventsCleared` event to better indicate the end of a frame.
-- Removed automatic re-drawing for windows.
-  - Added `Window::redraw()` method, so redraws can be triggered manually. 
+
+- Removed automatic re-drawing of windows.
+  - Added `Window::redraw()` method. 
+- Removed public re-export of the `winit` crate.
 
 ### [0.2] - 2024-07-25
 
