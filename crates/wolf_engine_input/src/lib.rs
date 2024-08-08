@@ -40,10 +40,6 @@ pub enum Input {
     ///
     /// This event indicates the mouse has moved, and by how much.  It's most useful to games with
     /// FPS-like camera controls.
-    ///
-    /// This event is not associated with a window.  It may be emitted alongside a normal
-    /// [`MouseMove`](Input::MouseMove) events.  Some window systems may filter out raw events
-    /// when the window is not in-focus.
     RawMouseMove { delta_x: f32, delta_y: f32 },
 
     /// A mouse button was pressed / released.
