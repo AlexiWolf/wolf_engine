@@ -90,6 +90,7 @@ impl Window {
         }
     }
 
+    /// Get the uuid of the window.
     pub fn id(&self) -> Uuid {
         self.uuid
     }
