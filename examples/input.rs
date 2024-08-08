@@ -48,11 +48,6 @@ fn process_input(input: &Input) {
             keycode,
             is_repeat,
         } => println!("Key: {state:?}, {scancode:?}, {keycode:?}, {is_repeat:?}"),
-        Input::RawKeyboard {
-            state,
-            scancode,
-            keycode,
-        } => println!("Raw Key: {state:?}, {scancode:?}, {keycode:?}"),
         Input::MouseMove { x, y } => println!("Mouse Moved: {x}, {y}"),
         Input::RawMouseMove { delta_x, delta_y } => {
             println!("Raw Mouse Moved: {delta_x}, {delta_y}")

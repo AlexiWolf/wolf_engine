@@ -85,6 +85,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_input]
 
+### [Unreleased]
+
+- Changed "raw" keyboard input to use the normal `Keyboard` input.
+  - Removed `Input::RawKeyboard` variant.
+
 ### [0.1.2] - 2023-07-09
 
 - Updated `winit` integration to `v0.30.x`.
