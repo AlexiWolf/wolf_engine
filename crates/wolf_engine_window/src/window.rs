@@ -101,6 +101,11 @@ impl Window {
         (size.width, size.height)
     }
 
+    /// Set the title of the window.
+    pub fn set_title(&self, new_title: &str) {
+        self.inner.set_title(new_title);
+    }
+
     /// Request a redraw of the window.
     pub fn redraw(&self) {
         self.inner.request_redraw();
