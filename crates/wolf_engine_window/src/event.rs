@@ -110,9 +110,10 @@ impl EventLoop {
                     window_id,
                     event: window_event,
                 } => {
-                    let uuid = window_ids
-                        .uuid_of(window_id)
-                        .expect("window exists in store if processing events for it");
+                    let uuid = match window_ids.uuid_of(window_id) {
+                        Some(uuid) => uuid,
+                        None => return,
+                    };
 
                     if let Some(input) = window_event.to_input() {
                         (event_handler)(
