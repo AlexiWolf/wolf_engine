@@ -106,4 +106,11 @@ mod window_system_tests {
             Some(FullscreenMode::Exclusive)
         );
     }
+
+    #[test]
+    fn should_not_be_fullscreen_by_default() {
+        let window_settings = WindowSettings::default();
+
+        assert!(window_settings.fullscreen_mode.is_none());
+    }
 }
