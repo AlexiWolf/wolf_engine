@@ -9,6 +9,11 @@ use winit::{
     window::{Window as WinitWindow, WindowAttributes, WindowId},
 };
 
+#[derive(Clone, Eq, PartialEq, Debug)]
+pub enum FullscreenMode {
+    Borderless,
+}
+
 /// The settings used by the [`WindowContext`](crate::WindowContext) when creating the window.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct WindowSettings {
@@ -16,6 +21,7 @@ pub struct WindowSettings {
     pub size: (u32, u32),
     pub is_resizable: bool,
     pub is_visible: bool,
+    pub fullscreen_mode: Option<FullscreenMode>,
 }
 
 impl WindowSettings {
@@ -42,6 +48,11 @@ impl WindowSettings {
         self.is_visible = is_visible;
         self
     }
+
+    pub fn with_fullscreen_mode(mut self, fullscreen_mode: FullscreenMode) -> Self {
+        self.fullscreen_mode = Some(fullscreen_mode);
+        self
+    }
 }
 
 impl Default for WindowSettings {
@@ -51,6 +62,7 @@ impl Default for WindowSettings {
             size: (1280, 720),
             is_resizable: true,
             is_visible: true,
+            fullscreen_mode: None,
         }
     }
 }
