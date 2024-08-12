@@ -95,7 +95,7 @@ mod window_system_tests {
             .with_size((123, 123))
             .with_resizable(false)
             .with_visible(false)
-            .with_fullscreen_mode(FullscreenMode::Exclusive);
+            .with_fullscreen_mode(FullscreenMode::Borderless);
 
         assert_eq!(window_settings.title, "Custom Test Title");
         assert_eq!(window_settings.size, (123, 123));
@@ -103,7 +103,7 @@ mod window_system_tests {
         assert_eq!(window_settings.is_visible, false);
         assert_eq!(
             window_settings.fullscreen_mode,
-            Some(FullscreenMode::Exclusive)
+            Some(FullscreenMode::Borderless)
         );
     }
 

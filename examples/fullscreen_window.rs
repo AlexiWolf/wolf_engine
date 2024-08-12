@@ -18,9 +18,7 @@ fn main() {
                     .create_window(
                         WindowSettings::default()
                             .with_title("Wolf Engine - Window Example")
-                            .with_size((800, 600))
-                            .with_fullscreen_mode(FullscreenMode::Exclusive)
-                            .with_resizable(true),
+                            .with_fullscreen_mode(FullscreenMode::Borderless),
                     )
                     .expect("window creation succeeded"),
             );
