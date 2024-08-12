@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Renamed `Resumed` event to `Started` to better match the `Exited` event.
 - Added better error-handling when initializing the window system, and 
   creating windows.
+- Added support for borderless-fullscreen windows.
 
 - Changed to a separate `WindowContext`, and `EventLoop`.
   - Renamed `WindowContextBuilder` to `EventLoopBuilder`.
