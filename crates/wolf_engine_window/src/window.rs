@@ -138,19 +138,12 @@ impl Window {
 
     /// Get the current fullscreen-mode, if the window is in full-screen.
     pub fn fullscreen_mode(&self) -> Option<FullscreenMode> {
-        if let Some(fullscreen) = self.inner.fullscreen() {
-            Some(fullscreen.into())
-        } else {
-            None
-        }
+        self.inner.fullscreen().map(|fullscreen| fullscreen.into())
     }
 
     /// Set the fullscreen-mode.
     pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {
-        let fullscreen = match fullscreen_mode {
-            Some(fullscreen_mode) => Some(fullscreen_mode.into()),
-            None => None,
-        };
+        let fullscreen = fullscreen_mode.map(|fullscreen_mode| fullscreen_mode.into());
         self.inner.set_fullscreen(fullscreen);
     }
 
