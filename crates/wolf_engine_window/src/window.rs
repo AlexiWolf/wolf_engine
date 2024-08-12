@@ -9,6 +9,7 @@ use winit::{
     window::{Window as WinitWindow, WindowAttributes, WindowId},
 };
 
+/// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub enum FullscreenMode {
     Borderless,
