@@ -6,13 +6,30 @@ use std::{
 use uuid::Uuid;
 use winit::{
     dpi::PhysicalSize,
-    window::{Window as WinitWindow, WindowAttributes, WindowId},
+    window::{Fullscreen, Window as WinitWindow, WindowAttributes, WindowId},
 };
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub enum FullscreenMode {
     Borderless,
+}
+
+impl From<Fullscreen> for FullscreenMode {
+    fn from(fullscreen: Fullscreen) -> Self {
+        match fullscreen {
+            Fullscreen::Borderless(_) => FullscreenMode::Borderless,
+            Fullscreen::Exclusive(_) => panic!("Exclusive fullscreen is not yet supported"),
+        }
+    }
+}
+
+impl From<FullscreenMode> for Fullscreen {
+    fn from(fullscreen_mode: FullscreenMode) -> Self {
+        match fullscreen_mode {
+            FullscreenMode::Borderless => Fullscreen::Borderless(None),
+        }
+    }
 }
 
 /// The settings used by the [`WindowContext`](crate::WindowContext) when creating the window.
@@ -117,6 +134,17 @@ impl Window {
     /// Set the title of the window.
     pub fn set_title(&self, new_title: &str) {
         self.inner.set_title(new_title);
+    }
+
+    /// Get the current fullscreen-mode, if the window is in full-screen.
+    pub fn fullscreen_mode(&self) -> Option<FullscreenMode> {
+        self.inner.fullscreen().map(|fullscreen| fullscreen.into())
+    }
+
+    /// Set the fullscreen-mode.
+    pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {
+        let fullscreen = fullscreen_mode.map(|fullscreen_mode| fullscreen_mode.into());
+        self.inner.set_fullscreen(fullscreen);
     }
 
     /// Request a redraw of the window.
