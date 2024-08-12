@@ -136,6 +136,7 @@ impl Window {
         self.inner.set_title(new_title);
     }
 
+    /// Get the current fullscreen-mode, if the window is in full-screen.
     pub fn fullscreen_mode(&self) -> Option<FullscreenMode> {
         if let Some(fullscreen) = self.inner.fullscreen() {
             Some(fullscreen.into())
@@ -144,6 +145,7 @@ impl Window {
         }
     }
 
+    /// Set the fullscreen-mode.
     pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {
         let fullscreen = match fullscreen_mode {
             Some(fullscreen_mode) => Some(fullscreen_mode.into()),
