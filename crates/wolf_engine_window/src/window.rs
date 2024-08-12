@@ -6,13 +6,21 @@ use std::{
 use uuid::Uuid;
 use winit::{
     dpi::PhysicalSize,
-    window::{Window as WinitWindow, WindowAttributes, WindowId},
+    window::{Fullscreen, Window as WinitWindow, WindowAttributes, WindowId},
 };
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub enum FullscreenMode {
     Borderless,
+}
+
+impl From<FullscreenMode> for Fullscreen {
+    fn from(fullscreen_mode: FullscreenMode) -> Self {
+        match fullscreen_mode {
+            FullscreenMode::Borderless => Fullscreen::Borderless(None),
+        }
+    }
 }
 
 /// The settings used by the [`WindowContext`](crate::WindowContext) when creating the window.
@@ -117,6 +125,14 @@ impl Window {
     /// Set the title of the window.
     pub fn set_title(&self, new_title: &str) {
         self.inner.set_title(new_title);
+    }
+
+    pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {
+        let fullscreen = match fullscreen_mode {
+            Some(fullscreen_mode) => Some(fullscreen_mode.into()),
+            None => None,
+        };
+        self.inner.set_fullscreen(fullscreen);
     }
 
     /// Request a redraw of the window.
