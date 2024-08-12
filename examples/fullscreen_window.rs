@@ -1,4 +1,5 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
+use wolf_engine_input::{keyboard::KeyCode, ButtonState, Input};
 use wolf_engine_window::{
     event::{Event, WindowEvent},
     FullscreenMode, WindowSettings,
@@ -44,7 +45,18 @@ fn main() {
                     pixels.resize_surface(width, height).unwrap();
                 }
             }
-            WindowEvent::Input(input) => println!("Input into window: {:?}", input),
+            WindowEvent::Input(Input::Keyboard {
+                state: ButtonState::Up,
+                keycode: Some(KeyCode::Space),
+                ..
+            }) => {
+                let window = window.as_ref().unwrap();
+                if window.fullscreen_mode().is_some() {
+                    window.set_fullscreen_mode(None);
+                } else {
+                    window.set_fullscreen_mode(Some(FullscreenMode::Borderless));
+                }
+            }
             WindowEvent::Closed => context.exit(),
             _ => (),
         },
