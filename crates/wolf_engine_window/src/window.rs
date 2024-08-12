@@ -15,6 +15,15 @@ pub enum FullscreenMode {
     Borderless,
 }
 
+impl From<Fullscreen> for FullscreenMode {
+    fn from(fullscreen: Fullscreen) -> Self {
+        match fullscreen {
+            Fullscreen::Borderless(_) => FullscreenMode::Borderless,
+            Fullscreen::Exclusive(_) => panic!("Exclusive fullscreen is not yet supported"),
+        }
+    }
+}
+
 impl From<FullscreenMode> for Fullscreen {
     fn from(fullscreen_mode: FullscreenMode) -> Self {
         match fullscreen_mode {
@@ -125,6 +134,14 @@ impl Window {
     /// Set the title of the window.
     pub fn set_title(&self, new_title: &str) {
         self.inner.set_title(new_title);
+    }
+
+    pub fn fullscreen_mode(&self) -> Option<FullscreenMode> {
+        if let Some(fullscreen) = self.inner.fullscreen() {
+            Some(fullscreen.into())
+        } else {
+            None
+        }
     }
 
     pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {
