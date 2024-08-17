@@ -88,24 +88,24 @@ impl EventLoop {
 impl EventLoop {
     /// Run the main-loop, passing events to the provided callback.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(Event, &WindowContext)>(self, mut event_handler: F) {
+    pub fn run<F: FnMut(Event)>(self, mut event_handler: F) {
         let mut is_first_resume = true;
         let window_ids = WindowIdMap::new();
         let _ = self.event_loop.run(|event, event_loop| match event {
             WinitEvent::AboutToWait => {
-                (event_handler)(Event::EventsCleared, &self.context);
+                (event_handler)(Event::EventsCleared);
                 event_loop.set_control_flow(ControlFlow::Poll);
             }
             WinitEvent::Resumed => {
                 if is_first_resume {
                     is_first_resume = false;
-                    (event_handler)(Event::Started, &self.context);
+                    (event_handler)(Event::Started);
                 }
             }
-            WinitEvent::LoopExiting => (event_handler)(Event::Exited, &self.context),
+            WinitEvent::LoopExiting => (event_handler)(Event::Exited),
             WinitEvent::DeviceEvent { event, .. } => {
                 if let Some(input) = event.to_input() {
-                    (event_handler)(Event::Input(input), &self.context);
+                    (event_handler)(Event::Input(input));
                 }
             }
             WinitEvent::WindowEvent {
@@ -118,24 +118,19 @@ impl EventLoop {
                 };
 
                 if let Some(input) = window_event.to_input() {
-                    (event_handler)(
-                        Event::WindowEvent(uuid, WindowEvent::Input(input)),
-                        &self.context,
-                    );
+                    (event_handler)(Event::WindowEvent(uuid, WindowEvent::Input(input)));
                 }
                 match window_event {
-                    WinitWindowEvent::RedrawRequested => (event_handler)(
-                        Event::WindowEvent(uuid, WindowEvent::RedrawRequested),
-                        &self.context,
-                    ),
-                    WinitWindowEvent::Resized(size) => (event_handler)(
-                        Event::WindowEvent(uuid, WindowEvent::Resized(size.width, size.height)),
-                        &self.context,
-                    ),
-                    WinitWindowEvent::CloseRequested => (event_handler)(
-                        Event::WindowEvent(uuid, WindowEvent::Closed),
-                        &self.context,
-                    ),
+                    WinitWindowEvent::RedrawRequested => {
+                        (event_handler)(Event::WindowEvent(uuid, WindowEvent::RedrawRequested))
+                    }
+                    WinitWindowEvent::Resized(size) => (event_handler)(Event::WindowEvent(
+                        uuid,
+                        WindowEvent::Resized(size.width, size.height),
+                    )),
+                    WinitWindowEvent::CloseRequested => {
+                        (event_handler)(Event::WindowEvent(uuid, WindowEvent::Closed))
+                    }
                     _ => (),
                 }
             }

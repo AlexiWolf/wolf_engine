@@ -17,7 +17,7 @@ fn test() -> Result<(), Failed> {
 
     let mut has_quit = false;
 
-    event_loop.run(|event, context| match event {
+    event_loop.run(|event| match event {
         Event::Started => {
             context.exit();
         }

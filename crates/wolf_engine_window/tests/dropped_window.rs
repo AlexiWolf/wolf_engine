@@ -17,7 +17,7 @@ pub fn main() -> ExitCode {
 fn test() -> Result<(), Failed> {
     let (event_loop, context) = wolf_engine_window::init().build().unwrap();
     let mut window: Option<Window> = None;
-    event_loop.run(|event, context| match event {
+    event_loop.run(|event| match event {
         Event::Started => {
             context.create_window(WindowSettings::default().with_visible(false));
         }

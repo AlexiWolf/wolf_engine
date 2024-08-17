@@ -11,7 +11,7 @@ fn main() {
     let mut pixels = None;
     let mut window: Option<Window> = None;
 
-    event_loop.run(|event, context| match event {
+    event_loop.run(|event| match event {
         Event::Started => {
             println!("Hello, world!");
             context.create_window(

@@ -22,7 +22,7 @@ fn main() {
             .with_size((800, 600)),
     );
 
-    event_loop.run(|event, context| match event {
+    event_loop.run(|event| match event {
         Event::Started => println!("Hello, world!"),
         Event::EventsCleared => windows.values().for_each(|window: &Window| window.redraw()),
         Event::WindowEvent(window_id, event) => match event {
