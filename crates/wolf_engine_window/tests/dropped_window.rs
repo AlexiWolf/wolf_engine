@@ -15,16 +15,11 @@ pub fn main() -> ExitCode {
 }
 
 fn test() -> Result<(), Failed> {
-    let event_loop = wolf_engine_window::init().build().unwrap();
-    let mut window = None;
-
+    let (event_loop, context) = wolf_engine_window::init().build().unwrap();
+    let mut window: Option<Window> = None;
     event_loop.run(|event, context| match event {
         Event::Started => {
-            window = Some(
-                context
-                    .create_window(WindowSettings::default().with_visible(false))
-                    .expect("window creation succeeded"),
-            );
+            context.create_window(WindowSettings::default().with_visible(false));
         }
         Event::EventsCleared => {
             if let Some(window) = window.as_ref() {
@@ -33,6 +28,9 @@ fn test() -> Result<(), Failed> {
                 context.exit();
             }
             window = None;
+        }
+        Event::WindowEvent(_, WindowEvent::Created(window_result)) => {
+            window = Some(window_result.expect("window creation succeeded"));
         }
         Event::WindowEvent(_, WindowEvent::RedrawRequested) => {
             let window = window.as_ref().expect("this event is not sent to the user");
