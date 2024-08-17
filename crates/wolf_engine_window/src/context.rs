@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use uuid::Uuid;
 use winit::{
     event_loop::ActiveEventLoop,
     window::{Fullscreen, WindowAttributes},
@@ -9,45 +10,22 @@ use crate::{
     FullscreenMode, Window, WindowIdMap, WindowSettings,
 };
 
+#[derive(Clone)]
 /// A link to the window system.
-pub struct WindowContext<'event_loop> {
-    event_loop: &'event_loop ActiveEventLoop,
-    window_ids: WindowIdMap,
-}
+pub struct WindowContext {}
 
-impl<'event_loop> WindowContext<'event_loop> {
-    pub(crate) fn new(event_loop: &'event_loop ActiveEventLoop, window_ids: WindowIdMap) -> Self {
-        Self {
-            event_loop,
-            window_ids,
-        }
+impl WindowContext {
+    pub(crate) fn new() -> Self {
+        Self {}
     }
 
     /// Create a new [`Window`].
-    pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, WindowError> {
-        let fullscreen_mode = window_settings.fullscreen_mode.clone();
-        let mut window_attributes: WindowAttributes = window_settings.into();
-        if let Some(fullscreen_mode) = fullscreen_mode {
-            let monitor_handle = self.event_loop.primary_monitor();
-            match fullscreen_mode {
-                FullscreenMode::Borderless => {
-                    window_attributes = window_attributes
-                        .with_fullscreen(Some(Fullscreen::Borderless(monitor_handle)))
-                }
-            }
-        }
-        match self.event_loop.create_window(window_attributes) {
-            Ok(winit_window) => {
-                let window = Window::new(winit_window, self.window_ids.id_remover());
-                self.window_ids.insert(&window);
-                Ok(window)
-            }
-            Err(error) => Err(WindowError::OsError(OsError::from(anyhow!("{}", error)))),
-        }
+    pub fn create_window(&self, window_settings: WindowSettings) -> Uuid {
+        todo!()
     }
 
     /// Stops the event loop.
     pub fn exit(&self) {
-        self.event_loop.exit();
+        todo!()
     }
 }
