@@ -7,7 +7,10 @@ use winit::{
     event::{Event as WinitEvent, WindowEvent as WinitWindowEvent},
     event_loop::ControlFlow,
 };
-use wolf_engine_events::mpsc::{self, MpscEventReceiver};
+use wolf_engine_events::{
+    mpsc::{self, MpscEventReceiver},
+    EventReceiver,
+};
 use wolf_engine_input::{Input, ToInput};
 
 use crate::{
@@ -96,53 +99,63 @@ impl EventLoop {
 impl EventLoop {
     /// Run the main-loop, passing events to the provided callback.
     #[allow(deprecated)]
-    pub fn run<F: FnMut(Event)>(self, mut event_handler: F) {
+    pub fn run<F: FnMut(Event)>(mut self, mut event_handler: F) {
         let mut is_first_resume = true;
         let window_ids = WindowIdMap::new();
-        let _ = self.event_loop.run(|event, event_loop| match event {
-            WinitEvent::AboutToWait => {
-                (event_handler)(Event::EventsCleared);
-                event_loop.set_control_flow(ControlFlow::Poll);
-            }
-            WinitEvent::Resumed => {
-                if is_first_resume {
-                    is_first_resume = false;
-                    (event_handler)(Event::Started);
+        let _ = self.event_loop.run(|event, event_loop| {
+            while let Some(event) = self.event_receiver.next_event() {
+                match event {
+                    ContextEvent::CreateWindow(id, window_settings) => todo!(),
+                    ContextEvent::Exit => todo!(),
                 }
             }
-            WinitEvent::LoopExiting => (event_handler)(Event::Exited),
-            WinitEvent::DeviceEvent { event, .. } => {
-                if let Some(input) = event.to_input() {
-                    (event_handler)(Event::Input(input));
-                }
-            }
-            WinitEvent::WindowEvent {
-                window_id,
-                event: window_event,
-            } => {
-                let uuid = match window_ids.uuid_of(window_id) {
-                    Some(uuid) => uuid,
-                    None => return,
-                };
 
-                if let Some(input) = window_event.to_input() {
-                    (event_handler)(Event::WindowEvent(uuid, WindowEvent::Input(input)));
+            match event {
+                WinitEvent::AboutToWait => {
+                    (event_handler)(Event::EventsCleared);
+                    event_loop.set_control_flow(ControlFlow::Poll);
                 }
-                match window_event {
-                    WinitWindowEvent::RedrawRequested => {
-                        (event_handler)(Event::WindowEvent(uuid, WindowEvent::RedrawRequested))
+                WinitEvent::Resumed => {
+                    if is_first_resume {
+                        is_first_resume = false;
+                        (event_handler)(Event::Started);
                     }
-                    WinitWindowEvent::Resized(size) => (event_handler)(Event::WindowEvent(
-                        uuid,
-                        WindowEvent::Resized(size.width, size.height),
-                    )),
-                    WinitWindowEvent::CloseRequested => {
-                        (event_handler)(Event::WindowEvent(uuid, WindowEvent::Closed))
-                    }
-                    _ => (),
                 }
+                WinitEvent::LoopExiting => (event_handler)(Event::Exited),
+                WinitEvent::DeviceEvent { event, .. } => {
+                    if let Some(input) = event.to_input() {
+                        (event_handler)(Event::Input(input));
+                    }
+                }
+                WinitEvent::WindowEvent {
+                    window_id,
+                    event: window_event,
+                } => {
+                    let uuid = match window_ids.uuid_of(window_id) {
+                        Some(uuid) => uuid,
+                        None => return,
+                    };
+
+                    if let Some(input) = window_event.to_input() {
+                        (event_handler)(Event::WindowEvent(uuid, WindowEvent::Input(input)));
+                    }
+
+                    match window_event {
+                        WinitWindowEvent::RedrawRequested => {
+                            (event_handler)(Event::WindowEvent(uuid, WindowEvent::RedrawRequested))
+                        }
+                        WinitWindowEvent::Resized(size) => (event_handler)(Event::WindowEvent(
+                            uuid,
+                            WindowEvent::Resized(size.width, size.height),
+                        )),
+                        WinitWindowEvent::CloseRequested => {
+                            (event_handler)(Event::WindowEvent(uuid, WindowEvent::Closed))
+                        }
+                        _ => (),
+                    }
+                }
+                _ => (),
             }
-            _ => (),
         });
     }
 }
