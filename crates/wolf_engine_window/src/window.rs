@@ -99,7 +99,6 @@ impl From<WindowSettings> for WindowAttributes {
 #[derive(Clone, Debug)]
 pub struct Window {
     uuid: Uuid,
-    id_remover: WindowIdRemover,
     inner: Arc<WinitWindow>,
 }
 
@@ -114,8 +113,7 @@ impl Eq for Window {}
 impl Window {
     pub(crate) fn new(uuid: Uuid, inner: WinitWindow) -> Self {
         Self {
-            uuid: Uuid::new_v4(),
-            id_remover,
+            uuid,
             inner: Arc::new(inner),
         }
     }
@@ -153,15 +151,6 @@ impl Window {
     }
 }
 
-impl Drop for Window {
-    fn drop(&mut self) {
-        let weak = Arc::downgrade(&self.inner);
-        if weak.strong_count() == 1 {
-            self.id_remover.remove(self);
-        }
-    }
-}
-
 impl rwh_06::HasWindowHandle for Window {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(&self.inner)
@@ -190,52 +179,26 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window {
 
 #[derive(Clone, Debug)]
 pub(crate) struct WindowIdMap {
-    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
+    window_ids: HashMap<WindowId, Uuid>,
 }
 
 impl WindowIdMap {
     pub fn new() -> Self {
         Self {
-            window_ids: Arc::new(RwLock::new(HashMap::new())),
+            window_ids: HashMap::new(),
         }
     }
 
-    pub fn id_remover(&self) -> WindowIdRemover {
-        WindowIdRemover {
-            window_ids: self.window_ids.clone(),
-        }
+    pub fn insert(&mut self, window: &Window) {
+        self.window_ids.insert(window.inner.id(), window.id());
     }
 
-    pub fn insert(&self, window: &Window) {
-        self.window_ids
-            .write()
-            .expect("write-lock was acquired")
-            .insert(window.inner.id(), window.id());
+    pub fn remove(&mut self, window: &Window) {
+        let winit_id = window.inner.id();
+        let _ = self.window_ids.remove(&winit_id);
     }
 
     pub fn uuid_of(&self, winit_id: WindowId) -> Option<Uuid> {
-        Some(
-            self.window_ids
-                .read()
-                .expect("read-lock was acquired")
-                .get(&winit_id)?
-                .to_owned(),
-        )
-    }
-}
-
-#[derive(Clone, Debug)]
-pub(crate) struct WindowIdRemover {
-    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
-}
-
-impl WindowIdRemover {
-    pub fn remove(&self, window: &Window) {
-        let winit_id = window.inner.id();
-        let _ = self
-            .window_ids
-            .write()
-            .expect("write-lock was acquired")
-            .remove(&winit_id);
+        Some(self.window_ids.get(&winit_id)?.to_owned())
     }
 }
