@@ -112,7 +112,7 @@ impl PartialEq for Window {
 impl Eq for Window {}
 
 impl Window {
-    pub(crate) fn new(inner: WinitWindow, id_remover: WindowIdRemover) -> Self {
+    pub(crate) fn new(uuid: Uuid, inner: WinitWindow) -> Self {
         Self {
             uuid: Uuid::new_v4(),
             id_remover,
