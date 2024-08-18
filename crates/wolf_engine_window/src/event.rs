@@ -132,7 +132,7 @@ impl EventLoop {
                             WindowEvent::Created(window_result),
                         ));
                     }
-                    ContextEvent::Exit => todo!(),
+                    ContextEvent::Exit => event_loop.exit(),
                 }
             }
 
