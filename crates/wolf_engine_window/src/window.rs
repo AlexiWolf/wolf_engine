@@ -7,7 +7,7 @@ use winit::{
 };
 use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
 
-use crate::ContextEvent;
+use crate::event::ContextEvent;
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]

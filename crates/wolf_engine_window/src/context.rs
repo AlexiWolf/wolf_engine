@@ -1,13 +1,7 @@
 use uuid::Uuid;
 use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
 
-use crate::WindowSettings;
-
-pub(crate) enum ContextEvent {
-    CreateWindow(Uuid, WindowSettings),
-    WindowDropped(Uuid),
-    Exit,
-}
+use crate::{event::ContextEvent, WindowSettings};
 
 #[derive(Clone)]
 /// A link to the window system.
