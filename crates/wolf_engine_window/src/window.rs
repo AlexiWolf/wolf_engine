@@ -8,6 +8,9 @@ use winit::{
     dpi::PhysicalSize,
     window::{Fullscreen, Window as WinitWindow, WindowAttributes, WindowId},
 };
+use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
+
+use crate::ContextEvent;
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -96,9 +99,10 @@ impl From<WindowSettings> for WindowAttributes {
 }
 
 /// A window.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Window {
     uuid: Uuid,
+    event_sender: MpscEventSender<ContextEvent>,
     inner: Arc<WinitWindow>,
 }
 
@@ -111,9 +115,14 @@ impl PartialEq for Window {
 impl Eq for Window {}
 
 impl Window {
-    pub(crate) fn new(uuid: Uuid, inner: WinitWindow) -> Self {
+    pub(crate) fn new(
+        uuid: Uuid,
+        event_sender: MpscEventSender<ContextEvent>,
+        inner: WinitWindow,
+    ) -> Self {
         Self {
             uuid,
+            event_sender,
             inner: Arc::new(inner),
         }
     }
@@ -177,6 +186,25 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window {
     }
 }
 
+impl Drop for Window {
+    fn drop(&mut self) {
+        let weak = Arc::downgrade(&self.inner);
+        if weak.strong_count() == 1 {
+            self.event_sender
+                .send_event(ContextEvent::WindowDropped(self.uuid));
+        }
+    }
+}
+
+impl std::fmt::Debug for Window {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Window")
+            .field("uuid", &self.uuid)
+            .field("inner", &self.inner)
+            .finish()
+    }
+}
+
 #[derive(Clone, Debug)]
 pub(crate) struct WindowIdMap {
     window_ids: HashMap<WindowId, Uuid>,
@@ -193,12 +221,22 @@ impl WindowIdMap {
         self.window_ids.insert(window.inner.id(), window.id());
     }
 
-    pub fn remove(&mut self, window: &Window) {
-        let winit_id = window.inner.id();
-        let _ = self.window_ids.remove(&winit_id);
+    pub fn remove(&mut self, uuid: Uuid) {
+        if let Some(winit_id) = self.winit_id_of(uuid) {
+            let _ = self.window_ids.remove(&winit_id);
+        }
     }
 
     pub fn uuid_of(&self, winit_id: WindowId) -> Option<Uuid> {
         Some(self.window_ids.get(&winit_id)?.to_owned())
+    }
+
+    pub fn winit_id_of(&self, uuid: Uuid) -> Option<WindowId> {
+        for (winit_id, stored_uuid) in self.window_ids.iter() {
+            if uuid == *stored_uuid {
+                return Some(*winit_id);
+            }
+        }
+        None
     }
 }

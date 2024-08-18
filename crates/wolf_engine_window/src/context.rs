@@ -1,10 +1,11 @@
 use uuid::Uuid;
-use wolf_engine_events::mpsc::MpscEventSender;
+use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
 
 use crate::WindowSettings;
 
 pub(crate) enum ContextEvent {
     CreateWindow(Uuid, WindowSettings),
+    WindowDropped(Uuid),
     Exit,
 }
 
@@ -30,6 +31,10 @@ impl WindowContext {
 
     /// Stops the event loop.
     pub fn exit(&self) {
-        self.event_sender.send_event(ContextEvent::Exit);
+        self.event_sender.send_event(ContextEvent::Exit).unwrap();
+    }
+
+    pub(crate) fn event_sender(&self) -> MpscEventSender<ContextEvent> {
+        self.event_sender.clone()
     }
 }
