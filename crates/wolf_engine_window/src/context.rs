@@ -24,7 +24,7 @@ impl WindowContext {
     pub fn create_window(&self, window_settings: WindowSettings) -> Uuid {
         let uuid = Uuid::new_v4();
         self.event_sender
-            .send_event(ContextEvent::CreateWindow(uuid.clone(), window_settings))
+            .send_event(ContextEvent::CreateWindow(uuid, window_settings))
             .unwrap();
         uuid
     }
