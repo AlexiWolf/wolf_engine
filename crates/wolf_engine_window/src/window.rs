@@ -190,7 +190,8 @@ impl Drop for Window {
     fn drop(&mut self) {
         let weak = Arc::downgrade(&self.inner);
         if weak.strong_count() == 1 {
-            self.event_sender
+            let _ = self
+                .event_sender
                 .send_event(ContextEvent::WindowDropped(self.uuid));
         }
     }
