@@ -81,6 +81,8 @@ pub struct EventLoop {
     event_receiver: MpscEventReceiver<ContextEvent>,
     event_loop: WinitEventLoop,
     context: WindowContext,
+    is_first_resume: bool,
+    window_ids: WindowIdMap,
 }
 
 impl EventLoop {
@@ -93,6 +95,8 @@ impl EventLoop {
             event_receiver,
             event_loop,
             context,
+            is_first_resume: true,
+            window_ids: WindowIdMap::new(),
         }
     }
 }
@@ -101,8 +105,6 @@ impl EventLoop {
     /// Run the main-loop, passing events to the provided callback.
     #[allow(deprecated)]
     pub fn run<F: FnMut(Event)>(mut self, mut event_handler: F) {
-        let mut is_first_resume = true;
-        let mut window_ids = WindowIdMap::new();
         let _ = self.event_loop.run(|event, event_loop| {
             while let Some(event) = self.event_receiver.next_event() {
                 match event {
@@ -123,7 +125,7 @@ impl EventLoop {
                             Ok(winit_window) => {
                                 let window =
                                     Window::new(uuid, self.context.event_sender(), winit_window);
-                                window_ids.insert(&window);
+                                self.window_ids.insert(&window);
                                 Ok(window)
                             }
                             Err(error) => {
@@ -136,7 +138,7 @@ impl EventLoop {
                         ));
                     }
                     ContextEvent::WindowDropped(uuid) => {
-                        window_ids.remove(uuid);
+                        self.window_ids.remove(uuid);
                     }
                     ContextEvent::Exit => event_loop.exit(),
                 }
@@ -148,8 +150,8 @@ impl EventLoop {
                     event_loop.set_control_flow(ControlFlow::Poll);
                 }
                 WinitEvent::Resumed => {
-                    if is_first_resume {
-                        is_first_resume = false;
+                    if self.is_first_resume {
+                        self.is_first_resume = false;
                         (event_handler)(Event::Started);
                     }
                 }
@@ -163,7 +165,7 @@ impl EventLoop {
                     window_id,
                     event: window_event,
                 } => {
-                    let uuid = match window_ids.uuid_of(window_id) {
+                    let uuid = match self.window_ids.uuid_of(window_id) {
                         Some(uuid) => uuid,
                         None => return,
                     };
