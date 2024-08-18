@@ -4,7 +4,7 @@ use wolf_engine_events::mpsc::MpscEventSender;
 use crate::WindowSettings;
 
 pub(crate) enum ContextEvent {
-    CreateWindow(Uuid),
+    CreateWindow(Uuid, WindowSettings),
 }
 
 #[derive(Clone)]
@@ -20,7 +20,11 @@ impl WindowContext {
 
     /// Create a new [`Window`].
     pub fn create_window(&self, window_settings: WindowSettings) -> Uuid {
-        todo!()
+        let uuid = Uuid::new_v4();
+        self.event_sender
+            .send_event(ContextEvent::CreateWindow(uuid.clone(), window_settings))
+            .unwrap();
+        uuid
     }
 
     /// Stops the event loop.
