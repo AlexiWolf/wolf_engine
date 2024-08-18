@@ -1,22 +1,21 @@
-use anyhow::anyhow;
 use uuid::Uuid;
-use winit::{
-    event_loop::ActiveEventLoop,
-    window::{Fullscreen, WindowAttributes},
-};
+use wolf_engine_events::mpsc::MpscEventSender;
 
-use crate::{
-    error::{OsError, WindowError},
-    FullscreenMode, Window, WindowIdMap, WindowSettings,
-};
+use crate::WindowSettings;
+
+pub(crate) enum ContextEvent {
+    CreateWindow(Uuid),
+}
 
 #[derive(Clone)]
 /// A link to the window system.
-pub struct WindowContext {}
+pub struct WindowContext {
+    event_sender: MpscEventSender<ContextEvent>,
+}
 
 impl WindowContext {
-    pub(crate) fn new() -> Self {
-        Self {}
+    pub(crate) fn new(event_sender: MpscEventSender<ContextEvent>) -> Self {
+        Self { event_sender }
     }
 
     /// Create a new [`Window`].
