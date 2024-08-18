@@ -5,6 +5,7 @@ use crate::WindowSettings;
 
 pub(crate) enum ContextEvent {
     CreateWindow(Uuid, WindowSettings),
+    Exit,
 }
 
 #[derive(Clone)]
@@ -29,6 +30,6 @@ impl WindowContext {
 
     /// Stops the event loop.
     pub fn exit(&self) {
-        todo!()
+        self.event_sender.send_event(ContextEvent::Exit);
     }
 }
