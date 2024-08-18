@@ -7,7 +7,7 @@ use winit::{
 };
 use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
 
-use crate::event::ContextEvent;
+use crate::event::BackendEvent;
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -99,7 +99,7 @@ impl From<WindowSettings> for WindowAttributes {
 #[derive(Clone)]
 pub struct Window {
     uuid: Uuid,
-    event_sender: MpscEventSender<ContextEvent>,
+    event_sender: MpscEventSender<BackendEvent>,
     inner: Arc<WinitWindow>,
 }
 
@@ -114,7 +114,7 @@ impl Eq for Window {}
 impl Window {
     pub(crate) fn new(
         uuid: Uuid,
-        event_sender: MpscEventSender<ContextEvent>,
+        event_sender: MpscEventSender<BackendEvent>,
         inner: WinitWindow,
     ) -> Self {
         Self {
@@ -189,7 +189,7 @@ impl Drop for Window {
         if weak.strong_count() == 1 {
             let _ = self
                 .event_sender
-                .send_event(ContextEvent::WindowDropped(self.uuid));
+                .send_event(BackendEvent::WindowDropped(self.uuid));
         }
     }
 }

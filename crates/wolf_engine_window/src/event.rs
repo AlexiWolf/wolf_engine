@@ -41,7 +41,7 @@ pub enum WindowEvent {
     Input(Input),
 }
 
-pub(crate) enum ContextEvent {
+pub(crate) enum BackendEvent {
     CreateWindow(Uuid, WindowSettings),
     WindowDropped(Uuid),
     Exit,
@@ -84,7 +84,7 @@ impl EventLoopBuilder {
 
 /// The main-loop of the window system.
 pub struct EventLoop {
-    event_receiver: MpscEventReceiver<ContextEvent>,
+    event_receiver: MpscEventReceiver<BackendEvent>,
     event_loop: Option<WinitEventLoop>,
     context: WindowContext,
     is_first_resume: bool,
@@ -93,7 +93,7 @@ pub struct EventLoop {
 
 impl EventLoop {
     fn new(
-        event_receiver: MpscEventReceiver<ContextEvent>,
+        event_receiver: MpscEventReceiver<BackendEvent>,
         event_loop: WinitEventLoop,
         context: WindowContext,
     ) -> Self {
@@ -116,17 +116,17 @@ impl EventLoop {
         let _ = event_loop.run(|event, event_loop| {
             while let Some(event) = self.event_receiver.next_event() {
                 match event {
-                    ContextEvent::CreateWindow(uuid, window_settings) => {
+                    BackendEvent::CreateWindow(uuid, window_settings) => {
                         let window_result = self.create_window(uuid, event_loop, window_settings);
                         (event_handler)(Event::WindowEvent(
                             uuid,
                             WindowEvent::Created(window_result),
                         ));
                     }
-                    ContextEvent::WindowDropped(uuid) => {
+                    BackendEvent::WindowDropped(uuid) => {
                         self.window_ids.remove(uuid);
                     }
-                    ContextEvent::Exit => event_loop.exit(),
+                    BackendEvent::Exit => event_loop.exit(),
                 }
             }
 
