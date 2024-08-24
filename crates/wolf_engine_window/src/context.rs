@@ -14,7 +14,7 @@ impl WindowContext {
         Self { event_sender }
     }
 
-    /// Create a new [`Window`].
+    /// Create a new [`Window`](crate::Window).
     pub fn create_window(&self, window_settings: WindowSettings) -> Uuid {
         let uuid = Uuid::new_v4();
         self.event_sender
