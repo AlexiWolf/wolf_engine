@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_window]
 
+### [Unreleased]
+
+- Changed to event-driven window creation.
+
 ### [0.3] - 2024-08-12
 
 - Added support for multiple windows.
