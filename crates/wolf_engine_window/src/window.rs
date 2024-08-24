@@ -1,13 +1,13 @@
-use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock},
-};
+use std::{collections::HashMap, sync::Arc};
 
 use uuid::Uuid;
 use winit::{
     dpi::PhysicalSize,
     window::{Fullscreen, Window as WinitWindow, WindowAttributes, WindowId},
 };
+use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
+
+use crate::event::BackendEvent;
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -96,10 +96,10 @@ impl From<WindowSettings> for WindowAttributes {
 }
 
 /// A window.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Window {
     uuid: Uuid,
-    id_remover: WindowIdRemover,
+    event_sender: MpscEventSender<BackendEvent>,
     inner: Arc<WinitWindow>,
 }
 
@@ -112,10 +112,14 @@ impl PartialEq for Window {
 impl Eq for Window {}
 
 impl Window {
-    pub(crate) fn new(inner: WinitWindow, id_remover: WindowIdRemover) -> Self {
+    pub(crate) fn new(
+        uuid: Uuid,
+        event_sender: MpscEventSender<BackendEvent>,
+        inner: WinitWindow,
+    ) -> Self {
         Self {
-            uuid: Uuid::new_v4(),
-            id_remover,
+            uuid,
+            event_sender,
             inner: Arc::new(inner),
         }
     }
@@ -153,15 +157,6 @@ impl Window {
     }
 }
 
-impl Drop for Window {
-    fn drop(&mut self) {
-        let weak = Arc::downgrade(&self.inner);
-        if weak.strong_count() == 1 {
-            self.id_remover.remove(self);
-        }
-    }
-}
-
 impl rwh_06::HasWindowHandle for Window {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(&self.inner)
@@ -188,54 +183,58 @@ unsafe impl rwh_05::HasRawDisplayHandle for Window {
     }
 }
 
+impl Drop for Window {
+    fn drop(&mut self) {
+        let weak = Arc::downgrade(&self.inner);
+        if weak.strong_count() == 1 {
+            let _ = self
+                .event_sender
+                .send_event(BackendEvent::WindowDropped(self.uuid));
+        }
+    }
+}
+
+impl std::fmt::Debug for Window {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Window")
+            .field("uuid", &self.uuid)
+            .field("inner", &self.inner)
+            .finish()
+    }
+}
+
 #[derive(Clone, Debug)]
 pub(crate) struct WindowIdMap {
-    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
+    window_ids: HashMap<WindowId, Uuid>,
 }
 
 impl WindowIdMap {
     pub fn new() -> Self {
         Self {
-            window_ids: Arc::new(RwLock::new(HashMap::new())),
+            window_ids: HashMap::new(),
         }
     }
 
-    pub fn id_remover(&self) -> WindowIdRemover {
-        WindowIdRemover {
-            window_ids: self.window_ids.clone(),
-        }
+    pub fn insert(&mut self, window: &Window) {
+        self.window_ids.insert(window.inner.id(), window.id());
     }
 
-    pub fn insert(&self, window: &Window) {
-        self.window_ids
-            .write()
-            .expect("write-lock was acquired")
-            .insert(window.inner.id(), window.id());
+    pub fn remove(&mut self, uuid: Uuid) {
+        if let Some(winit_id) = self.winit_id_of(uuid) {
+            let _ = self.window_ids.remove(&winit_id);
+        }
     }
 
     pub fn uuid_of(&self, winit_id: WindowId) -> Option<Uuid> {
-        Some(
-            self.window_ids
-                .read()
-                .expect("read-lock was acquired")
-                .get(&winit_id)?
-                .to_owned(),
-        )
+        Some(self.window_ids.get(&winit_id)?.to_owned())
     }
-}
 
-#[derive(Clone, Debug)]
-pub(crate) struct WindowIdRemover {
-    window_ids: Arc<RwLock<HashMap<WindowId, Uuid>>>,
-}
-
-impl WindowIdRemover {
-    pub fn remove(&self, window: &Window) {
-        let winit_id = window.inner.id();
-        let _ = self
-            .window_ids
-            .write()
-            .expect("write-lock was acquired")
-            .remove(&winit_id);
+    pub fn winit_id_of(&self, uuid: Uuid) -> Option<WindowId> {
+        for (winit_id, stored_uuid) in self.window_ids.iter() {
+            if uuid == *stored_uuid {
+                return Some(*winit_id);
+            }
+        }
+        None
     }
 }

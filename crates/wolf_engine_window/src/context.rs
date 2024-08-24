@@ -1,53 +1,34 @@
-use anyhow::anyhow;
-use winit::{
-    event_loop::ActiveEventLoop,
-    window::{Fullscreen, WindowAttributes},
-};
+use uuid::Uuid;
+use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
 
-use crate::{
-    error::{OsError, WindowError},
-    FullscreenMode, Window, WindowIdMap, WindowSettings,
-};
+use crate::{event::BackendEvent, WindowSettings};
 
+#[derive(Clone)]
 /// A link to the window system.
-pub struct WindowContext<'event_loop> {
-    event_loop: &'event_loop ActiveEventLoop,
-    window_ids: WindowIdMap,
+pub struct WindowContext {
+    event_sender: MpscEventSender<BackendEvent>,
 }
 
-impl<'event_loop> WindowContext<'event_loop> {
-    pub(crate) fn new(event_loop: &'event_loop ActiveEventLoop, window_ids: WindowIdMap) -> Self {
-        Self {
-            event_loop,
-            window_ids,
-        }
+impl WindowContext {
+    pub(crate) fn new(event_sender: MpscEventSender<BackendEvent>) -> Self {
+        Self { event_sender }
     }
 
-    /// Create a new [`Window`].
-    pub fn create_window(&self, window_settings: WindowSettings) -> Result<Window, WindowError> {
-        let fullscreen_mode = window_settings.fullscreen_mode.clone();
-        let mut window_attributes: WindowAttributes = window_settings.into();
-        if let Some(fullscreen_mode) = fullscreen_mode {
-            let monitor_handle = self.event_loop.primary_monitor();
-            match fullscreen_mode {
-                FullscreenMode::Borderless => {
-                    window_attributes = window_attributes
-                        .with_fullscreen(Some(Fullscreen::Borderless(monitor_handle)))
-                }
-            }
-        }
-        match self.event_loop.create_window(window_attributes) {
-            Ok(winit_window) => {
-                let window = Window::new(winit_window, self.window_ids.id_remover());
-                self.window_ids.insert(&window);
-                Ok(window)
-            }
-            Err(error) => Err(WindowError::OsError(OsError::from(anyhow!("{}", error)))),
-        }
+    /// Create a new [`Window`](crate::Window).
+    pub fn create_window(&self, window_settings: WindowSettings) -> Uuid {
+        let uuid = Uuid::new_v4();
+        self.event_sender
+            .send_event(BackendEvent::CreateWindow(uuid, window_settings))
+            .unwrap();
+        uuid
     }
 
     /// Stops the event loop.
     pub fn exit(&self) {
-        self.event_loop.exit();
+        self.event_sender.send_event(BackendEvent::Exit).unwrap();
+    }
+
+    pub(crate) fn event_sender(&self) -> MpscEventSender<BackendEvent> {
+        self.event_sender.clone()
     }
 }

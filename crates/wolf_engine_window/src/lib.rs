@@ -16,33 +16,38 @@
 //!
 //! ```no_run
 //! # use wolf_engine_window::{
+//! #   Window,
 //! #   WindowSettings,
 //! #   event::{Event, WindowEvent},
 //! # };
 //! #
-//! # let window_context = wolf_engine_window::init().build().unwrap();
+//! # let (event_loop, context) = wolf_engine_window::init().build().unwrap();
 //! #
-//! let mut window = None;
-//! window_context.run(|event, context| match event {
+//! let mut window: Option<Window> = None;
+//! event_loop.run(|event| match event {
 //!     // The main-loop has started.
-//!     // Do intial setup, like creating windows, render surfaces, ext. here.
+//!     // Do intial setup, like creating windows, loading assets, ext. here.
 //!     Event::Started => {
 //!         println!("Hello, world!");
-//!         window = Some(
-//!             context.create_window(
-//!                 WindowSettings::default()
-//!                     .with_title("Example Window")
-//!                     .with_size((800, 600)),
-//!             ).unwrap()
-//!         );
+//!         context.create_window(
+//!             WindowSettings::default()
+//!                 .with_title("Example Window")
+//!                 .with_size((800, 600))
+//!             );
 //!     }
 //!     // All events have been processed.
 //!     Event::EventsCleared => {
-//!         // Start the next frame.
-//!         window.as_ref().unwrap().redraw();
+//!         if let Some(window) = window.as_ref() {
+//!             // Start the next frame.
+//!             window.redraw();
+//!         }
 //!     }
 //!     // Window-specific events.
 //!     Event::WindowEvent(window_id, event) => match event {
+//!         // A window has either been created, or has failed for some reason.
+//!         // You can unwrap the result, and store the window.
+//!         // This is where you're going to want to set up your renderer, also.
+//!         WindowEvent::Created(window_result) => window = Some(window_result.unwrap()),
 //!         // A window should be redrawn.
 //!         WindowEvent::RedrawRequested => {
 //!             // Render code goes here!

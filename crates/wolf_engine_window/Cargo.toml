@@ -24,6 +24,7 @@ wolf_engine_input = { version = "0.1.2", path = "../wolf_engine_input", features
 uuid = { version = "1.10.0", features = ["v4", "fast-rng"] }
 thiserror = "1.0.63"
 anyhow = "1.0.86"
+wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
 
 [dev-dependencies]
 ntest = "0.9.3"
