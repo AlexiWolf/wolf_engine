@@ -13,3 +13,6 @@ categories = ["game-development", "game-engines"]
 [dev-dependencies]
 ntest = "0.9.0"
 test-case = "3.3.1"
+
+[dependencies]
+downcast-rs = "1.2.1"
