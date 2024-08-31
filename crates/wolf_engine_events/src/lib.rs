@@ -105,6 +105,7 @@
 
 mod event_queue;
 pub use event_queue::*;
+use mpsc::{MpscEventReceiver, MpscEventSender};
 pub mod mpsc;
 
 use downcast_rs::*;
@@ -116,3 +117,24 @@ pub type AnyEvent = Box<dyn Event>;
 pub trait Event: Downcast + Debug + 'static {}
 impl_downcast!(Event);
 
+pub struct EventLoop {
+    sender: MpscEventSender<AnyEvent>,
+    receiver: MpscEventReceiver<AnyEvent>,
+}
+
+impl EventLoop {
+    pub fn new() -> Self {
+        let (sender, receiver) = mpsc::event_queue();
+        Self { sender, receiver }
+    }
+
+    pub fn event_sender(&self) -> MpscEventSender<AnyEvent> {
+        self.sender.to_owned()
+    }
+}
+
+impl EventReceiver<AnyEvent> for EventLoop {
+    fn next_event(&mut self) -> Option<AnyEvent> {
+        self.receiver.next_event()
+    }
+}
