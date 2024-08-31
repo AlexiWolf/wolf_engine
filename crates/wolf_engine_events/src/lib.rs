@@ -106,3 +106,11 @@
 mod event_queue;
 pub use event_queue::*;
 pub mod mpsc;
+
+use downcast_rs::*;
+
+use std::fmt::Debug;
+
+pub trait Event: Downcast + Debug + 'static {}
+impl_downcast!(Event);
+
