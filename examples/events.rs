@@ -1,4 +1,7 @@
-use wolf_engine_events::{Event, EventReceiver, EventSender};
+use wolf_engine_events::{
+    dynamic::{Event, EventLoop},
+    EventReceiver, EventSender,
+};
 
 #[derive(Debug)]
 pub enum TestEvent {
@@ -15,7 +18,7 @@ pub enum ExampleEvent {
 impl Event for ExampleEvent {}
 
 fn main() {
-    let mut event_loop = wolf_engine_events::EventLoop::new();
+    let mut event_loop = EventLoop::new();
     let event_sender = event_loop.event_sender();
     let _ = event_sender.send_event(Box::new(TestEvent::A));
     let _ = event_sender.send_event(Box::new(TestEvent::B));
