@@ -1,6 +1,6 @@
 use wolf_engine_events::{
-    dynamic::{Event, EventLoop},
-    EventReceiver, EventSender,
+    dynamic::{AnyEvent, Event},
+    mpsc, EventReceiver, EventSender,
 };
 
 #[derive(Debug)]
@@ -18,8 +18,7 @@ pub enum ExampleEvent {
 impl Event for ExampleEvent {}
 
 fn main() {
-    let mut event_loop = EventLoop::new();
-    let event_sender = event_loop.event_sender();
+    let (event_sender, mut event_loop) = mpsc::event_queue::<AnyEvent>();
     let _ = event_sender.send_event(Box::new(TestEvent::A));
     let _ = event_sender.send_event(Box::new(TestEvent::B));
     let _ = event_sender.send_event(Box::new(ExampleEvent::C));
