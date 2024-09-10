@@ -69,8 +69,6 @@
 //! This crate doesn't provide its own rendering functions.  Instead, it implements
 //! [`raw_window_handle`] traits in order for compatibility with external rendering libraries.
 
-use event::EventLoopBuilder;
-
 mod context;
 pub use context::*;
 mod window;
@@ -78,6 +76,7 @@ pub use window::*;
 
 pub mod event;
 pub use uuid::Uuid;
+use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender};
 
 /// Error-types used by the window system.
 pub mod error;
@@ -85,8 +84,8 @@ pub mod error;
 pub mod raw_window_handle;
 
 /// Initialize the window system.
-pub fn init() -> EventLoopBuilder {
-    EventLoopBuilder::new()
+pub fn init(event_sender: MpscEventSender<AnyEvent>) -> WindowContext {
+    WindowContext::new(event_sender)
 }
 
 #[cfg(test)]
