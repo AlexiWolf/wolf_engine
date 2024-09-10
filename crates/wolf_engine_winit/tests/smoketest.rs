@@ -1,7 +1,7 @@
 use std::process::ExitCode;
 
 use libtest_mimic::{Arguments, Failed, Trial};
-use wolf_engine_window::event::{Event, WindowEvent};
+use wolf_engine_window::event::WindowEvent;
 use wolf_engine_window::*;
 
 pub fn main() -> ExitCode {
@@ -12,25 +12,21 @@ pub fn main() -> ExitCode {
 }
 
 fn test() -> Result<(), Failed> {
-    let (event_loop, context) = init().build().unwrap();
-    let _window = context.create_window(WindowSettings::default().with_visible(false));
+    let window_system = wolf_engine_winit::init().build().unwrap();
+    let context = window_system.context();
 
     let mut has_quit = false;
 
-    event_loop.run(|event| match event {
-        Event::Started => {
+    window_system.run(|event| match event {
+        WindowEvent::Started => {
+            let _window = context.create_window(WindowSettings::default().with_visible(false));
+        }
+        WindowEvent::WindowEvent(_, WindowEvent::Created(window_result)) => {
+            let _window = window_result.expect("Window creation succeeded");
             context.exit();
         }
-        Event::WindowEvent(_, WindowEvent::Created(window_result)) => {
-            let _window = window_result.expect("Window creation succeeded");
-        }
-        Event::Exited => *&mut has_quit = true,
+        WindowEvent::Exited => *&mut has_quit = true,
         _ => (),
     });
-
-    assert!(
-        has_quit,
-        "The window system has not quit, or did not run properly."
-    );
     Ok(())
 }

@@ -1,16 +1,16 @@
 use uuid::Uuid;
-use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
+use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
 
 use crate::{event::BackendEvent, WindowSettings};
 
 #[derive(Clone)]
 /// A link to the window system.
 pub struct WindowContext {
-    event_sender: MpscEventSender<BackendEvent>,
+    event_sender: MpscEventSender<AnyEvent>,
 }
 
 impl WindowContext {
-    pub(crate) fn new(event_sender: MpscEventSender<BackendEvent>) -> Self {
+    pub(crate) fn new(event_sender: MpscEventSender<AnyEvent>) -> Self {
         Self { event_sender }
     }
 
@@ -18,17 +18,19 @@ impl WindowContext {
     pub fn create_window(&self, window_settings: WindowSettings) -> Uuid {
         let uuid = Uuid::new_v4();
         self.event_sender
-            .send_event(BackendEvent::CreateWindow(uuid, window_settings))
+            .send_event(Box::new(BackendEvent::CreateWindow(uuid, window_settings)))
             .unwrap();
         uuid
     }
 
     /// Stops the event loop.
     pub fn exit(&self) {
-        self.event_sender.send_event(BackendEvent::Exit).unwrap();
+        self.event_sender
+            .send_event(Box::new(BackendEvent::Exit))
+            .unwrap();
     }
 
-    pub(crate) fn event_sender(&self) -> MpscEventSender<BackendEvent> {
+    pub(crate) fn event_sender(&self) -> MpscEventSender<AnyEvent> {
         self.event_sender.clone()
     }
 }
