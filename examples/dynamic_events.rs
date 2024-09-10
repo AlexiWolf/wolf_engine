@@ -8,14 +8,12 @@ pub enum TestEvent {
     A,
     B,
 }
-impl Event for TestEvent {}
 
 #[derive(Debug)]
 pub enum ExampleEvent {
     C,
     D,
 }
-impl Event for ExampleEvent {}
 
 fn main() {
     let (event_sender, mut event_loop) = mpsc::event_queue::<AnyEvent>();
