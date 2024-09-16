@@ -1,0 +1,10 @@
+[package]
+name = "wolf_engine_winit"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+winit = "0.30"
+wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
+wolf_engine_input = { version = "0.1.2", path = "../wolf_engine_input", features = ["winit"] }
+wolf_engine_window = { version = "0.3.0", path = "../wolf_engine_window" }
