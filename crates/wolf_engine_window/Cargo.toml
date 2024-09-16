@@ -26,12 +26,3 @@ wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
 ntest = "0.9.3"
 libtest-mimic = "0.7.3"
 
-[[test]]
-name = "run_and_quit"
-path = "tests/run_and_quit.rs"
-harness = false
-
-[[test]]
-name = "dropped_window"
-path = "tests/dropped_window.rs"
-harness = false
