@@ -7,7 +7,7 @@ use wolf_engine_window::{
 
 fn main() {
     let (event_sender, event_reciever) = mpsc::event_queue::<AnyEvent>();
-    let window_context = wolf_engine::window::init(event_sender.clone()).unwrap();
+    let window_context = wolf_engine::window::init(event_sender.clone());
 
     let mut canvas = None;
     let window = window_context.create_window(
@@ -21,17 +21,13 @@ fn main() {
             println!("Hello, world!");
         }
         Event::EventsCleared => {
-            if let Some(window) = window.as_ref() {
-                window.redraw();
-            }
+            window.redraw();
         }
         Event::WindowEvent(_window_id, event) => match event {
-            WindowEvent::Created(window_result) => {
-                window = Some(window_result.expect("Window creation succeeded"));
+            WindowEvent::Created(_window_result) => {
                 canvas = Some({
-                    let window = window.as_ref().unwrap();
                     let (width, height) = window.size();
-                    let surface_texture = SurfaceTexture::new(width, height, window);
+                    let surface_texture = SurfaceTexture::new(width, height, window.raw_handle());
                     let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
                     pixels.clear_color(Color::RED);
                     pixels
@@ -54,5 +50,6 @@ fn main() {
         },
         Event::Exited => println!("Goodbye, World!"),
         _ => (),
-    });
+    })
+    .unwrap();
 }
