@@ -45,7 +45,7 @@ fn main() {
                 }
             }
             WindowEvent::Input(input) => println!("Input into window: {:?}", input),
-            WindowEvent::Closed => context.exit(),
+            WindowEvent::Closed => window_context.exit(),
             _ => (),
         },
         Event::Exited => println!("Goodbye, World!"),
