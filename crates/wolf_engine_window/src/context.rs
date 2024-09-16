@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
 
-use crate::{event::BackendEvent, WindowSettings};
+use crate::{event::BackendEvent, Window, WindowSettings};
 
 #[derive(Clone)]
 /// A link to the window system.
@@ -15,12 +15,15 @@ impl WindowContext {
     }
 
     /// Create a new [`Window`](crate::Window).
-    pub fn create_window(&self, window_settings: WindowSettings) -> Uuid {
+    pub fn create_window(&self, window_settings: WindowSettings) -> Window {
         let uuid = Uuid::new_v4();
         self.event_sender
-            .send_event(Box::new(BackendEvent::CreateWindow(uuid, window_settings)))
+            .send_event(Box::new(BackendEvent::CreateWindow(
+                uuid,
+                window_settings.clone(),
+            )))
             .unwrap();
-        uuid
+        Window::new(uuid, window_settings)
     }
 
     /// Stops the event loop.

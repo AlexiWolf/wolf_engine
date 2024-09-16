@@ -60,21 +60,13 @@ impl Default for WindowSettings {
 }
 
 /// A window.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Window {
     uuid: Uuid,
 }
 
-impl PartialEq for Window {
-    fn eq(&self, other: &Self) -> bool {
-        self.uuid == other.uuid
-    }
-}
-
-impl Eq for Window {}
-
 impl Window {
-    pub(crate) fn new(uuid: Uuid) -> Self {
+    pub(crate) fn new(uuid: Uuid, _window_settings: WindowSettings) -> Self {
         Self { uuid }
     }
 
