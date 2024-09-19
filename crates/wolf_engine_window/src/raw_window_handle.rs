@@ -32,7 +32,7 @@ impl<T> HasRwh5Handles for T {}
 pub trait HasRawWindowHandles: HasRwh6Handles + HasRwh5Handles {}
 impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
-pub struct RawHandle<'a> {
+pub struct WindowHandle<'a> {
     rwh_06_window: rwh_06::WindowHandle<'a>,
     rwh_06_display: rwh_06::DisplayHandle<'a>,
 
@@ -42,27 +42,27 @@ pub struct RawHandle<'a> {
     rwh_05_display: rwh_05::RawDisplayHandle,
 }
 
-impl rwh_06::HasWindowHandle for RawHandle<'_> {
+impl rwh_06::HasWindowHandle for WindowHandle<'_> {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         Ok(self.rwh_06_window)
     }
 }
 
-impl rwh_06::HasDisplayHandle for RawHandle<'_> {
+impl rwh_06::HasDisplayHandle for WindowHandle<'_> {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
         Ok(self.rwh_06_display)
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for RawHandle<'_> {
+unsafe impl rwh_05::HasRawWindowHandle for WindowHandle<'_> {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
         self.rwh_05_window
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for RawHandle<'_> {
+unsafe impl rwh_05::HasRawDisplayHandle for WindowHandle<'_> {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
         self.rwh_05_display
     }
