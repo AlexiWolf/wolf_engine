@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
 
-use crate::{event::BackendEvent, Window, WindowSettings};
+use crate::{event::BackendEvent, raw_window_handle::WindowHandle, Window, WindowSettings};
 
 #[derive(Clone)]
 /// A link to the window system.
@@ -24,6 +24,10 @@ impl WindowContext {
             )))
             .unwrap();
         Window::new(uuid, window_settings)
+    }
+
+    pub fn window_handle(&self, window: &Window) -> Option<WindowHandle> {
+        None
     }
 
     /// Stops the event loop.

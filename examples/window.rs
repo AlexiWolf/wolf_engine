@@ -26,7 +26,7 @@ fn main() {
         Event::WindowEvent(_window_id, event) => match event {
             WindowEvent::Created(_window_result) => {
                 canvas = Some({
-                    let handle = window.handle().unwrap();
+                    let handle = window_context.window_handle(&window).unwrap();
                     let (width, height) = window.size();
                     let surface_texture = SurfaceTexture::new(width, height, &handle);
                     let mut pixels = Pixels::new(width, height, surface_texture).unwrap();
