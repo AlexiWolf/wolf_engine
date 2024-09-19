@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::raw_window_handle::HasRawWindowHandles;
+use crate::raw_window_handle::{HasRawWindowHandles, RawHandle};
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -99,5 +99,4 @@ impl Window {
     pub fn raw_handle(&self) -> Option<RawHandle> {
         None
     }
-}
 }
