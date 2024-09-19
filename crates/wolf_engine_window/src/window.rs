@@ -96,7 +96,7 @@ impl Window {
     /// Request a redraw of the window.
     pub fn redraw(&self) {}
 
-    pub fn raw_handle(&self) -> Option<RawHandle> {
+    pub fn handle(&self) -> Option<RawHandle> {
         None
     }
 }
