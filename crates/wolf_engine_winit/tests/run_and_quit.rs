@@ -24,7 +24,7 @@ fn test() -> Result<(), Failed> {
         Event::Started => {
             context.exit();
         }
-        Event::WindowEvent(_, WindowEvent::Created(window_result)) => {
+        Event::WindowEvent(_, WindowEvent::Ready(window_result)) => {
             let _window = window_result.expect("Window creation succeeded");
         }
         Event::Exited => *&mut has_quit = true,

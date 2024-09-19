@@ -32,7 +32,7 @@ fn test() -> Result<(), Failed> {
             }
             window = None;
         }
-        Event::WindowEvent(_, WindowEvent::Created(window_result)) => {
+        Event::WindowEvent(_, WindowEvent::Ready(window_result)) => {
             window = Some(window_result.expect("window creation succeeded"));
         }
         Event::WindowEvent(_, WindowEvent::RedrawRequested) => {

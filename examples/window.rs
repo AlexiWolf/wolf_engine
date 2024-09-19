@@ -24,7 +24,7 @@ fn main() {
             window.redraw();
         }
         Event::WindowEvent(_window_id, event) => match event {
-            WindowEvent::Created(_window_result) => {
+            WindowEvent::Ready(_window_result) => {
                 canvas = Some({
                     let handle = window_context.window_handle(&window).unwrap();
                     let (width, height) = window.size();
