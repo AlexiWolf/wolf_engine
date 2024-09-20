@@ -1,4 +1,6 @@
-use std::process::ExitCode;
+use std::process::{exit, ExitCode};
+use std::thread;
+use std::time::Duration;
 
 use libtest_mimic::{Arguments, Failed, Trial};
 use wolf_engine_events::dynamic::AnyEvent;
@@ -10,6 +12,11 @@ pub fn main() -> ExitCode {
     let mut args = Arguments::from_args();
     args.test_threads = Some(1);
     let tests = vec![Trial::test("should_run_and_quit", test)];
+    thread::spawn(|| {
+        thread::sleep(Duration::from_secs(1));
+        println!("Error: Test timed out");
+        exit(1);
+    });
     libtest_mimic::run(&args, tests).exit_code()
 }
 
