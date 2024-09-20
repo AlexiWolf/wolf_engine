@@ -33,7 +33,7 @@ fn test() -> Result<(), Failed> {
             window = None;
         }
         Event::WindowEvent(_, WindowEvent::Ready(window_result)) => {
-            window = Some(window_result.expect("window creation succeeded"));
+            window_result.expect("window creation succeeded");
         }
         Event::WindowEvent(_, WindowEvent::RedrawRequested) => {
             let window = window.as_ref().expect("this event is not sent to the user");

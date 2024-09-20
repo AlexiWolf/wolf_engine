@@ -20,7 +20,7 @@ pub enum Event {
 #[derive(Clone, PartialEq, Debug)]
 #[non_exhaustive]
 pub enum WindowEvent {
-    Ready(Result<Window, WindowError>),
+    Ready(Result<(), WindowError>),
     RedrawRequested,
     Resized(u32, u32),
     Closed,
