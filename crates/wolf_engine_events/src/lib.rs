@@ -104,6 +104,8 @@
 //! ```
 
 pub mod dynamic;
+mod event_loop;
+pub use event_loop::*;
 mod event_queue;
 pub use event_queue::*;
 pub mod mpsc;
