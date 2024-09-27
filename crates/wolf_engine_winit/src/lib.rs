@@ -38,3 +38,19 @@ impl ApplicationHandler for WinitAdapter {
     ) {
     }
 }
+
+pub fn init() -> Result<WindowSystem, WindowError> {
+    let (event_sender, event_receiver) = event_queue();
+    let window_context = wolf_engine_window::init(event_sender.clone());
+    let winit_event_loop = EventLoop::new().unwrap();
+    let application = Application {
+        event_sender,
+        event_receiver,
+        window_context,
+        runner: Box::new(|_| {}),
+    };
+    Ok(WindowSystem {
+        application,
+        event_loop: winit_event_loop,
+    })
+}
