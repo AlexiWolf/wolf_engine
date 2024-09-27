@@ -4,28 +4,43 @@ use winit::{
     event_loop::{ActiveEventLoop, EventLoop},
     window::WindowId,
 };
-use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventReceiver};
-use wolf_engine_window::{error::WindowError, event::Event};
+use wolf_engine_events::{
+    dynamic::AnyEvent,
+    mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
+};
+use wolf_engine_window::{error::WindowError, event::Event, WindowBackend, WindowContext};
 
-pub fn run<E: FnMut(Event)>(
-    event_receiver: MpscEventReceiver<AnyEvent>,
-    event_handler: E,
-) -> Result<(), WindowError> {
-    let event_loop = EventLoop::new().unwrap();
-    let mut winit_adapter = WinitAdapter::new();
-    let _ = event_loop.run_app(&mut winit_adapter);
-    Ok(())
+pub struct WindowSystem {
+    application: Application,
+    event_loop: EventLoop<()>,
 }
 
-struct WinitAdapter {}
-
-impl WinitAdapter {
-    pub fn new() -> Self {
-        Self {}
+impl WindowBackend for WindowSystem {
+    fn context(&self) -> WindowContext {
+        self.application.window_context.clone()
     }
 }
 
-impl ApplicationHandler for WinitAdapter {
+impl wolf_engine_events::EventLoop<AnyEvent> for WindowSystem {
+    fn event_sender(&self) -> MpscEventSender<AnyEvent> {
+        self.application.event_sender.clone()
+    }
+
+    fn run<F: FnMut(AnyEvent)>(self, _event_handler: F) {
+        let mut application = self.application;
+        let event_loop = self.event_loop;
+        let _ = event_loop.run_app(&mut application);
+    }
+}
+
+struct Application {
+    event_sender: MpscEventSender<AnyEvent>,
+    event_receiver: MpscEventReceiver<AnyEvent>,
+    window_context: WindowContext,
+    event_handler: Box<dyn FnMut(Event)>,
+}
+
+impl ApplicationHandler for Application {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {}
 
     fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {}
@@ -47,7 +62,7 @@ pub fn init() -> Result<WindowSystem, WindowError> {
         event_sender,
         event_receiver,
         window_context,
-        runner: Box::new(|_| {}),
+        event_handler: Box::new(|_| {}),
     };
     Ok(WindowSystem {
         application,
