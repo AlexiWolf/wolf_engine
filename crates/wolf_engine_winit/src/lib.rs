@@ -40,6 +40,22 @@ struct Application {
     event_handler: Box<dyn FnMut(Event)>,
 }
 
+impl Application {
+    pub fn new(
+        event_sender: MpscEventSender<AnyEvent>,
+        event_receiver: MpscEventReceiver<AnyEvent>,
+        window_context: WindowContext,
+        event_handler: Box<dyn FnMut(Event)>,
+    ) -> Self {
+        Self {
+            event_sender,
+            event_receiver,
+            window_context,
+            event_handler,
+        }
+    }
+}
+
 impl ApplicationHandler for Application {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {}
 
@@ -58,12 +74,12 @@ pub fn init() -> Result<WindowSystem, WindowError> {
     let (event_sender, event_receiver) = event_queue();
     let window_context = wolf_engine_window::init(event_sender.clone());
     let winit_event_loop = EventLoop::new().unwrap();
-    let application = Application {
+    let application = Application::new(
         event_sender,
         event_receiver,
         window_context,
-        event_handler: Box::new(|_| {}),
-    };
+        Box::new(|_| {}),
+    );
     Ok(WindowSystem {
         application,
         event_loop: winit_event_loop,
