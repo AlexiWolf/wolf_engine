@@ -32,7 +32,7 @@ impl WindowContext {
                 window_settings.clone(),
             )))
             .unwrap();
-        Window::new(uuid, window_settings)
+        Window::new(uuid, self.event_sender.clone(), window_settings)
     }
 
     pub fn window_handle(&self, window: &Window) -> Option<WindowHandle> {

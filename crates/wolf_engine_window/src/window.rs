@@ -1,6 +1,7 @@
 use std::sync::{Arc, RwLock};
 
 use uuid::Uuid;
+use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender};
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -75,16 +76,22 @@ impl WindowState {
 }
 
 /// A window.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Window {
     uuid: Uuid,
+    event_sender: MpscEventSender<AnyEvent>,
     state: Arc<WindowState>,
 }
 
 impl Window {
-    pub(crate) fn new(uuid: Uuid, settings: WindowSettings) -> Self {
+    pub(crate) fn new(
+        uuid: Uuid,
+        event_sender: MpscEventSender<AnyEvent>,
+        settings: WindowSettings,
+    ) -> Self {
         Self {
             uuid,
+            event_sender,
             state: Arc::new(WindowState::new(settings)),
         }
     }
@@ -121,6 +128,15 @@ impl Window {
 impl PartialEq for Window {
     fn eq(&self, other: &Self) -> bool {
         self.uuid == other.uuid
+    }
+}
+
+impl std::fmt::Debug for Window {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Window")
+            .field("uuid", &self.uuid)
+            .field("state", &self.state)
+            .finish()
     }
 }
 
