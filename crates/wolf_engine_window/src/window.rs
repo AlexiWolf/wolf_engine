@@ -81,14 +81,6 @@ pub struct Window {
     state: Arc<WindowState>,
 }
 
-impl PartialEq for Window {
-    fn eq(&self, other: &Self) -> bool {
-        self.uuid == other.uuid
-    }
-}
-
-impl Eq for Window {}
-
 impl Window {
     pub(crate) fn new(uuid: Uuid, settings: WindowSettings) -> Self {
         Self {
@@ -125,3 +117,11 @@ impl Window {
     /// Request a redraw of the window.
     pub fn redraw(&self) {}
 }
+
+impl PartialEq for Window {
+    fn eq(&self, other: &Self) -> bool {
+        self.uuid == other.uuid
+    }
+}
+
+impl Eq for Window {}
