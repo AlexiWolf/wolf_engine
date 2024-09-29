@@ -30,6 +30,8 @@ impl WindowContext {
         None
     }
 
+    pub fn insert_window_handle(&self, uuid: Uuid, handle: WindowHandle) {}
+
     /// Stops the event loop.
     pub fn exit(&self) {
         self.event_sender
