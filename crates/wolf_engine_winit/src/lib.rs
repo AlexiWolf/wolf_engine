@@ -20,33 +20,40 @@ use wolf_engine_window::{
 };
 
 pub struct WindowSystem {
-    application: Application,
+    event_sender: MpscEventSender<AnyEvent>,
+    event_receiver: MpscEventReceiver<AnyEvent>,
+    window_context: WindowContext,
     event_loop: EventLoop<()>,
 }
 
 impl WindowBackend for WindowSystem {
     fn context(&self) -> WindowContext {
-        self.application.window_context.clone()
+        self.window_context.clone()
     }
 }
 
 impl wolf_engine_events::EventLoop<AnyEvent> for WindowSystem {
     fn event_sender(&self) -> MpscEventSender<AnyEvent> {
-        self.application.event_sender.clone()
+        self.event_sender.clone()
     }
 
-    fn run<F: FnMut(AnyEvent)>(self, _event_handler: F) {
-        let mut application = self.application;
+    fn run<F: FnMut(AnyEvent)>(self, event_handler: F) {
+        let mut application = Application::new(
+            self.event_sender,
+            self.event_receiver,
+            self.window_context,
+            event_handler,
+        );
         let event_loop = self.event_loop;
         let _ = event_loop.run_app(&mut application);
     }
 }
 
-struct Application {
+struct Application<H: FnMut(AnyEvent)> {
     event_sender: MpscEventSender<AnyEvent>,
     event_receiver: MpscEventReceiver<AnyEvent>,
     window_context: WindowContext,
-    event_handler: Box<dyn FnMut(Event)>,
+    event_handler: H,
 
     is_suspended: bool,
 
@@ -55,12 +62,12 @@ struct Application {
     pending_windows: Vec<(Uuid, WindowSettings)>,
 }
 
-impl Application {
+impl<H: FnMut(AnyEvent)> Application<H> {
     pub fn new(
         event_sender: MpscEventSender<AnyEvent>,
         event_receiver: MpscEventReceiver<AnyEvent>,
         window_context: WindowContext,
-        event_handler: Box<dyn FnMut(Event)>,
+        event_handler: H,
     ) -> Self {
         Self {
             event_sender,
@@ -81,10 +88,12 @@ impl Application {
             if let Some(event) = event.downcast_ref::<BackendEvent>() {
                 self.process_backend_events(event, event_loop);
             }
+
+            (self.event_handler)(event);
         }
     }
 
-    fn process_backend_events(&mut self, event: &BackendEvent, event_loop: &ActiveEventLoop) {
+    fn process_backend_events(&mut self, event: &BackendEvent, _event_loop: &ActiveEventLoop) {
         match event {
             BackendEvent::WindowDropped(uuid) => {
                 self.windows.remove(uuid);
@@ -120,7 +129,7 @@ impl Application {
     }
 }
 
-impl ApplicationHandler for Application {
+impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         self.is_suspended = false;
     }
@@ -142,7 +151,7 @@ impl ApplicationHandler for Application {
 
     fn window_event(
         &mut self,
-        event_loop: &ActiveEventLoop,
+        _event_loop: &ActiveEventLoop,
         window_id: WindowId,
         event: winit::event::WindowEvent,
     ) {
@@ -161,14 +170,10 @@ pub fn init() -> Result<WindowSystem, WindowError> {
     let (event_sender, event_receiver) = event_queue();
     let window_context = wolf_engine_window::init(event_sender.clone());
     let winit_event_loop = EventLoop::new().unwrap();
-    let application = Application::new(
+    Ok(WindowSystem {
+        window_context,
         event_sender,
         event_receiver,
-        window_context,
-        Box::new(|_| {}),
-    );
-    Ok(WindowSystem {
-        application,
         event_loop: winit_event_loop,
     })
 }
