@@ -28,7 +28,7 @@ pub enum WindowEvent {
 }
 
 #[derive(Debug)]
-pub(crate) enum BackendEvent {
+pub enum BackendEvent {
     CreateWindow(Uuid, WindowSettings),
     WindowDropped(Uuid),
     Exit,
