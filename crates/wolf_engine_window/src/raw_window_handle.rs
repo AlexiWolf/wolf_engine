@@ -34,6 +34,7 @@ impl<T> HasRwh5Handles for T {}
 pub trait HasRawWindowHandles: HasRwh6Handles + HasRwh5Handles {}
 impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
+#[derive(Clone)]
 pub struct WindowHandle {
     window: Arc<dyn HasRawWindowHandles>,
 }
