@@ -1,3 +1,8 @@
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock},
+};
+
 use uuid::Uuid;
 use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
 
@@ -7,11 +12,15 @@ use crate::{event::BackendEvent, raw_window_handle::WindowHandle, Window, Window
 /// A link to the window system.
 pub struct WindowContext {
     event_sender: MpscEventSender<AnyEvent>,
+    window_handles: Arc<RwLock<HashMap<Uuid, WindowHandle>>>,
 }
 
 impl WindowContext {
     pub(crate) fn new(event_sender: MpscEventSender<AnyEvent>) -> Self {
-        Self { event_sender }
+        Self {
+            event_sender,
+            window_handles: Arc::new(RwLock::new(HashMap::new())),
+        }
     }
 
     /// Create a new [`Window`](crate::Window).
@@ -27,12 +36,19 @@ impl WindowContext {
     }
 
     pub fn window_handle(&self, window: &Window) -> Option<WindowHandle> {
-        None
+        match self.window_handles.read().unwrap().get(&window.id()) {
+            Some(handle) => Some(handle.to_owned()),
+            None => None,
+        }
     }
 
-    pub fn insert_window_handle(&self, uuid: Uuid, handle: WindowHandle) {}
+    pub fn insert_window_handle(&self, uuid: Uuid, handle: WindowHandle) {
+        self.window_handles.write().unwrap().insert(uuid, handle);
+    }
 
-    pub fn remove_window_handle(&self, uuid: Uuid) {}
+    pub fn remove_window_handle(&self, uuid: Uuid) {
+        self.window_handles.write().unwrap().remove(&uuid);
+    }
 
     /// Stops the event loop.
     pub fn exit(&self) {
