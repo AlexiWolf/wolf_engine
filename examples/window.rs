@@ -13,7 +13,8 @@ fn main() {
     let window = window_context.create_window(
         WindowSettings::default()
             .with_title("Wolf Engine - Window Example")
-            .with_size((800, 600)),
+            .with_size((800, 600))
+            .with_resizable(false),
     );
 
     window_system.run(|event| {
