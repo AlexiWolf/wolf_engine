@@ -1,3 +1,5 @@
+use std::sync::{Arc, RwLock};
+
 use uuid::Uuid;
 
 /// The fullscreen-mode for a Window.
@@ -59,16 +61,44 @@ impl Default for WindowSettings {
     }
 }
 
+#[derive(Debug)]
+pub(crate) struct WindowState {
+    pub settings: RwLock<WindowSettings>,
+}
+
+impl WindowState {
+    fn new(settings: WindowSettings) -> Self {
+        Self {
+            settings: RwLock::new(settings),
+        }
+    }
+}
+
 /// A window.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug)]
 pub struct Window {
     uuid: Uuid,
-    settings: WindowSettings,
+    state: Arc<WindowState>,
 }
+
+impl PartialEq for Window {
+    fn eq(&self, other: &Self) -> bool {
+        self.uuid == other.uuid
+    }
+}
+
+impl Eq for Window {}
 
 impl Window {
     pub(crate) fn new(uuid: Uuid, settings: WindowSettings) -> Self {
-        Self { uuid, settings }
+        Self {
+            uuid,
+            state: Arc::new(WindowState::new(settings)),
+        }
+    }
+
+    pub(crate) fn state(&self) -> Arc<WindowState> {
+        self.state.clone()
     }
 
     /// Get the uuid of the window.
@@ -78,7 +108,7 @@ impl Window {
 
     /// Get the current size of the window.
     pub fn size(&self) -> (u32, u32) {
-        self.settings.size
+        self.state.settings.read().unwrap().size
     }
 
     /// Set the title of the window.
