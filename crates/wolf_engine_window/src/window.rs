@@ -1,7 +1,12 @@
 use std::sync::{Arc, RwLock};
 
 use uuid::Uuid;
-use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender};
+use wolf_engine_events::{
+    dynamic::{AnyEvent, AnyEventSender},
+    mpsc::MpscEventSender,
+};
+
+use crate::event::BackendEvent;
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -141,3 +146,14 @@ impl std::fmt::Debug for Window {
 }
 
 impl Eq for Window {}
+
+impl Drop for Window {
+    fn drop(&mut self) {
+        let weak_state = Arc::downgrade(&self.state);
+        if weak_state.strong_count() == 1 {
+            self.event_sender
+                .send_any_event(BackendEvent::WindowDropped(self.uuid))
+                .unwrap();
+        }
+    }
+}
