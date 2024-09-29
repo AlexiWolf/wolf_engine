@@ -57,3 +57,34 @@ impl WindowContext {
             .unwrap();
     }
 }
+
+#[cfg(test)]
+mod window_context_tests {
+    use wolf_engine_events::{mpsc, EventReceiver};
+
+    use super::*;
+
+    #[test]
+    fn should_sent_window_creation_events_to_backend() {
+        let (event_sender, mut event_receiver) = mpsc::event_queue();
+        let window_context = WindowContext::new(event_sender.clone());
+
+        let window_settings = WindowSettings::default().with_title("Test Window");
+        let window = window_context.create_window(window_settings.clone());
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(backend_event) = event.downcast_ref::<BackendEvent>() {
+                match backend_event {
+                    BackendEvent::CreateWindow(uuid, settings) => {
+                        assert_eq!(*uuid, window.id());
+                        assert_eq!(*settings, window_settings);
+                        return;
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        panic!("Event not emitted");
+    }
+}
