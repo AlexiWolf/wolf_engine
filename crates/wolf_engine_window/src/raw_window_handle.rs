@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 #[cfg(feature = "rwh_05")]
 pub use rwh_05;
 
@@ -32,38 +34,38 @@ impl<T> HasRwh5Handles for T {}
 pub trait HasRawWindowHandles: HasRwh6Handles + HasRwh5Handles {}
 impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
-pub struct WindowHandle<'a> {
-    rwh_06_window: rwh_06::WindowHandle<'a>,
-    rwh_06_display: rwh_06::DisplayHandle<'a>,
-
-    #[cfg(feature = "rwh_05")]
-    rwh_05_window: rwh_05::RawWindowHandle,
-    #[cfg(feature = "rwh_05")]
-    rwh_05_display: rwh_05::RawDisplayHandle,
+pub struct WindowHandle {
+    window: Arc<dyn HasRawWindowHandles>,
 }
 
-impl rwh_06::HasWindowHandle for WindowHandle<'_> {
+impl WindowHandle {
+    pub fn new(window: Arc<dyn HasRawWindowHandles>) -> Self {
+        Self { window }
+    }
+}
+
+impl rwh_06::HasWindowHandle for WindowHandle {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        Ok(self.rwh_06_window)
+        rwh_06::HasWindowHandle::window_handle(self.window.as_ref())
     }
 }
 
-impl rwh_06::HasDisplayHandle for WindowHandle<'_> {
+impl rwh_06::HasDisplayHandle for WindowHandle {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        Ok(self.rwh_06_display)
+        rwh_06::HasDisplayHandle::display_handle(self.window.as_ref())
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for WindowHandle<'_> {
+unsafe impl rwh_05::HasRawWindowHandle for WindowHandle {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        self.rwh_05_window
+        rwh_05::HasRawWindowHandle::raw_window_handle(self.window.as_ref())
     }
 }
 
 #[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for WindowHandle<'_> {
+unsafe impl rwh_05::HasRawDisplayHandle for WindowHandle {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        self.rwh_05_display
+        rwh_05::HasRawDisplayHandle::raw_display_handle(self.window.as_ref())
     }
 }
