@@ -10,7 +10,7 @@ use winit::{
 use wolf_engine_events::{
     dynamic::{AnyEvent, AnyEventSender},
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
-    EventReceiver,
+    EventReceiver, EventSender,
 };
 use wolf_engine_window::{
     error::WindowError,
@@ -51,6 +51,7 @@ struct Application {
     is_suspended: bool,
 
     windows: HashMap<Uuid, Arc<Window>>,
+    id_map: HashMap<WindowId, Uuid>,
     pending_windows: Vec<(Uuid, WindowSettings)>,
 }
 
@@ -70,6 +71,7 @@ impl Application {
             is_suspended: true,
 
             windows: HashMap::new(),
+            id_map: HashMap::new(),
             pending_windows: Vec::new(),
         }
     }
@@ -82,7 +84,15 @@ impl Application {
         }
     }
 
-    fn process_backend_events(&mut self, event: &BackendEvent, event_loop: &ActiveEventLoop) {}
+    fn process_backend_events(&mut self, event: &BackendEvent, event_loop: &ActiveEventLoop) {
+        match event {
+            BackendEvent::WindowDropped(uuid) => {
+                self.windows.remove(uuid);
+                self.window_context.remove_window_handle(*uuid);
+            }
+            _ => (),
+        }
+    }
 
     fn create_windows(&mut self, event_loop: &ActiveEventLoop) {
         if self.is_suspended {
@@ -102,6 +112,7 @@ impl Application {
             );
             let window_handle = WindowHandle::new(window.clone());
 
+            self.id_map.insert(window.id(), uuid);
             self.windows.insert(uuid, window);
             self.window_context
                 .insert_window_handle(uuid, window_handle);
@@ -135,6 +146,14 @@ impl ApplicationHandler for Application {
         window_id: WindowId,
         event: winit::event::WindowEvent,
     ) {
+        let uuid = self.id_map.get(&window_id).unwrap();
+        match event {
+            winit::event::WindowEvent::CloseRequested => self
+                .event_sender
+                .send_any_event(BackendEvent::WindowDropped(uuid.to_owned()))
+                .unwrap(),
+            _ => (),
+        }
     }
 }
 
