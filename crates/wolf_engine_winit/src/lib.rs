@@ -3,8 +3,8 @@ use std::{collections::HashMap, sync::Arc};
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
-    event::StartCause,
-    event_loop::{ActiveEventLoop, EventLoop},
+    event::{StartCause, WindowEvent},
+    event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
     window::{Window, WindowAttributes, WindowId},
 };
 use wolf_engine_events::{
@@ -91,6 +91,7 @@ impl<H: FnMut(AnyEvent)> Application<H> {
 
             (self.event_handler)(event);
         }
+        (self.event_handler)(Box::new(Event::EventsCleared));
     }
 
     fn process_backend_events(&mut self, event: &BackendEvent, _event_loop: &ActiveEventLoop) {
@@ -99,6 +100,9 @@ impl<H: FnMut(AnyEvent)> Application<H> {
                 self.windows.remove(uuid);
                 self.window_context.remove_window_handle(*uuid);
             }
+            BackendEvent::CreateWindow(uuid, settings) => self
+                .pending_windows
+                .push((uuid.to_owned(), settings.to_owned())),
             _ => (),
         }
     }
@@ -125,22 +129,28 @@ impl<H: FnMut(AnyEvent)> Application<H> {
             self.windows.insert(uuid, window);
             self.window_context
                 .insert_window_handle(uuid, window_handle);
+
+            (self.event_handler)(Box::new(Event::WindowEvent(
+                uuid,
+                wolf_engine_window::event::WindowEvent::Ready(Ok(())),
+            )))
         }
     }
 }
 
 impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
-    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+    fn resumed(&mut self, _event_loop: &ActiveEventLoop) {
         self.is_suspended = false;
     }
 
-    fn suspended(&mut self, event_loop: &ActiveEventLoop) {
+    fn suspended(&mut self, _event_loop: &ActiveEventLoop) {
         self.is_suspended = true;
     }
 
     fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {
+        event_loop.set_control_flow(ControlFlow::Poll);
         match cause {
-            StartCause::Init => self.event_sender.send_any_event(Event::Started).unwrap(),
+            StartCause::Init => (self.event_handler)(Box::new(Event::Started)),
             StartCause::Poll => {
                 self.process_events(event_loop);
                 self.create_windows(event_loop);
