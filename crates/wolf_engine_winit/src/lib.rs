@@ -39,6 +39,8 @@ struct Application {
     event_receiver: MpscEventReceiver<AnyEvent>,
     window_context: WindowContext,
     event_handler: Box<dyn FnMut(Event)>,
+
+    is_suspended: bool,
 }
 
 impl Application {
@@ -53,6 +55,8 @@ impl Application {
             event_receiver,
             window_context,
             event_handler,
+
+            is_suspended: true,
         }
     }
 
@@ -62,7 +66,13 @@ impl Application {
 }
 
 impl ApplicationHandler for Application {
-    fn resumed(&mut self, event_loop: &ActiveEventLoop) {}
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        self.is_suspended = false;
+    }
+
+    fn suspended(&mut self, event_loop: &ActiveEventLoop) {
+        self.is_suspended = true;
+    }
 
     fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {
         match cause {
