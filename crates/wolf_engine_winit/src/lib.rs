@@ -5,8 +5,9 @@ use winit::{
     window::WindowId,
 };
 use wolf_engine_events::{
-    dynamic::AnyEvent,
+    dynamic::{AnyEvent, AnyEventSender},
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
+    EventReceiver,
 };
 use wolf_engine_window::{error::WindowError, event::Event, WindowBackend, WindowContext};
 
@@ -54,12 +55,21 @@ impl Application {
             event_handler,
         }
     }
+
+    fn process_events(&mut self, event_loop: &ActiveEventLoop) {
+        while let Some(event) = self.event_receiver.next_event() {}
+    }
 }
 
 impl ApplicationHandler for Application {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {}
 
-    fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {}
+    fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {
+        match cause {
+            StartCause::Poll => self.process_events(event_loop),
+            _ => (),
+        }
+    }
 
     fn window_event(
         &mut self,
