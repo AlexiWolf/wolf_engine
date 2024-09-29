@@ -63,11 +63,12 @@ impl Default for WindowSettings {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Window {
     uuid: Uuid,
+    settings: WindowSettings,
 }
 
 impl Window {
-    pub(crate) fn new(uuid: Uuid, _window_settings: WindowSettings) -> Self {
-        Self { uuid }
+    pub(crate) fn new(uuid: Uuid, settings: WindowSettings) -> Self {
+        Self { uuid, settings }
     }
 
     /// Get the uuid of the window.
@@ -77,7 +78,7 @@ impl Window {
 
     /// Get the current size of the window.
     pub fn size(&self) -> (u32, u32) {
-        (0, 0)
+        self.settings.size
     }
 
     /// Set the title of the window.
