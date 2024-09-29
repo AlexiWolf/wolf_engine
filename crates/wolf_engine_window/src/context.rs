@@ -56,8 +56,4 @@ impl WindowContext {
             .send_event(Box::new(BackendEvent::Exit))
             .unwrap();
     }
-
-    pub(crate) fn event_sender(&self) -> MpscEventSender<AnyEvent> {
-        self.event_sender.clone()
-    }
 }
