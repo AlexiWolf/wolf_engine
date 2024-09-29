@@ -2,14 +2,18 @@ use winit::{
     application::ApplicationHandler,
     event::StartCause,
     event_loop::{ActiveEventLoop, EventLoop},
-    window::WindowId,
+    window::{WindowAttributes, WindowId},
 };
 use wolf_engine_events::{
     dynamic::{AnyEvent, AnyEventSender},
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
     EventReceiver,
 };
-use wolf_engine_window::{error::WindowError, event::Event, WindowBackend, WindowContext};
+use wolf_engine_window::{
+    error::WindowError,
+    event::{BackendEvent, Event},
+    WindowBackend, WindowContext,
+};
 
 pub struct WindowSystem {
     application: Application,
@@ -61,8 +65,14 @@ impl Application {
     }
 
     fn process_events(&mut self, event_loop: &ActiveEventLoop) {
-        while let Some(event) = self.event_receiver.next_event() {}
+        while let Some(event) = self.event_receiver.next_event() {
+            if let Some(event) = event.downcast_ref::<BackendEvent>() {
+                self.process_backend_events(event, event_loop);
+            }
+        }
     }
+
+    fn process_backend_events(&mut self, event: &BackendEvent, event_loop: &ActiveEventLoop) {}
 }
 
 impl ApplicationHandler for Application {
