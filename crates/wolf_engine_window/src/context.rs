@@ -65,7 +65,7 @@ mod window_context_tests {
     use super::*;
 
     #[test]
-    fn should_sent_window_creation_events_to_backend() {
+    fn should_sent_window_creation_events() {
         let (event_sender, mut event_receiver) = mpsc::event_queue();
         let window_context = WindowContext::new(event_sender.clone());
 
@@ -78,6 +78,46 @@ mod window_context_tests {
                     BackendEvent::CreateWindow(uuid, settings) => {
                         assert_eq!(*uuid, window.id());
                         assert_eq!(*settings, window_settings);
+                        return;
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        panic!("Event not emitted");
+    }
+
+    #[test]
+    fn should_close_windows_when_dropped() {
+        let (event_sender, mut event_receiver) = mpsc::event_queue();
+        let window_context = WindowContext::new(event_sender.clone());
+
+        let window_settings = WindowSettings::default().with_title("Test Window");
+        let window = window_context.create_window(window_settings.clone());
+        let dropped_id = window.id();
+        let window_clone = window.clone();
+
+        drop(window);
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(backend_event) = event.downcast_ref::<BackendEvent>() {
+                match backend_event {
+                    BackendEvent::WindowDropped(_uuid) => {
+                        panic!("Event sent while copies still exist")
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        drop(window_clone);
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(backend_event) = event.downcast_ref::<BackendEvent>() {
+                match backend_event {
+                    BackendEvent::WindowDropped(uuid) => {
+                        assert_eq!(*uuid, dropped_id);
                         return;
                     }
                     _ => (),
