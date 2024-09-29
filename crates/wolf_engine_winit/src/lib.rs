@@ -1,8 +1,11 @@
+use std::{collections::HashMap, sync::Arc};
+
 use winit::{
     application::ApplicationHandler,
+    dpi::PhysicalSize,
     event::StartCause,
     event_loop::{ActiveEventLoop, EventLoop},
-    window::{WindowAttributes, WindowId},
+    window::{Window, WindowAttributes, WindowId},
 };
 use wolf_engine_events::{
     dynamic::{AnyEvent, AnyEventSender},
@@ -12,7 +15,8 @@ use wolf_engine_events::{
 use wolf_engine_window::{
     error::WindowError,
     event::{BackendEvent, Event},
-    WindowBackend, WindowContext,
+    raw_window_handle::WindowHandle,
+    Uuid, WindowBackend, WindowContext, WindowSettings,
 };
 
 pub struct WindowSystem {
@@ -45,6 +49,9 @@ struct Application {
     event_handler: Box<dyn FnMut(Event)>,
 
     is_suspended: bool,
+
+    windows: HashMap<Uuid, Arc<Window>>,
+    pending_windows: Vec<(Uuid, WindowSettings)>,
 }
 
 impl Application {
@@ -61,6 +68,9 @@ impl Application {
             event_handler,
 
             is_suspended: true,
+
+            windows: HashMap::new(),
+            pending_windows: Vec::new(),
         }
     }
 
@@ -73,6 +83,30 @@ impl Application {
     }
 
     fn process_backend_events(&mut self, event: &BackendEvent, event_loop: &ActiveEventLoop) {}
+
+    fn create_windows(&mut self, event_loop: &ActiveEventLoop) {
+        if self.is_suspended {
+            return;
+        }
+
+        while let Some((uuid, settings)) = self.pending_windows.pop() {
+            let window_attributes = WindowAttributes::default()
+                .with_title(settings.title)
+                .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1))
+                .with_visible(settings.is_visible)
+                .with_resizable(settings.is_resizable);
+            let window = Arc::new(
+                event_loop
+                    .create_window(window_attributes)
+                    .expect("Window creation succeeded"),
+            );
+            let window_handle = WindowHandle::new(window.clone());
+
+            self.windows.insert(uuid, window);
+            self.window_context
+                .insert_window_handle(uuid, window_handle);
+        }
+    }
 }
 
 impl ApplicationHandler for Application {
@@ -87,7 +121,10 @@ impl ApplicationHandler for Application {
     fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {
         match cause {
             StartCause::Init => self.event_sender.send_any_event(Event::Started).unwrap(),
-            StartCause::Poll => self.process_events(event_loop),
+            StartCause::Poll => {
+                self.process_events(event_loop);
+                self.create_windows(event_loop);
+            }
             _ => (),
         }
     }
