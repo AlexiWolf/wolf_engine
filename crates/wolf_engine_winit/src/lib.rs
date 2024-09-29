@@ -66,6 +66,7 @@ impl ApplicationHandler for Application {
 
     fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {
         match cause {
+            StartCause::Init => self.event_sender.send_any_event(Event::Started).unwrap(),
             StartCause::Poll => self.process_events(event_loop),
             _ => (),
         }
