@@ -6,7 +6,7 @@ use std::{
 use uuid::Uuid;
 use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
 
-use crate::{event::BackendEvent, raw_window_handle::WindowHandle, Window, WindowSettings};
+use crate::{event::BackendEvent, Window, WindowSettings};
 
 #[derive(Clone)]
 /// A link to the window system.
@@ -33,21 +33,6 @@ impl WindowContext {
             )))
             .unwrap();
         Window::new(uuid, self.event_sender.clone(), window_settings)
-    }
-
-    pub fn window_handle(&self, window: &Window) -> Option<WindowHandle> {
-        match self.windows.read().unwrap().get(&window.id()) {
-            Some(handle) => Some(handle.to_owned()),
-            None => None,
-        }
-    }
-
-    pub fn insert_window_handle(&self, uuid: Uuid, handle: WindowHandle) {
-        self.windows.write().unwrap().insert(uuid, handle);
-    }
-
-    pub fn remove_window_handle(&self, uuid: Uuid) {
-        self.windows.write().unwrap().remove(&uuid);
     }
 
     /// Stops the event loop.

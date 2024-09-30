@@ -6,7 +6,7 @@ use wolf_engine_events::{
     mpsc::MpscEventSender,
 };
 
-use crate::event::BackendEvent;
+use crate::{event::BackendEvent, raw_window_handle::WindowHandle};
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -113,6 +113,17 @@ impl Window {
 
     /// Request a redraw of the window.
     pub fn redraw(&self) {}
+
+    pub fn handle(&self) -> Option<WindowHandle> {
+        match self.state.handle.read().unwrap().as_ref() {
+            Some(handle) => Some(handle.to_owned()),
+            None => None,
+        }
+    }
+
+    pub fn set_handle(&self, handle: WindowHandle) {
+        *self.state.handle.write().unwrap() = Some(handle);
+    }
 }
 
 impl PartialEq for Window {
@@ -140,10 +151,10 @@ impl Drop for Window {
     }
 }
 
-#[derive(Debug)]
 pub(crate) struct WindowState {
     pub uuid: Uuid,
     pub settings: RwLock<WindowSettings>,
+    pub handle: RwLock<Option<WindowHandle>>,
 }
 
 impl WindowState {
@@ -151,7 +162,18 @@ impl WindowState {
         Self {
             uuid,
             settings: RwLock::new(settings),
+            handle: RwLock::new(None),
         }
+    }
+}
+
+impl std::fmt::Debug for WindowState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("WindowState")
+            .field("uuid", &self.uuid)
+            .field("settings", &self.settings)
+            .field("has_handle", &self.handle.read().unwrap().is_some())
+            .finish()
     }
 }
 
