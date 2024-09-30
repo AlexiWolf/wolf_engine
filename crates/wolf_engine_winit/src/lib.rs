@@ -3,18 +3,18 @@ use std::{collections::HashMap, sync::Arc};
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
-    event::{StartCause, WindowEvent},
+    event::{StartCause, WindowEvent as WinitWindowEvent},
     event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
     window::{Window, WindowAttributes, WindowId},
 };
 use wolf_engine_events::{
     dynamic::{AnyEvent, AnyEventSender},
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
-    EventReceiver, EventSender,
+    EventReceiver,
 };
 use wolf_engine_window::{
     error::WindowError,
-    event::{BackendEvent, Event},
+    event::{BackendEvent, Event, WindowEvent as WeWindowEvent},
     raw_window_handle::WindowHandle,
     Uuid, WindowBackend, WindowContext, WindowSettings,
 };
@@ -90,6 +90,12 @@ impl<H: FnMut(AnyEvent)> Application<H> {
                 self.process_backend_events(event, event_loop);
             }
 
+            if let Some(window_event) = event.downcast_ref::<Event>() {
+                match window_event {
+                    Event::Exited => event_loop.exit(),
+                    _ => (),
+                }
+            }
             (self.event_handler)(event);
         }
         (self.event_handler)(Box::new(Event::EventsCleared));
@@ -97,9 +103,12 @@ impl<H: FnMut(AnyEvent)> Application<H> {
 
     fn process_backend_events(&mut self, event: &BackendEvent, _event_loop: &ActiveEventLoop) {
         match event {
-            BackendEvent::WindowDropped(uuid) => {
-                self.windows.remove(uuid);
-            }
+            BackendEvent::WindowDropped(uuid) => match self.windows.remove(uuid) {
+                Some(window) => {
+                    let _ = self.id_map.remove(&window.id());
+                }
+                None => (),
+            },
             BackendEvent::CreateWindow(uuid, settings) => self
                 .pending_windows
                 .push((uuid.to_owned(), settings.to_owned())),
@@ -165,13 +174,16 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
         &mut self,
         _event_loop: &ActiveEventLoop,
         window_id: WindowId,
-        event: winit::event::WindowEvent,
+        event: WinitWindowEvent,
     ) {
-        let uuid = self.id_map.get(&window_id).unwrap();
+        let uuid = match self.id_map.get(&window_id) {
+            Some(uuid) => uuid,
+            None => return,
+        };
         match event {
-            winit::event::WindowEvent::CloseRequested => self
+            WinitWindowEvent::CloseRequested => self
                 .event_sender
-                .send_any_event(BackendEvent::WindowDropped(uuid.to_owned()))
+                .send_any_event(Event::WindowEvent(uuid.to_owned(), WeWindowEvent::Closed))
                 .unwrap(),
             _ => (),
         }
