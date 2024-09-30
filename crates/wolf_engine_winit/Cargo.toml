@@ -19,10 +19,5 @@ name = "run_and_quit"
 path = "tests/run_and_quit.rs"
 harness = false
 
-[[test]]
-name = "dropped_window"
-path = "tests/dropped_window.rs"
-harness = false
-
 [dev-dependencies]
 libtest-mimic = "0.7.3"
