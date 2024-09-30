@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use libtest_mimic::{Arguments, Failed, Trial};
 use wolf_engine_events::EventLoop;
-use wolf_engine_window::event::{Event, WindowEvent};
+use wolf_engine_window::event::WindowEvent;
 use wolf_engine_window::*;
 
 pub fn main() -> ExitCode {
@@ -27,15 +27,15 @@ fn test() -> Result<(), Failed> {
     let mut has_quit = false;
 
     window_system.run(|event| {
-        if let Some(event) = event.downcast_ref::<Event>() {
+        if let Some(event) = event.downcast_ref::<WindowEvent>() {
             match event {
-                Event::Started => {
+                WindowEvent::Started => {
                     context.exit();
                 }
-                Event::WindowEvent(_, WindowEvent::Ready(window_result)) => {
+                WindowEvent::WindowReady(_, window_result) => {
                     window_result.as_ref().expect("Window creation succeeded");
                 }
-                Event::Exited => *&mut has_quit = true,
+                WindowEvent::Exited => *&mut has_quit = true,
                 _ => (),
             }
         }

@@ -14,7 +14,7 @@ use wolf_engine_events::{
 };
 use wolf_engine_window::{
     error::WindowError,
-    event::{BackendEvent, Event, WindowEvent as WeWindowEvent},
+    event::{BackendEvent, WindowEvent, WindowEvent as WeWindowEvent},
     raw_window_handle::WindowHandle,
     Uuid, WindowBackend, WindowContext, WindowSettings,
 };
@@ -90,15 +90,15 @@ impl<H: FnMut(AnyEvent)> Application<H> {
                 self.process_backend_events(event, event_loop);
             }
 
-            if let Some(window_event) = event.downcast_ref::<Event>() {
+            if let Some(window_event) = event.downcast_ref::<WindowEvent>() {
                 match window_event {
-                    Event::Exited => event_loop.exit(),
+                    WindowEvent::Exited => event_loop.exit(),
                     _ => (),
                 }
             }
             (self.event_handler)(event);
         }
-        (self.event_handler)(Box::new(Event::EventsCleared));
+        (self.event_handler)(Box::new(WindowEvent::EventsCleared));
     }
 
     fn process_backend_events(&mut self, event: &BackendEvent, _event_loop: &ActiveEventLoop) {
@@ -146,10 +146,7 @@ impl<H: FnMut(AnyEvent)> Application<H> {
                 .expect("window should have been created by the window context")
                 .set_handle(window_handle);
 
-            (self.event_handler)(Box::new(Event::WindowEvent(
-                uuid,
-                wolf_engine_window::event::WindowEvent::Ready(Ok(())),
-            )))
+            (self.event_handler)(Box::new(WeWindowEvent::WindowReady(uuid, Ok(()))))
         }
     }
 }
@@ -166,7 +163,7 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
     fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {
         event_loop.set_control_flow(ControlFlow::Poll);
         match cause {
-            StartCause::Init => (self.event_handler)(Box::new(Event::Started)),
+            StartCause::Init => (self.event_handler)(Box::new(WindowEvent::Started)),
             StartCause::Poll => {
                 self.process_events(event_loop);
                 self.create_windows(event_loop);
@@ -184,15 +181,16 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
         let uuid = match self.id_map.get(&window_id) {
             Some(uuid) => uuid,
             None => return,
-        };
+        }
+        .to_owned();
         match event {
             WinitWindowEvent::CloseRequested => self
                 .event_sender
-                .send_any_event(Event::WindowEvent(uuid.to_owned(), WeWindowEvent::Closed))
+                .send_any_event(WeWindowEvent::WindowCloseRequested(uuid))
                 .unwrap(),
-            WinitWindowEvent::RedrawRequested => (self.event_handler)(Box::new(
-                Event::WindowEvent(*uuid, WeWindowEvent::RedrawRequested),
-            )),
+            WinitWindowEvent::RedrawRequested => {
+                (self.event_handler)(Box::new(WeWindowEvent::WindowRedrawRequested(uuid)))
+            }
             _ => (),
         }
     }
