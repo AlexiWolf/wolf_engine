@@ -67,23 +67,9 @@ impl Default for WindowSettings {
     }
 }
 
-#[derive(Debug)]
-pub(crate) struct WindowState {
-    pub settings: RwLock<WindowSettings>,
-}
-
-impl WindowState {
-    fn new(settings: WindowSettings) -> Self {
-        Self {
-            settings: RwLock::new(settings),
-        }
-    }
-}
-
 /// A window.
 #[derive(Clone)]
 pub struct Window {
-    uuid: Uuid,
     event_sender: MpscEventSender<AnyEvent>,
     state: Arc<WindowState>,
 }
@@ -95,9 +81,8 @@ impl Window {
         settings: WindowSettings,
     ) -> Self {
         Self {
-            uuid,
             event_sender,
-            state: Arc::new(WindowState::new(settings)),
+            state: Arc::new(WindowState::new(uuid, settings)),
         }
     }
 
@@ -107,7 +92,7 @@ impl Window {
 
     /// Get the uuid of the window.
     pub fn id(&self) -> Uuid {
-        self.uuid
+        self.state.uuid
     }
 
     /// Get the current size of the window.
@@ -132,28 +117,46 @@ impl Window {
 
 impl PartialEq for Window {
     fn eq(&self, other: &Self) -> bool {
-        self.uuid == other.uuid
+        self.state == other.state
     }
 }
 
 impl std::fmt::Debug for Window {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Window")
-            .field("uuid", &self.uuid)
             .field("state", &self.state)
             .finish()
     }
 }
-
-impl Eq for Window {}
 
 impl Drop for Window {
     fn drop(&mut self) {
         let weak_state = Arc::downgrade(&self.state);
         if weak_state.strong_count() == 1 {
             self.event_sender
-                .send_any_event(BackendEvent::WindowDropped(self.uuid))
+                .send_any_event(BackendEvent::WindowDropped(self.state.uuid))
                 .unwrap();
         }
+    }
+}
+
+#[derive(Debug)]
+pub(crate) struct WindowState {
+    pub uuid: Uuid,
+    pub settings: RwLock<WindowSettings>,
+}
+
+impl WindowState {
+    fn new(uuid: Uuid, settings: WindowSettings) -> Self {
+        Self {
+            uuid,
+            settings: RwLock::new(settings),
+        }
+    }
+}
+
+impl PartialEq for WindowState {
+    fn eq(&self, other: &Self) -> bool {
+        self.uuid == other.uuid
     }
 }
