@@ -6,7 +6,10 @@ use std::{
 use uuid::Uuid;
 use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
 
-use crate::{event::BackendEvent, Window, WindowSettings};
+use crate::{
+    event::{BackendEvent, Event},
+    Window, WindowSettings,
+};
 
 #[derive(Clone)]
 /// A link to the window system.
@@ -47,7 +50,7 @@ impl WindowContext {
     /// Stops the event loop.
     pub fn exit(&self) {
         self.event_sender
-            .send_event(Box::new(BackendEvent::Exit))
+            .send_event(Box::new(Event::Exited))
             .unwrap();
     }
 
