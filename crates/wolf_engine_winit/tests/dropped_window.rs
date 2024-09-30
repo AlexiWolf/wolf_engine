@@ -29,9 +29,6 @@ fn test() -> Result<(), Failed> {
     window_system.run(|event| {
         if let Some(event) = event.downcast_ref::<Event>() {
             match event {
-                Event::Started => {
-                    context.create_window(WindowSettings::default().with_visible(false));
-                }
                 Event::EventsCleared => {
                     if let Some(window) = window.as_ref() {
                         window.redraw();
