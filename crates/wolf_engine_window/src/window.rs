@@ -147,9 +147,9 @@ impl Drop for Window {
         //   Self's ref (1 ref) + WindowContext's ref (1 ref) = 2 refs
         // The ref owned by the WindowContext should not keep the window alive.
         if weak_state.strong_count() == 2 {
-            self.event_sender
-                .send_any_event(BackendEvent::WindowDropped(self.state.uuid))
-                .unwrap();
+            let _ = self
+                .event_sender
+                .send_any_event(BackendEvent::WindowDropped(self.state.uuid));
         }
     }
 }
