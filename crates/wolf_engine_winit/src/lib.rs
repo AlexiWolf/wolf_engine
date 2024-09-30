@@ -112,6 +112,11 @@ impl<H: FnMut(AnyEvent)> Application<H> {
             BackendEvent::CreateWindow(uuid, settings) => self
                 .pending_windows
                 .push((uuid.to_owned(), settings.to_owned())),
+            BackendEvent::RedrawRequested(uuid) => {
+                if let Some(window) = self.windows.get(uuid) {
+                    window.request_redraw();
+                }
+            }
             _ => (),
         }
     }
@@ -185,6 +190,9 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
                 .event_sender
                 .send_any_event(Event::WindowEvent(uuid.to_owned(), WeWindowEvent::Closed))
                 .unwrap(),
+            WinitWindowEvent::RedrawRequested => (self.event_handler)(Box::new(
+                Event::WindowEvent(*uuid, WeWindowEvent::RedrawRequested),
+            )),
             _ => (),
         }
     }

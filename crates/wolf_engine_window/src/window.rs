@@ -108,7 +108,11 @@ impl Window {
     pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {}
 
     /// Request a redraw of the window.
-    pub fn redraw(&self) {}
+    pub fn redraw(&self) {
+        self.event_sender
+            .send_any_event(BackendEvent::RedrawRequested(self.id()))
+            .unwrap();
+    }
 
     pub fn handle(&self) -> Option<WindowHandle> {
         match self.state.handle.read().unwrap().as_ref() {
