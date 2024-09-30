@@ -31,5 +31,6 @@ pub enum WindowEvent {
 pub enum BackendEvent {
     CreateWindow(Uuid, WindowSettings),
     WindowDropped(Uuid),
+    WindowClosed(Uuid),
     Exit,
 }
