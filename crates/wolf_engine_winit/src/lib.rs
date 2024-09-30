@@ -200,7 +200,7 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
 
 pub fn init() -> Result<WindowSystem, WindowError> {
     let (event_sender, event_receiver) = event_queue();
-    let window_context = wolf_engine_window::init(event_sender.clone());
+    let window_context = WindowContext::new(event_sender.clone());
     let winit_event_loop = EventLoop::new().unwrap();
     Ok(WindowSystem {
         window_context,

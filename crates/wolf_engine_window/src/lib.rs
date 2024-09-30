@@ -3,22 +3,15 @@
 mod context;
 pub use context::*;
 mod window;
-use event::Event;
 pub use window::*;
 
 pub mod event;
 pub use uuid::Uuid;
-use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender};
 
 /// Error-types used by the window system.
 pub mod error;
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
 pub mod raw_window_handle;
-
-/// Initialize the window system.
-pub fn init(event_sender: MpscEventSender<AnyEvent>) -> WindowContext {
-    WindowContext::new(event_sender)
-}
 
 pub trait WindowBackend {
     fn context(&self) -> WindowContext;

@@ -19,7 +19,7 @@ pub struct WindowContext {
 }
 
 impl WindowContext {
-    pub(crate) fn new(event_sender: MpscEventSender<AnyEvent>) -> Self {
+    pub fn new(event_sender: MpscEventSender<AnyEvent>) -> Self {
         Self {
             event_sender,
             windows: Arc::new(RwLock::new(HashMap::new())),
