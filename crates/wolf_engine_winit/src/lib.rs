@@ -121,7 +121,7 @@ impl<H: FnMut(AnyEvent)> Application<H> {
             let window = Arc::new(
                 event_loop
                     .create_window(window_attributes)
-                    .expect("Window creation succeeded"),
+                    .expect("Window creation should have succeeded"),
             );
             let window_handle = WindowHandle::new(window.clone());
 
@@ -129,7 +129,7 @@ impl<H: FnMut(AnyEvent)> Application<H> {
             self.windows.insert(uuid, window);
             self.window_context
                 .window(uuid)
-                .expect("window has been created")
+                .expect("window should have been created by the window context")
                 .set_handle(window_handle);
 
             (self.event_handler)(Box::new(Event::WindowEvent(

@@ -41,10 +41,14 @@ fn test() -> Result<(), Failed> {
                     window = None;
                 }
                 Event::WindowEvent(_, WindowEvent::Ready(window_result)) => {
-                    window_result.as_ref().expect("window creation succeeded");
+                    window_result
+                        .as_ref()
+                        .expect("window creation should have succeeded");
                 }
                 Event::WindowEvent(_, WindowEvent::RedrawRequested) => {
-                    let window = window.as_ref().expect("this event is not sent to the user");
+                    let window = window
+                        .as_ref()
+                        .expect("this event should not be sent to the user");
                     window.redraw();
                 }
                 _ => (),
