@@ -32,7 +32,16 @@ impl WindowContext {
                 window_settings.clone(),
             )))
             .unwrap();
-        Window::new(uuid, self.event_sender.clone(), window_settings)
+        let window = Window::new(uuid, self.event_sender.clone(), window_settings);
+        self.windows.write().unwrap().insert(uuid, window.clone());
+        window
+    }
+
+    pub fn window(&self, uuid: Uuid) -> Option<Window> {
+        match self.windows.read().unwrap().get(&uuid) {
+            Some(window) => Some(window.to_owned()),
+            None => None,
+        }
     }
 
     /// Stops the event loop.
@@ -40,6 +49,17 @@ impl WindowContext {
         self.event_sender
             .send_event(Box::new(BackendEvent::Exit))
             .unwrap();
+    }
+
+    pub fn handle_event(&self, event: &AnyEvent) {
+        if let Some(backend_event) = event.downcast_ref::<BackendEvent>() {
+            match backend_event {
+                BackendEvent::WindowDropped(uuid) => {
+                    let _ = self.windows.write().unwrap().remove(uuid);
+                }
+                _ => (),
+            }
+        }
     }
 }
 

@@ -85,6 +85,7 @@ impl<H: FnMut(AnyEvent)> Application<H> {
 
     fn process_events(&mut self, event_loop: &ActiveEventLoop) {
         while let Some(event) = self.event_receiver.next_event() {
+            self.window_context.handle_event(&event);
             if let Some(event) = event.downcast_ref::<BackendEvent>() {
                 self.process_backend_events(event, event_loop);
             }
@@ -98,7 +99,6 @@ impl<H: FnMut(AnyEvent)> Application<H> {
         match event {
             BackendEvent::WindowDropped(uuid) => {
                 self.windows.remove(uuid);
-                self.window_context.remove_window_handle(*uuid);
             }
             BackendEvent::CreateWindow(uuid, settings) => self
                 .pending_windows
@@ -128,7 +128,9 @@ impl<H: FnMut(AnyEvent)> Application<H> {
             self.id_map.insert(window.id(), uuid);
             self.windows.insert(uuid, window);
             self.window_context
-                .insert_window_handle(uuid, window_handle);
+                .window(uuid)
+                .expect("window has been created")
+                .set_handle(window_handle);
 
             (self.event_handler)(Box::new(Event::WindowEvent(
                 uuid,
