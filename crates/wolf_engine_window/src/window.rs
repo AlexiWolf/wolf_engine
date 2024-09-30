@@ -143,7 +143,10 @@ impl std::fmt::Debug for Window {
 impl Drop for Window {
     fn drop(&mut self) {
         let weak_state = Arc::downgrade(&self.state);
-        if weak_state.strong_count() == 1 {
+        // Strong-count of 2 refs to account for the extra ref owned by the window context:
+        //   Self's ref (1 ref) + WindowContext's ref (1 ref) = 2 refs
+        // The ref owned by the WindowContext should not keep the window alive.
+        if weak_state.strong_count() == 2 {
             self.event_sender
                 .send_any_event(BackendEvent::WindowDropped(self.state.uuid))
                 .unwrap();
