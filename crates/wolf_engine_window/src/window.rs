@@ -86,10 +86,6 @@ impl Window {
         }
     }
 
-    pub(crate) fn state(&self) -> Arc<WindowState> {
-        self.state.clone()
-    }
-
     /// Get the uuid of the window.
     pub fn id(&self) -> Uuid {
         self.state.uuid
