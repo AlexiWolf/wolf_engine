@@ -8,7 +8,7 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 use wolf_engine_events::{
-    dynamic::{AnyEvent, AnyEventSender},
+    dynamic::{AnyEvent, AnyEventSender, Event},
     mpsc::{event_queue, MpscEventReceiver, MpscEventSender},
     EventReceiver,
 };
@@ -163,6 +163,16 @@ impl<H: FnMut(AnyEvent)> Application<H> {
             (self.event_handler)(Box::new(WeWindowEvent::WindowReady(uuid, Ok(()))))
         }
     }
+
+    fn send_event_buffered<E: Event>(&self, event: E) {
+        self.event_sender.send_any_event(event).unwrap();
+    }
+
+    fn send_event_immediately<E: Event>(&mut self, event: E) {
+        let event = Box::new(event) as AnyEvent;
+        self.window_context.handle_event(&event);
+        (self.event_handler)(event);
+    }
 }
 
 impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
@@ -205,6 +215,9 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
             WinitWindowEvent::RedrawRequested => {
                 (self.event_handler)(Box::new(WeWindowEvent::WindowRedrawRequested(uuid)))
             }
+            WinitWindowEvent::Resized(new_size) => self.send_event_immediately(
+                WeWindowEvent::WindowResized(uuid, (new_size.width, new_size.height)),
+            ),
             _ => (),
         }
     }
