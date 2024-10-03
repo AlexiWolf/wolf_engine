@@ -63,6 +63,16 @@ impl WindowContext {
                 _ => (),
             }
         }
+        if let Some(window_event) = event.downcast_ref::<WindowEvent>() {
+            match window_event {
+                WindowEvent::WindowResized(uuid, new_size) => {
+                    if let Some(window) = self.window(*uuid) {
+                        window.state.set_size(*new_size);
+                    }
+                }
+                _ => (),
+            }
+        }
     }
 }
 
