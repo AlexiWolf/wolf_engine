@@ -71,7 +71,7 @@ impl Default for WindowSettings {
 #[derive(Clone)]
 pub struct Window {
     event_sender: MpscEventSender<AnyEvent>,
-    state: Arc<WindowState>,
+    pub(crate) state: Arc<WindowState>,
 }
 
 impl Window {
@@ -167,6 +167,10 @@ impl WindowState {
             settings: RwLock::new(settings),
             handle: RwLock::new(None),
         }
+    }
+
+    pub fn set_size(&self, new_size: (u32, u32)) {
+        self.settings.write().unwrap().size = new_size;
     }
 }
 
