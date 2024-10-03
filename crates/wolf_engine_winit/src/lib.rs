@@ -19,6 +19,20 @@ use wolf_engine_window::{
     Uuid, WindowBackend, WindowContext, WindowSettings,
 };
 
+pub fn init() -> Result<WindowSystem, WindowError> {
+    let (event_sender, event_receiver) = event_queue();
+    let window_context = WindowContext::new(event_sender.clone());
+    match EventLoop::new() {
+        Ok(event_loop) => Ok(WindowSystem {
+            window_context,
+            event_sender,
+            event_receiver,
+            event_loop,
+        }),
+        Err(error) => Err(WindowError::InitError(error.to_string())),
+    }
+}
+
 pub struct WindowSystem {
     event_sender: MpscEventSender<AnyEvent>,
     event_receiver: MpscEventReceiver<AnyEvent>,
@@ -193,19 +207,5 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
             }
             _ => (),
         }
-    }
-}
-
-pub fn init() -> Result<WindowSystem, WindowError> {
-    let (event_sender, event_receiver) = event_queue();
-    let window_context = WindowContext::new(event_sender.clone());
-    match EventLoop::new() {
-        Ok(event_loop) => Ok(WindowSystem {
-            window_context,
-            event_sender,
-            event_receiver,
-            event_loop,
-        }),
-        Err(error) => Err(WindowError::InitError(error.to_string())),
     }
 }
