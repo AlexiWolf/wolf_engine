@@ -199,11 +199,13 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for Application<H> {
 pub fn init() -> Result<WindowSystem, WindowError> {
     let (event_sender, event_receiver) = event_queue();
     let window_context = WindowContext::new(event_sender.clone());
-    let winit_event_loop = EventLoop::new().unwrap();
-    Ok(WindowSystem {
-        window_context,
-        event_sender,
-        event_receiver,
-        event_loop: winit_event_loop,
-    })
+    match EventLoop::new() {
+        Ok(event_loop) => Ok(WindowSystem {
+            window_context,
+            event_sender,
+            event_receiver,
+            event_loop,
+        }),
+        Err(error) => Err(WindowError::InitError(error.to_string())),
+    }
 }
