@@ -68,7 +68,7 @@ impl WindowContext {
 
 #[cfg(test)]
 mod window_context_tests {
-    use wolf_engine_events::{mpsc, EventReceiver};
+    use wolf_engine_events::{dynamic::AnyEventSender, mpsc, EventReceiver};
 
     use super::*;
 
@@ -134,5 +134,35 @@ mod window_context_tests {
         }
 
         panic!("Event not emitted");
+    }
+
+    #[test]
+    pub fn should_resize_window_on_resize_event() {
+        let (event_sender, mut event_receiver) = mpsc::event_queue();
+        let window_context = WindowContext::new(event_sender.clone());
+        let window_settings = WindowSettings::default()
+            .with_title("Test Window")
+            .with_size((800, 600));
+        let window = window_context.create_window(window_settings.clone());
+
+        event_sender
+            .send_any_event(WindowEvent::WindowResized(window.id(), (100, 100)))
+            .unwrap();
+
+        assert_eq!(
+            window.size(),
+            (800, 600),
+            "Starting size of the window is not correct"
+        );
+
+        while let Some(event) = event_receiver.next_event() {
+            window_context.handle_event(&event);
+        }
+
+        assert_eq!(
+            window.size(),
+            (100, 100),
+            "Ending size of the window is not correct"
+        );
     }
 }
