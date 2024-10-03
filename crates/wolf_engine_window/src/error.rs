@@ -3,6 +3,6 @@
 pub enum WindowError {
     #[error("Failed to initialize the window system")]
     InitError(String),
-    #[error("Operation is unsupported by the window system.")]
+    #[error("Operation is unsupported by the window system, or OS.")]
     UnsupportedError(String),
 }
