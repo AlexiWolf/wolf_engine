@@ -69,8 +69,7 @@
 //! This crate doesn't provide its own rendering functions.  Instead, it implements
 //! [`raw_window_handle`] traits in order for compatibility with external rendering libraries.
 
-use event::EventLoopBuilder;
-
+pub mod backend;
 mod context;
 pub use context::*;
 mod window;
@@ -83,11 +82,6 @@ pub use uuid::Uuid;
 pub mod error;
 /// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
 pub mod raw_window_handle;
-
-/// Initialize the window system.
-pub fn init() -> EventLoopBuilder {
-    EventLoopBuilder::new()
-}
 
 #[cfg(test)]
 mod window_system_tests {
