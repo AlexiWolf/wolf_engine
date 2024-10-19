@@ -26,6 +26,26 @@ impl WindowContext {
         todo!()
     }
 
+    fn process_event(&self, event: ()) {}
+}
+
+pub struct WindowContextEventSender {
+    window_context: WindowContext,
+}
+
+impl WindowContextEventSender {
+    fn new(window_context: WindowContext) -> Self {
+        Self { window_context }
+    }
+}
+
+impl EventSender<()> for WindowContextEventSender {
+    fn send_event(&self, event: ()) -> Result<(), wolf_engine_events::ReceiverDroppedError> {
+        self.window_context.process_event(event);
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod window_context_tests {
     use wolf_engine_events::mpsc;
