@@ -21,3 +21,7 @@ pub enum WindowEvent {
 }
 
 impl Event for WindowEvent {}
+
+pub enum WindowBackendEvent {
+    WindowResized(Uuid, u32, u32),
+}
