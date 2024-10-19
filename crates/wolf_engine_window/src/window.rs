@@ -108,3 +108,11 @@ impl Window {
         None
     }
 }
+
+pub(crate) struct WindowState {}
+
+impl WindowState {
+    pub fn new(uuid: Uuid, settings: WindowSettings) -> Self {
+        Self {}
+    }
+}
