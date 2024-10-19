@@ -10,8 +10,10 @@ pub struct WindowContext {
 }
 
 impl WindowContext {
-    pub fn new(event_sender: MpscEventSender<AnyEvent>) -> Self {
-        Self { event_sender }
+    pub fn new(event_sender: MpscEventSender<AnyEvent>) -> (Self, WindowContextEventSender) {
+        let context = Self { event_sender };
+        let event_sender = WindowContextEventSender::new(context.clone());
+        (context, event_sender)
     }
 
     /// Create a new [`Window`](crate::Window).
