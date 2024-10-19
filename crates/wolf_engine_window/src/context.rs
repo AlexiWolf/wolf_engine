@@ -1,7 +1,14 @@
-use uuid::Uuid;
-use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
+use std::sync::Arc;
 
-use crate::{Window, WindowSettings};
+use uuid::Uuid;
+use wolf_engine_events::{
+    dynamic::AnyEvent, mpsc::MpscEventSender, EventSender, ReceiverDroppedError,
+};
+
+use crate::{
+    event::{WindowBackendEvent, WindowFrontendEvent},
+    Window, WindowSettings, WindowState,
+};
 
 #[derive(Clone)]
 /// A link to the window system.
@@ -18,7 +25,16 @@ impl WindowContext {
 
     /// Create a new [`Window`](crate::Window).
     pub fn create_window(&self, window_settings: WindowSettings) -> Window {
-        todo!()
+        let uuid = Uuid::new_v4();
+        let window_state = Arc::new(WindowState::new(uuid, window_settings.clone()));
+        let window = Window::new(self.event_sender.clone(), &window_state);
+        self.event_sender
+            .send_event(Box::new(WindowFrontendEvent::WindowCreated(
+                uuid,
+                window_settings,
+            )))
+            .unwrap();
+        window
     }
 
     /// Stops the event loop.
