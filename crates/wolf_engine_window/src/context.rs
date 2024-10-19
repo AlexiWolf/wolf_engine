@@ -24,8 +24,6 @@ impl WindowContext {
         todo!()
     }
 
-    pub(crate) fn event_sender(&self) -> MpscEventSender<AnyEvent> {
-        todo!()
 #[cfg(test)]
 mod window_context_tests {
     use wolf_engine_events::mpsc;
