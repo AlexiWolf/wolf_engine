@@ -7,7 +7,7 @@ use wolf_engine_window::{backend::WindowSystem, error::WindowError, WindowContex
 
 pub fn init() -> Result<WinitBackend, WindowError> {
     let (event_sender, event_receiver) = mpsc::event_queue();
-    let window_context = WindowContext::new(event_sender.clone());
+    let (window_context, window_event_sender) = WindowContext::new(event_sender.clone());
     match EventLoop::new() {
         Ok(event_loop) => Ok(WinitBackend {
             event_sender,
