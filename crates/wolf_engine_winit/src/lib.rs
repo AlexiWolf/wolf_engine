@@ -28,7 +28,7 @@ pub struct WinitBackend {
 
 impl WindowSystem for WinitBackend {
     fn context(&self) -> wolf_engine_window::WindowContext {
-        todo!()
+        self.window_context.clone()
     }
 }
 
@@ -37,7 +37,5 @@ impl wolf_engine_events::event_loop::EventLoop<AnyEvent> for WinitBackend {
         todo!()
     }
 
-    fn run<F: FnMut(AnyEvent)>(self, event_handler: F) {
-        todo!()
-    }
+    fn run<F: FnMut(AnyEvent)>(self, event_handler: F) {}
 }

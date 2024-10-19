@@ -11,7 +11,7 @@ pub struct WindowContext {
 
 impl WindowContext {
     pub fn new(event_sender: MpscEventSender<AnyEvent>) -> Self {
-        todo!()
+        Self { event_sender }
     }
 
     /// Create a new [`Window`](crate::Window).
