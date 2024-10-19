@@ -56,5 +56,11 @@ mod window_context_tests {
     fn should_handle_incoming_events() {
         let (event_sender, event_receiver) = mpsc::event_queue();
         let (context, context_event_sender) = WindowContext::new(event_sender.clone());
+        let window = context.create_window(WindowSettings::default().with_size((100, 100)));
+
+        context_event_sender
+            .send_event(WindowBackendEvent::WindowResized(window.id(), (800, 600)))
+            .unwrap();
+        assert_eq!(window.size(), (800, 600), "The window was not resized");
     }
 }
