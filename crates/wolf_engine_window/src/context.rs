@@ -59,7 +59,7 @@ mod window_context_tests {
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
 
         context_event_sender
-            .send_event(WindowBackendEvent::WindowResized(window.id(), (800, 600)))
+            .send_event(WindowBackendEvent::WindowResized(window.id(), 800, 600))
             .unwrap();
         assert_eq!(window.size(), (800, 600), "The window was not resized");
     }
