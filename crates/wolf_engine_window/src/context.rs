@@ -26,22 +26,22 @@ impl WindowContext {
         todo!()
     }
 
-    fn process_event(&self, event: ()) {}
+    fn process_event(&self, event: WindowBackendEvent) {}
 }
 
 pub struct WindowContextEventSender {
-    window_context: WindowContext,
+    context: WindowContext,
 }
 
 impl WindowContextEventSender {
-    fn new(window_context: WindowContext) -> Self {
-        Self { window_context }
+    fn new(context: WindowContext) -> Self {
+        Self { context }
     }
 }
 
-impl EventSender<()> for WindowContextEventSender {
-    fn send_event(&self, event: ()) -> Result<(), wolf_engine_events::ReceiverDroppedError> {
-        self.window_context.process_event(event);
+impl EventSender<WindowBackendEvent> for WindowContextEventSender {
+    fn send_event(&self, event: WindowBackendEvent) -> Result<(), ReceiverDroppedError> {
+        self.context.process_event(event);
         Ok(())
     }
 }
@@ -50,17 +50,21 @@ impl EventSender<()> for WindowContextEventSender {
 mod window_context_tests {
     use wolf_engine_events::mpsc;
 
+    use crate::event::WindowBackendEvent;
+
     use super::*;
 
     #[test]
     fn should_handle_incoming_events() {
         let (event_sender, event_receiver) = mpsc::event_queue();
         let (context, context_event_sender) = WindowContext::new(event_sender.clone());
+
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
 
         context_event_sender
             .send_event(WindowBackendEvent::WindowResized(window.id(), 800, 600))
             .unwrap();
+
         assert_eq!(window.size(), (800, 600), "The window was not resized");
     }
 }
