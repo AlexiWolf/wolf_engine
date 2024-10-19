@@ -34,5 +34,8 @@ fn test() -> Result<(), Failed> {
             }
         }
     });
+
+    assert!(has_quit, "The has_quit flag is not set");
+
     Ok(())
 }
