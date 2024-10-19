@@ -26,5 +26,15 @@ impl WindowContext {
 
     pub(crate) fn event_sender(&self) -> MpscEventSender<AnyEvent> {
         todo!()
+#[cfg(test)]
+mod window_context_tests {
+    use wolf_engine_events::mpsc;
+
+    use super::*;
+
+    #[test]
+    fn should_handle_incoming_events() {
+        let (event_sender, event_receiver) = mpsc::event_queue();
+        let (context, context_event_sender) = WindowContext::new(event_sender.clone());
     }
 }
