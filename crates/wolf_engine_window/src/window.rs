@@ -1,4 +1,7 @@
+use std::sync::{Arc, RwLock};
+
 use uuid::Uuid;
+use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender};
 
 use crate::raw_window_handle::WindowHandle;
 
@@ -62,27 +65,28 @@ impl Default for WindowSettings {
 }
 
 /// A window.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Window {
-    uuid: Uuid,
+    event_sender: MpscEventSender<AnyEvent>,
+    state: Arc<WindowState>,
 }
 
 impl PartialEq for Window {
     fn eq(&self, other: &Self) -> bool {
-        self.uuid == other.uuid
+        self.state.uuid == other.state.uuid
     }
 }
 
 impl Eq for Window {}
 
 impl Window {
-    pub(crate) fn new(uuid: Uuid) -> Self {
-        Self { uuid }
+    pub(crate) fn new(event_sender: MpscEventSender<AnyEvent>, window_state: &WindowState) -> Self {
+        todo!()
     }
 
     /// Get the uuid of the window.
     pub fn id(&self) -> Uuid {
-        self.uuid
+        self.state.uuid
     }
 
     /// Get the current size of the window.
@@ -109,10 +113,16 @@ impl Window {
     }
 }
 
-pub(crate) struct WindowState {}
+pub(crate) struct WindowState {
+    uuid: Uuid,
+    settings: RwLock<WindowSettings>,
+}
 
 impl WindowState {
     pub fn new(uuid: Uuid, settings: WindowSettings) -> Self {
-        Self {}
+        Self {
+            uuid,
+            settings: RwLock::new(settings),
+        }
     }
 }
