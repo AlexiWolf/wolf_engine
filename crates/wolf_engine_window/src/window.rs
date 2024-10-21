@@ -86,7 +86,7 @@ impl Window {
 
     /// Get the current size of the window.
     pub fn size(&self) -> (u32, u32) {
-        (0, 0)
+        self.state.settings.read().unwrap().size
     }
 
     /// Set the title of the window.
