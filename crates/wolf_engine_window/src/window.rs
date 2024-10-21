@@ -72,7 +72,11 @@ pub struct Window {
 }
 
 impl Window {
-    pub(crate) fn new(event_sender: MpscEventSender<AnyEvent>, window_state: &WindowState) -> Self {
+    pub(crate) fn new(event_sender: MpscEventSender<AnyEvent>, state: Arc<WindowState>) -> Self {
+        Self {
+            event_sender,
+            state,
+        }
     }
 
     /// Get the uuid of the window.
