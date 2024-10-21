@@ -71,17 +71,8 @@ pub struct Window {
     state: Arc<WindowState>,
 }
 
-impl PartialEq for Window {
-    fn eq(&self, other: &Self) -> bool {
-        self.state.uuid == other.state.uuid
-    }
-}
-
-impl Eq for Window {}
-
 impl Window {
     pub(crate) fn new(event_sender: MpscEventSender<AnyEvent>, window_state: &WindowState) -> Self {
-        todo!()
     }
 
     /// Get the uuid of the window.
@@ -112,6 +103,14 @@ impl Window {
         None
     }
 }
+
+impl PartialEq for Window {
+    fn eq(&self, other: &Self) -> bool {
+        self.state.uuid == other.state.uuid
+    }
+}
+
+impl Eq for Window {}
 
 pub(crate) struct WindowState {
     uuid: Uuid,
