@@ -116,7 +116,7 @@ mod window_context_tests {
 
     #[test]
     fn should_resize_windows() {
-        let (_, _, context, context_event_sender) = test_init();
+        let (_, _event_receiver, context, context_event_sender) = test_init();
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
 
         context_event_sender
