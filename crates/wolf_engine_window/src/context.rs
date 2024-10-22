@@ -187,6 +187,41 @@ mod window_context_tests {
     }
 
     #[test]
+    fn should_emit_window_closed_events() {
+        let (_, mut event_receiver, context, _context_event_sender) = test_init();
+        let window = context.create_window(WindowSettings::default());
+        let window_clone = window.clone();
+        let window_id = window.id();
+
+        drop(window);
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
+                match context_event {
+                    WindowContextEvent::WindowClosed(_uuid) => {
+                        panic!("Window closed events should only be emitted when the last clone is dropped")
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        drop(window_clone);
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
+                match context_event {
+                    WindowContextEvent::WindowClosed(uuid) => {
+                        assert_eq!(*uuid, window_id, "Event is for the wrong window uuid");
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        panic!("The redraw event was not emitted.");
+    }
+
+    #[test]
     fn should_resize_windows() {
         let (_, _event_receiver, context, context_event_sender) = test_init();
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
