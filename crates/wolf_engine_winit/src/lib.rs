@@ -1,4 +1,8 @@
-use winit::event_loop::EventLoop;
+use winit::{
+    application::ApplicationHandler,
+    event_loop::{ActiveEventLoop, EventLoop},
+    window::WindowId,
+};
 use wolf_engine_events::{
     dynamic::AnyEvent,
     mpsc::{self, MpscEventReceiver, MpscEventSender},
@@ -38,4 +42,26 @@ impl wolf_engine_events::event_loop::EventLoop<AnyEvent> for WinitBackend {
     }
 
     fn run<F: FnMut(AnyEvent)>(self, event_handler: F) {}
+}
+
+struct WinitApp {}
+
+impl WinitApp {
+    pub(crate) fn new() -> Self {
+        Self {}
+    }
+}
+
+impl ApplicationHandler for WinitApp {
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        event_loop.exit()
+    }
+
+    fn window_event(
+        &mut self,
+        event_loop: &ActiveEventLoop,
+        window_id: WindowId,
+        event: winit::event::WindowEvent,
+    ) {
+    }
 }
