@@ -44,7 +44,9 @@ impl WindowContext {
 
     /// Stops the event loop.
     pub fn exit(&self) {
-        todo!()
+        self.event_sender
+            .send_event(Box::new(WindowContextEvent::Exited))
+            .unwrap();
     }
 
     fn process_event(&self, event: WindowContextEvent) {
