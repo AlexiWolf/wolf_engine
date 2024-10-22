@@ -140,7 +140,7 @@ mod window_context_tests {
     }
 
     #[test]
-    fn should_remove_dropped_windows() {
+    fn should_bookkeep_window_state() {
         fn window_count(context: &WindowContext) -> usize {
             context.window_states.read().unwrap().len()
         }
