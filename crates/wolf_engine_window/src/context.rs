@@ -8,10 +8,7 @@ use wolf_engine_events::{
     dynamic::AnyEvent, mpsc::MpscEventSender, EventSender, ReceiverDroppedError,
 };
 
-use crate::{
-    event::{WindowContextEvent, WindowFrontendEvent},
-    Window, WindowSettings, WindowState,
-};
+use crate::{event::WindowContextEvent, Window, WindowSettings, WindowState};
 
 #[derive(Clone)]
 /// A link to the window system.
@@ -37,7 +34,7 @@ impl WindowContext {
         let window = Window::new(self.event_sender.clone(), window_state.clone());
         self.insert_window_state(&window_state);
         self.event_sender
-            .send_event(Box::new(WindowFrontendEvent::WindowCreated(
+            .send_event(Box::new(WindowContextEvent::WindowCreated(
                 uuid,
                 window_settings,
             )))
@@ -57,6 +54,7 @@ impl WindowContext {
                     window_state.resize(width, height);
                 })
             }
+            _ => (),
         }
     }
 
@@ -130,7 +128,7 @@ mod window_context_tests {
 
     #[test]
     fn should_emit_rename_events() {
-        let (_, mut event_receiver, context, context_event_sender) = test_init();
+        let (_, mut event_receiver, context, _context_event_sender) = test_init();
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
 
         window.set_title("I can haz rename?");
@@ -151,6 +149,6 @@ mod window_context_tests {
             }
         }
 
-        panic!("NO! Window cannot haz rename. :(");
+        panic!("NO! Window cannot haz rename. :( \nThe rename event was not emitted.");
     }
 }
