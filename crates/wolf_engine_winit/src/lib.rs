@@ -70,7 +70,7 @@ impl wolf_engine_events::event_loop::EventLoop<AnyEvent> for WinitBackend {
 
 struct WinitApp<H: FnMut(AnyEvent)> {
     event_handler: H,
-    event_sender: MpscEventSender<AnyEvent>,
+    _event_sender: MpscEventSender<AnyEvent>,
     event_receiver: MpscEventReceiver<AnyEvent>,
     window_context: WindowContext,
     window_context_event_sender: WindowContextEventSender,
@@ -91,7 +91,7 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
     ) -> Self {
         Self {
             event_handler,
-            event_sender,
+            _event_sender: event_sender,
             event_receiver,
             window_context,
             window_context_event_sender,

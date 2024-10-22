@@ -1,7 +1,7 @@
 use std::sync::{Arc, RwLock};
 
 use uuid::Uuid;
-use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
+use wolf_engine_events::EventSender;
 
 use crate::{event::WindowContextEvent, raw_window_handle::WindowHandle, WindowContext};
 
@@ -103,7 +103,7 @@ impl Window {
     }
 
     /// Set the fullscreen-mode.
-    pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {}
+    pub fn set_fullscreen_mode(&self, _fullscreen_mode: Option<FullscreenMode>) {}
 
     /// Request a redraw of the window.
     pub fn redraw(&self) {
