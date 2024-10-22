@@ -121,6 +121,15 @@ impl PartialEq for Window {
 
 impl Eq for Window {}
 
+impl Drop for Window {
+    fn drop(&mut self) {
+        let weak = Arc::downgrade(&self.state);
+        if weak.strong_count() == 1 {
+            self.context.remove_window_state(self.id());
+        }
+    }
+}
+
 pub(crate) struct WindowState {
     pub uuid: Uuid,
     pub settings: RwLock<WindowSettings>,

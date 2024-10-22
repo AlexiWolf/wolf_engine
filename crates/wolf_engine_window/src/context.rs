@@ -73,6 +73,10 @@ impl WindowContext {
             .unwrap()
             .insert(uuid, Arc::downgrade(window_state));
     }
+
+    pub(crate) fn remove_window_state(&self, uuid: Uuid) {
+        self.window_states.write().unwrap().remove(&uuid);
+    }
 }
 
 pub struct WindowContextEventSender {
