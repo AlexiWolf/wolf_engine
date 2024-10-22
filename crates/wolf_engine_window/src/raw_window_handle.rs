@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{fmt::Debug, sync::Arc};
 
 #[cfg(feature = "rwh_05")]
 pub use rwh_05;
@@ -42,6 +42,45 @@ pub struct WindowHandle {
 impl WindowHandle {
     pub fn new(window: Arc<dyn HasRawWindowHandles>) -> Self {
         Self { window }
+    }
+}
+
+impl PartialEq for WindowHandle {
+    fn eq(&self, other: &Self) -> bool {
+        self.window.window_handle().unwrap() == other.window.window_handle().unwrap()
+    }
+}
+
+impl Debug for WindowHandle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut debug_struct = &mut f.debug_struct("WindowHandle");
+        #[cfg(feature = "rwh_06")]
+        {
+            debug_struct = debug_struct
+                .field(
+                    "rwh_06_window_handle",
+                    &rwh_06::HasWindowHandle::window_handle(&self.window),
+                )
+                .field(
+                    "rwh_06_display_handle",
+                    &rwh_06::HasDisplayHandle::display_handle(&self.window),
+                );
+        }
+
+        #[cfg(feature = "rwh_05")]
+        {
+            debug_struct = debug_struct
+                .field(
+                    "rwh_05_window_handle",
+                    &rwh_05::HasRawWindowHandle::raw_window_handle(&self.window),
+                )
+                .field(
+                    "rwh_05_display_handle",
+                    &rwh_05::HasRawDisplayHandle::raw_display_handle(&self.window),
+                );
+        }
+
+        debug_struct.finish()
     }
 }
 
