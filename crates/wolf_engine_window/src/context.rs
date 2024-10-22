@@ -115,6 +115,30 @@ mod window_context_tests {
     }
 
     #[test]
+    fn should_emit_window_created_events() {
+        let (_, mut event_receiver, context, _context_event_sender) = test_init();
+        let window_settings = WindowSettings::default().with_size((100, 100));
+        let window = context.create_window(window_settings.clone());
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
+                match context_event {
+                    WindowContextEvent::WindowCreated(uuid, event_settings) => {
+                        assert_eq!(*uuid, window.id(), "Event is for the wrong window uuid");
+                        assert_eq!(
+                            *event_settings, window_settings,
+                            "The window settings do not match"
+                        );
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        panic!("The window created event was not emitted")
+    }
+
+    #[test]
     fn should_resize_windows() {
         let (_, _event_receiver, context, context_event_sender) = test_init();
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
