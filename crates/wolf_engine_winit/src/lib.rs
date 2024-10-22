@@ -47,6 +47,7 @@ impl wolf_engine_events::event_loop::EventLoop<AnyEvent> for WinitBackend {
 
     fn run<F: FnMut(AnyEvent)>(self, event_handler: F) {
         let mut winit_app = WinitApp {
+            event_handler,
             event_sender: self.event_sender,
             event_receiver: self.event_receiver,
             window_context: self.window_context,
@@ -58,14 +59,15 @@ impl wolf_engine_events::event_loop::EventLoop<AnyEvent> for WinitBackend {
     }
 }
 
-struct WinitApp {
+struct WinitApp<H: FnMut(AnyEvent)> {
+    event_handler: H,
     event_sender: MpscEventSender<AnyEvent>,
     event_receiver: MpscEventReceiver<AnyEvent>,
     window_context: WindowContext,
     window_context_event_sender: WindowContextEventSender,
 }
 
-impl ApplicationHandler for WinitApp {
+impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         event_loop.exit()
     }
