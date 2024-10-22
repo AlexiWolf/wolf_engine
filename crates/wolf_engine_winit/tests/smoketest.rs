@@ -1,4 +1,4 @@
-use std::process::ExitCode;
+use std::{process::ExitCode, time::Duration};
 
 use event::WindowEvent;
 use libtest_mimic::{Arguments, Failed, Trial};
@@ -6,10 +6,20 @@ use wolf_engine_events::event_loop::EventLoop;
 use wolf_engine_window::{backend::WindowSystem, *};
 
 pub fn main() -> ExitCode {
+    timeout(Duration::from_secs(1));
+
     let mut args = Arguments::from_args();
     args.test_threads = Some(1);
     let tests = vec![Trial::test("winit_smoketest", test)];
     libtest_mimic::run(&args, tests).exit_code()
+}
+
+fn timeout(after: std::time::Duration) {
+    std::thread::spawn(move || {
+        std::thread::sleep(after);
+        println!("Test timed out");
+        std::process::exit(1);
+    });
 }
 
 fn test() -> Result<(), Failed> {
