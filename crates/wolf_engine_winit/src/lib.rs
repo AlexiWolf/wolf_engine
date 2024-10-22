@@ -1,14 +1,19 @@
 use winit::{
     application::ApplicationHandler,
-    event_loop::{ActiveEventLoop, EventLoop},
+    event::StartCause,
+    event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
     window::WindowId,
 };
 use wolf_engine_events::{
     dynamic::AnyEvent,
     mpsc::{self, MpscEventReceiver, MpscEventSender},
+    EventReceiver,
 };
 use wolf_engine_window::{
-    backend::WindowSystem, error::WindowError, WindowContext, WindowContextEventSender,
+    backend::WindowSystem,
+    error::WindowError,
+    event::{WindowContextEvent, WindowEvent},
+    WindowContext, WindowContextEventSender,
 };
 
 pub fn init() -> Result<WinitBackend, WindowError> {
@@ -85,6 +90,22 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
             is_suspended: true,
         }
     }
+
+    fn process_events(&mut self, event_loop: &ActiveEventLoop) {
+        while let Some(event) = self.event_receiver.next_event() {
+            self.handle_event(event_loop, event);
+        }
+    }
+
+    fn handle_event(&mut self, event_loop: &ActiveEventLoop, event: AnyEvent) {
+        if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
+            match context_event {
+                WindowContextEvent::WindowCreated(_, _) => (),
+                WindowContextEvent::WindowClosed(_) => (),
+                _ => (),
+            }
+        }
+    }
 }
 
 impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
@@ -94,6 +115,17 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
 
     fn suspended(&mut self, _event_loop: &ActiveEventLoop) {
         self.is_suspended = true;
+    }
+
+    fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: StartCause) {
+        event_loop.set_control_flow(ControlFlow::Poll);
+        match cause {
+            StartCause::Init => (self.event_handler)(Box::new(WindowEvent::Started)),
+            StartCause::Poll => {
+                self.process_events(event_loop);
+            }
+            _ => (),
+        }
     }
 
     fn window_event(
