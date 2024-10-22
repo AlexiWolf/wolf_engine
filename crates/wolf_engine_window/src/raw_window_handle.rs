@@ -36,11 +36,11 @@ impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
 #[derive(Clone)]
 pub struct WindowHandle {
-    window: Arc<dyn HasRawWindowHandles>,
+    window: Arc<dyn HasRawWindowHandles + Send + Sync>,
 }
 
 impl WindowHandle {
-    pub fn new(window: Arc<dyn HasRawWindowHandles>) -> Self {
+    pub fn new(window: Arc<dyn HasRawWindowHandles + Send + Sync>) -> Self {
         Self { window }
     }
 }
