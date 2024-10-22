@@ -7,7 +7,7 @@ fn main() {
     let context = window_system.context();
 
     let mut canvas = None;
-    let mut window = context.create_window(
+    let window = context.create_window(
         WindowSettings::default()
             .with_title("Wolf Engine - Window Example")
             .with_size((800, 600)),
@@ -18,11 +18,6 @@ fn main() {
             match window_event {
                 WindowEvent::Started => {
                     println!("Hello, world!");
-                    context.create_window(
-                        WindowSettings::default()
-                            .with_title("Wolf Engine - Window Example")
-                            .with_size((800, 600)),
-                    );
                 }
                 WindowEvent::EventsCleared => {
                     window.redraw();
