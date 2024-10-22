@@ -129,6 +129,7 @@ mod window_context_tests {
                             *event_settings, window_settings,
                             "The window settings do not match"
                         );
+                        return;
                     }
                     _ => (),
                 }
