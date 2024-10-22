@@ -103,7 +103,7 @@ mod window_context_tests {
     use super::*;
 
     #[test]
-    fn should_handle_incoming_events() {
+    fn should_resize_windows() {
         let (event_sender, _event_receiver) = mpsc::event_queue();
         let (context, context_event_sender) = WindowContext::new(event_sender.clone());
 
