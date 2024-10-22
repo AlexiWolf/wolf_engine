@@ -212,13 +212,14 @@ mod window_context_tests {
                 match context_event {
                     WindowContextEvent::WindowClosed(uuid) => {
                         assert_eq!(*uuid, window_id, "Event is for the wrong window uuid");
+                        return;
                     }
                     _ => (),
                 }
             }
         }
 
-        panic!("The redraw event was not emitted.");
+        panic!("The window close event was not emitted.");
     }
 
     #[test]
