@@ -291,4 +291,24 @@ mod window_context_tests {
 
         panic!("The redraw event was not emitted.");
     }
+
+    #[test]
+    fn should_emit_exited_events() {
+        let (_, mut event_receiver, context, _context_event_sender) = test_init();
+
+        context.exit();
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
+                match context_event {
+                    WindowContextEvent::Exited => {
+                        return;
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        panic!("The exited event was not emitted.");
+    }
 }
