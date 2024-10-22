@@ -117,8 +117,8 @@ impl PartialEq for Window {
 impl Eq for Window {}
 
 pub(crate) struct WindowState {
-    uuid: Uuid,
-    settings: RwLock<WindowSettings>,
+    pub uuid: Uuid,
+    pub settings: RwLock<WindowSettings>,
 }
 
 impl WindowState {
@@ -128,6 +128,7 @@ impl WindowState {
             settings: RwLock::new(settings),
         }
     }
+
     pub fn size(&self) -> (u32, u32) {
         self.settings.read().unwrap().size
     }
