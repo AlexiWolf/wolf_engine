@@ -127,11 +127,8 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
                         window.request_redraw();
                     }
                 }
-                WindowContextEvent::WindowClosed(uuid) => match self.windows.remove(uuid) {
-                    Some(window) => {
-                        let _ = self.id_map.remove(&window.id());
-                    }
-                    None => (),
+                WindowContextEvent::WindowClosed(uuid) => if let Some(window) = self.windows.remove(uuid) {
+                    let _ = self.id_map.remove(&window.id());
                 },
                 _ => (),
             }

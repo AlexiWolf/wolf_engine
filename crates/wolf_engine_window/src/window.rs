@@ -165,10 +165,7 @@ impl WindowState {
     }
 
     pub fn handle(&self) -> Option<WindowHandle> {
-        match self.handle.read().unwrap().as_ref() {
-            Some(handle) => Some(handle.to_owned()),
-            None => None,
-        }
+        self.handle.read().unwrap().as_ref().map(|handle| handle.to_owned())
     }
 
     pub fn set_handle(&self, handle: WindowHandle) {

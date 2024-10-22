@@ -50,19 +50,16 @@ impl WindowContext {
     }
 
     fn process_event(&self, event: WindowContextEvent) {
-        match event {
-            WindowContextEvent::WindowResized(uuid, width, height) => {
-                self.with_window_state_mut(uuid, |window_state| {
-                    window_state.resize(width, height);
-                })
-            }
-            _ => (),
+        if let WindowContextEvent::WindowResized(uuid, width, height) = event {
+            self.with_window_state_mut(uuid, |window_state| {
+                window_state.resize(width, height);
+            })
         }
     }
 
     fn with_window_state_mut<F: FnOnce(Arc<WindowState>)>(&self, uuid: Uuid, function: F) {
         if let Some(weak) = self.window_states.write().unwrap().get_mut(&uuid) {
-            if let Some(window_state) = Weak::upgrade(&weak) {
+            if let Some(window_state) = Weak::upgrade(weak) {
                 function(window_state);
             }
         }
