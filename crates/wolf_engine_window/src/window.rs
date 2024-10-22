@@ -133,4 +133,7 @@ impl WindowState {
         self.settings.read().unwrap().size
     }
 
+    pub fn resize(&self, width: u32, height: u32) {
+        self.settings.write().unwrap().size = (width, height);
+    }
 }

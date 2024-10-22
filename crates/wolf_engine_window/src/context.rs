@@ -1,4 +1,7 @@
-use std::sync::Arc;
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock, Weak},
+};
 
 use uuid::Uuid;
 use wolf_engine_events::{
@@ -14,11 +17,15 @@ use crate::{
 /// A link to the window system.
 pub struct WindowContext {
     event_sender: MpscEventSender<AnyEvent>,
+    window_states: Arc<RwLock<HashMap<Uuid, Weak<WindowState>>>>,
 }
 
 impl WindowContext {
     pub fn new(event_sender: MpscEventSender<AnyEvent>) -> (Self, WindowContextEventSender) {
-        let context = Self { event_sender };
+        let context = Self {
+            event_sender,
+            window_states: Arc::new(RwLock::new(HashMap::new())),
+        };
         let event_sender = WindowContextEventSender::new(context.clone());
         (context, event_sender)
     }
@@ -28,6 +35,7 @@ impl WindowContext {
         let uuid = Uuid::new_v4();
         let window_state = Arc::new(WindowState::new(uuid, window_settings.clone()));
         let window = Window::new(self.event_sender.clone(), window_state.clone());
+        self.insert_window_state(&window_state);
         self.event_sender
             .send_event(Box::new(WindowFrontendEvent::WindowCreated(
                 uuid,
@@ -42,7 +50,31 @@ impl WindowContext {
         todo!()
     }
 
-    fn process_event(&self, event: WindowBackendEvent) {}
+    fn process_event(&self, event: WindowBackendEvent) {
+        match event {
+            WindowBackendEvent::WindowResized(uuid, width, height) => {
+                self.with_window_state_mut(uuid, |window_state| {
+                    window_state.resize(width, height);
+                })
+            }
+        }
+    }
+
+    fn with_window_state_mut<F: FnOnce(Arc<WindowState>)>(&self, uuid: Uuid, function: F) {
+        if let Some(weak) = self.window_states.write().unwrap().get_mut(&uuid) {
+            if let Some(window_state) = Weak::upgrade(&weak) {
+                function(window_state);
+            }
+        }
+    }
+
+    fn insert_window_state(&self, window_state: &Arc<WindowState>) {
+        let uuid = window_state.uuid;
+        self.window_states
+            .write()
+            .unwrap()
+            .insert(uuid, Arc::downgrade(window_state));
+    }
 }
 
 pub struct WindowContextEventSender {
