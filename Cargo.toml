@@ -22,8 +22,8 @@ wolf_engine_winit = { version = "0.1.0", path = "crates/wolf_engine_winit", opti
 [features]
 default = ["input"]
 input = ["wolf_engine_input"]
-rwh_05 = ["wolf_engine_window/rwh_05"]
-rwh_06 = ["wolf_engine_window/rwh_06"]
+rwh_06 = ["wolf_engine_window/rwh_06", "wolf_engine_winit/rwh_06"]
+rwh_05 = ["wolf_engine_window/rwh_05", "wolf_engine_winit/rwh_05"]
 winit = ["wolf_engine_winit", "wolf_engine_input/winit"]
 window = ["wolf_engine_window"]
 

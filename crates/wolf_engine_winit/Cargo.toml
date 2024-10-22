@@ -3,6 +3,10 @@ name = "wolf_engine_winit"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+rwh_06 = ["winit/rwh_06"]
+rwh_05 = ["winit/rwh_05"]
+
 [dependencies]
 winit = "0.30"
 wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
