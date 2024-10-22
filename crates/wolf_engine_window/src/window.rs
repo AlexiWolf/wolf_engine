@@ -106,7 +106,14 @@ impl Window {
     pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {}
 
     /// Request a redraw of the window.
-    pub fn redraw(&self) {}
+    pub fn redraw(&self) {
+        self.context
+            .event_sender
+            .send_event(Box::new(WindowContextEvent::WindowRedrawRequested(
+                self.id(),
+            )))
+            .unwrap();
+    }
 
     pub fn handle(&self) -> Option<WindowHandle> {
         None
