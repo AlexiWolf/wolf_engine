@@ -27,9 +27,4 @@ pub enum WindowContextEvent {
     WindowResized(Uuid, u32, u32),
 }
 
-#[derive(Clone, PartialEq, Debug)]
-pub enum WindowFrontendEvent {
-    WindowCreated(Uuid, WindowSettings),
-}
-
-impl Event for WindowFrontendEvent {}
+impl Event for WindowContextEvent {}
