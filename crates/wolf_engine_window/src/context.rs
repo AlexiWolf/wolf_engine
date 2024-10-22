@@ -201,7 +201,7 @@ mod window_context_tests {
     #[test]
     fn should_emit_rename_events() {
         let (_, mut event_receiver, context, _context_event_sender) = test_init();
-        let window = context.create_window(WindowSettings::default().with_size((100, 100)));
+        let window = context.create_window(WindowSettings::default());
 
         window.set_title("I can haz rename?");
 
@@ -222,5 +222,27 @@ mod window_context_tests {
         }
 
         panic!("NO! Window cannot haz rename. :( \nThe rename event was not emitted.");
+    }
+
+    #[test]
+    fn should_emit_redraw_requested_events() {
+        let (_, mut event_receiver, context, _context_event_sender) = test_init();
+        let window = context.create_window(WindowSettings::default());
+
+        window.redraw();
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
+                match context_event {
+                    WindowContextEvent::WindowRedrawRequested(uuid) => {
+                        assert_eq!(*uuid, window.id(), "Event is for the wrong window uuid");
+                        return;
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        panic!("The redraw event was not emitted.");
     }
 }
