@@ -23,7 +23,7 @@ pub enum WindowEvent {
 impl Event for WindowEvent {}
 
 #[derive(Clone, PartialEq, Debug)]
-pub enum WindowBackendEvent {
+pub enum WindowContextEvent {
     WindowResized(Uuid, u32, u32),
 }
 
