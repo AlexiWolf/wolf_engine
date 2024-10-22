@@ -24,6 +24,8 @@ impl Event for WindowEvent {}
 
 #[derive(Clone, PartialEq, Debug)]
 pub enum WindowContextEvent {
+    WindowRenameRequested(Uuid, String),
+
     WindowResized(Uuid, u32, u32),
 }
 
