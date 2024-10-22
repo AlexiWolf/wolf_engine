@@ -144,6 +144,7 @@ impl Drop for Window {
 pub(crate) struct WindowState {
     pub uuid: Uuid,
     pub settings: RwLock<WindowSettings>,
+    pub handle: RwLock<Option<WindowHandle>>,
 }
 
 impl WindowState {
@@ -151,6 +152,7 @@ impl WindowState {
         Self {
             uuid,
             settings: RwLock::new(settings),
+            handle: RwLock::new(None),
         }
     }
 
@@ -163,8 +165,13 @@ impl WindowState {
     }
 
     pub fn handle(&self) -> Option<WindowHandle> {
-        None
+        match self.handle.read().unwrap().as_ref() {
+            Some(handle) => Some(handle.to_owned()),
+            None => None,
+        }
     }
 
-    pub fn set_handle(&self, handle: WindowHandle) {}
+    pub fn set_handle(&self, handle: WindowHandle) {
+        *self.handle.write().unwrap() = Some(handle);
+    }
 }
