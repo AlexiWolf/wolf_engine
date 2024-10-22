@@ -96,7 +96,10 @@ impl EventSender<WindowContextEvent> for WindowContextEventSender {
 
 #[cfg(test)]
 mod window_context_tests {
-    use wolf_engine_events::mpsc::{self, MpscEventReceiver};
+    use wolf_engine_events::{
+        mpsc::{self, MpscEventReceiver},
+        EventReceiver,
+    };
 
     use crate::event::WindowContextEvent;
 
@@ -123,5 +126,31 @@ mod window_context_tests {
             .unwrap();
 
         assert_eq!(window.size(), (800, 600), "The window was not resized");
+    }
+
+    #[test]
+    fn should_emit_rename_events() {
+        let (_, event_receiver, context, context_event_sender) = test_init();
+        let window = context.create_window(WindowSettings::default().with_size((100, 100)));
+
+        window.rename("I can haz rename?");
+
+        while let Some(event) = event_receiver.next_event() {
+            if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
+                match context_event {
+                    WindowContextEvent::WindowRenameRequested(uuid, new_title) => {
+                        assert_eq!(*uuid, window.id(), "Event is for the wrong window uuid");
+                        assert_eq!(
+                            new_title, "I can haz rename?",
+                            "the new title is not correct"
+                        );
+                        return;
+                    }
+                    _ => (),
+                }
+            }
+        }
+
+        panic!("NO! Window cannot haz rename. :(");
     }
 }
