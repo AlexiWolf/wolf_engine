@@ -140,6 +140,30 @@ mod window_context_tests {
     }
 
     #[test]
+    fn should_remove_dropped_windows() {
+        fn window_count(context: &WindowContext) -> usize {
+            context.window_states.read().unwrap().len()
+        }
+
+        let (_, _event_receiver, context, context_event_sender) = test_init();
+
+        assert_eq!(window_count(&context), 0);
+        let a = context.create_window(WindowSettings::default());
+        assert_eq!(window_count(&context), 1);
+        let b = context.create_window(WindowSettings::default());
+        assert_eq!(window_count(&context), 2);
+        let c = context.create_window(WindowSettings::default());
+        assert_eq!(window_count(&context), 3);
+
+        drop(a);
+        assert_eq!(window_count(&context), 2);
+        drop(b);
+        assert_eq!(window_count(&context), 1);
+        drop(c);
+        assert_eq!(window_count(&context), 0);
+    }
+
+    #[test]
     fn should_resize_windows() {
         let (_, _event_receiver, context, context_event_sender) = test_init();
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
