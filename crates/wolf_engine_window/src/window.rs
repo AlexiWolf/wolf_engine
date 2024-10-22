@@ -1,9 +1,9 @@
 use std::sync::{Arc, RwLock};
 
 use uuid::Uuid;
-use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender};
+use wolf_engine_events::{dynamic::AnyEvent, mpsc::MpscEventSender, EventSender};
 
-use crate::{raw_window_handle::WindowHandle, WindowContext};
+use crate::{event::WindowContextEvent, raw_window_handle::WindowHandle, WindowContext};
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -87,7 +87,15 @@ impl Window {
     }
 
     /// Set the title of the window.
-    pub fn set_title(&self, new_title: &str) {}
+    pub fn set_title(&self, new_title: &str) {
+        self.context
+            .event_sender
+            .send_event(Box::new(WindowContextEvent::WindowRenameRequested(
+                self.id(),
+                new_title.into(),
+            )))
+            .unwrap();
+    }
 
     /// Get the current fullscreen-mode, if the window is in full-screen.
     pub fn fullscreen_mode(&self) -> Option<FullscreenMode> {

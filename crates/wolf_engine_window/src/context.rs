@@ -13,7 +13,7 @@ use crate::{event::WindowContextEvent, Window, WindowSettings, WindowState};
 #[derive(Clone)]
 /// A link to the window system.
 pub struct WindowContext {
-    event_sender: MpscEventSender<AnyEvent>,
+    pub(crate) event_sender: MpscEventSender<AnyEvent>,
     window_states: Arc<RwLock<HashMap<Uuid, Weak<WindowState>>>>,
 }
 
