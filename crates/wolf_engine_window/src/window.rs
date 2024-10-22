@@ -86,7 +86,7 @@ impl Window {
 
     /// Get the current size of the window.
     pub fn size(&self) -> (u32, u32) {
-        self.state.settings.read().unwrap().size
+        self.state.size()
     }
 
     /// Set the title of the window.
@@ -128,4 +128,8 @@ impl WindowState {
             settings: RwLock::new(settings),
         }
     }
+    pub fn size(&self) -> (u32, u32) {
+        self.settings.read().unwrap().size
+    }
+
 }
