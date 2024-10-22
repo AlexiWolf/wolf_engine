@@ -13,7 +13,7 @@ use wolf_engine_window::{
     backend::WindowSystem,
     error::WindowError,
     event::{WindowContextEvent, WindowEvent},
-    WindowContext, WindowContextEventSender,
+    Uuid, WindowContext, WindowContextEventSender, WindowSettings,
 };
 
 pub fn init() -> Result<WinitBackend, WindowError> {
@@ -71,6 +71,8 @@ struct WinitApp<H: FnMut(AnyEvent)> {
     window_context: WindowContext,
     window_context_event_sender: WindowContextEventSender,
     is_suspended: bool,
+
+    pending_windows: Vec<(Uuid, WindowSettings)>,
 }
 
 impl<H: FnMut(AnyEvent)> WinitApp<H> {
@@ -88,6 +90,8 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
             window_context,
             window_context_event_sender,
             is_suspended: true,
+
+            pending_windows: Vec::new(),
         }
     }
 
@@ -100,10 +104,19 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
     fn handle_event(&mut self, event_loop: &ActiveEventLoop, event: AnyEvent) {
         if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
             match context_event {
-                WindowContextEvent::WindowCreated(_, _) => (),
+                WindowContextEvent::WindowCreated(uuid, settings) => self
+                    .pending_windows
+                    .push((uuid.to_owned(), settings.to_owned())),
+
                 WindowContextEvent::WindowClosed(_) => (),
                 _ => (),
             }
+        }
+    }
+
+    fn create_windows(&mut self, event_loop: &ActiveEventLoop) {
+        if self.is_suspended {
+            return;
         }
     }
 }
@@ -123,6 +136,7 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
             StartCause::Init => (self.event_handler)(Box::new(WindowEvent::Started)),
             StartCause::Poll => {
                 self.process_events(event_loop);
+                self.create_windows(event_loop);
             }
             _ => (),
         }
