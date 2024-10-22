@@ -27,6 +27,7 @@ pub enum WindowContextEvent {
     WindowRenameRequested(Uuid, String),
 
     WindowResized(Uuid, u32, u32),
+    WindowCreated(Uuid, WindowSettings),
 }
 
 impl Event for WindowContextEvent {}
