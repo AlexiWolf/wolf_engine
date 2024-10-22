@@ -77,6 +77,16 @@ impl WindowContext {
     pub(crate) fn remove_window_state(&self, uuid: Uuid) {
         self.window_states.write().unwrap().remove(&uuid);
     }
+
+    pub fn insert_window_handle(
+        &self,
+        uuid: Uuid,
+        window_handle: crate::raw_window_handle::WindowHandle,
+    ) {
+        self.with_window_state_mut(uuid, |window_state| {
+            window_state.set_handle(window_handle);
+        })
+    }
 }
 
 pub struct WindowContextEventSender {

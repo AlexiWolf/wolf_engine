@@ -1,8 +1,11 @@
+use std::{collections::HashMap, sync::Arc};
+
 use winit::{
     application::ApplicationHandler,
+    dpi::PhysicalSize,
     event::StartCause,
     event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
-    window::WindowId,
+    window::{Window, WindowAttributes, WindowId},
 };
 use wolf_engine_events::{
     dynamic::AnyEvent,
@@ -13,6 +16,7 @@ use wolf_engine_window::{
     backend::WindowSystem,
     error::WindowError,
     event::{WindowContextEvent, WindowEvent},
+    raw_window_handle::WindowHandle,
     Uuid, WindowContext, WindowContextEventSender, WindowSettings,
 };
 
@@ -73,6 +77,8 @@ struct WinitApp<H: FnMut(AnyEvent)> {
     is_suspended: bool,
 
     pending_windows: Vec<(Uuid, WindowSettings)>,
+    id_map: HashMap<WindowId, Uuid>,
+    windows: HashMap<Uuid, Arc<Window>>,
 }
 
 impl<H: FnMut(AnyEvent)> WinitApp<H> {
@@ -92,6 +98,8 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
             is_suspended: true,
 
             pending_windows: Vec::new(),
+            id_map: HashMap::new(),
+            windows: HashMap::new(),
         }
     }
 
@@ -117,6 +125,26 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
     fn create_windows(&mut self, event_loop: &ActiveEventLoop) {
         if self.is_suspended {
             return;
+        }
+
+        while let Some((uuid, settings)) = self.pending_windows.pop() {
+            let window_attributes = WindowAttributes::default()
+                .with_title(settings.title)
+                .with_inner_size(PhysicalSize::new(settings.size.0, settings.size.1))
+                .with_visible(settings.is_visible)
+                .with_resizable(settings.is_resizable);
+            let window = Arc::new(
+                event_loop
+                    .create_window(window_attributes)
+                    .expect("Window creation should have succeeded"),
+            );
+            let window_handle = WindowHandle::new(window.clone());
+
+            self.id_map.insert(window.id(), uuid);
+            self.windows.insert(uuid, window);
+            self.window_context
+                .insert_window_handle(uuid, window_handle);
+            (self.event_handler)(Box::new(WindowEvent::WindowCreated(uuid, Ok(()))));
         }
     }
 }
