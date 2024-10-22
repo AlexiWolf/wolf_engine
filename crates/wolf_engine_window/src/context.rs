@@ -145,18 +145,37 @@ mod window_context_tests {
             context.window_states.read().unwrap().len()
         }
 
-        let (_, _event_receiver, context, context_event_sender) = test_init();
+        let (_, _event_receiver, context, _context_event_sender) = test_init();
 
         assert_eq!(window_count(&context), 0);
         let a = context.create_window(WindowSettings::default());
         assert_eq!(window_count(&context), 1);
+        let a_copy = a.clone();
+        assert_eq!(
+            window_count(&context),
+            1,
+            "Window clones should not change the window count"
+        );
+
         let b = context.create_window(WindowSettings::default());
         assert_eq!(window_count(&context), 2);
+
         let c = context.create_window(WindowSettings::default());
         assert_eq!(window_count(&context), 3);
 
         drop(a);
-        assert_eq!(window_count(&context), 2);
+        assert_eq!(
+            window_count(&context),
+            3,
+            "Window should not be cleaned up until clone is dropped"
+        );
+        drop(a_copy);
+        assert_eq!(
+            window_count(&context),
+            2,
+            "Dropping last copy should clean up the window"
+        );
+
         drop(b);
         assert_eq!(window_count(&context), 1);
         drop(c);
