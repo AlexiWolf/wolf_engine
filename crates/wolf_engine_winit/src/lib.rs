@@ -65,6 +65,7 @@ struct WinitApp<H: FnMut(AnyEvent)> {
     event_receiver: MpscEventReceiver<AnyEvent>,
     window_context: WindowContext,
     window_context_event_sender: WindowContextEventSender,
+    is_suspended: bool,
 }
 
 impl<H: FnMut(AnyEvent)> WinitApp<H> {
@@ -81,13 +82,18 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
             event_receiver,
             window_context,
             window_context_event_sender,
+            is_suspended: true,
         }
     }
 }
 
 impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
-    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        event_loop.exit()
+    fn resumed(&mut self, _event_loop: &ActiveEventLoop) {
+        self.is_suspended = false;
+    }
+
+    fn suspended(&mut self, _event_loop: &ActiveEventLoop) {
+        self.is_suspended = true;
     }
 
     fn window_event(
