@@ -116,7 +116,7 @@ impl Window {
     }
 
     pub fn handle(&self) -> Option<WindowHandle> {
-        None
+        self.state.handle()
     }
 }
 
