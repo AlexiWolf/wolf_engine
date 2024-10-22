@@ -130,10 +130,10 @@ mod window_context_tests {
 
     #[test]
     fn should_emit_rename_events() {
-        let (_, event_receiver, context, context_event_sender) = test_init();
+        let (_, mut event_receiver, context, context_event_sender) = test_init();
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
 
-        window.rename("I can haz rename?");
+        window.set_title("I can haz rename?");
 
         while let Some(event) = event_receiver.next_event() {
             if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
