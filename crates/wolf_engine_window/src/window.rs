@@ -133,6 +133,10 @@ impl Drop for Window {
         let weak = Arc::downgrade(&self.state);
         if weak.strong_count() == 1 {
             self.context.remove_window_state(self.id());
+            self.context
+                .event_sender
+                .send_event(Box::new(WindowContextEvent::WindowClosed(self.id())))
+                .unwrap();
         }
     }
 }
