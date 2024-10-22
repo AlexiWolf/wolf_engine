@@ -31,7 +31,7 @@ impl WindowContext {
     pub fn create_window(&self, window_settings: WindowSettings) -> Window {
         let uuid = Uuid::new_v4();
         let window_state = Arc::new(WindowState::new(uuid, window_settings.clone()));
-        let window = Window::new(self.event_sender.clone(), window_state.clone());
+        let window = Window::new(self.clone(), window_state.clone());
         self.insert_window_state(&window_state);
         self.event_sender
             .send_event(Box::new(WindowContextEvent::WindowCreated(
