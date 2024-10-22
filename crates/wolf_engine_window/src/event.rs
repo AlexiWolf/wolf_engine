@@ -29,6 +29,7 @@ pub enum WindowContextEvent {
     WindowResized(Uuid, u32, u32),
     WindowCreated(Uuid, WindowSettings),
     WindowClosed(Uuid),
+    Exited,
 }
 
 impl Event for WindowContextEvent {}
