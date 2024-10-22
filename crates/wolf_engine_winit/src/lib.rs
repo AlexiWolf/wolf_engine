@@ -46,13 +46,13 @@ impl wolf_engine_events::event_loop::EventLoop<AnyEvent> for WinitBackend {
     }
 
     fn run<F: FnMut(AnyEvent)>(self, event_handler: F) {
-        let mut winit_app = WinitApp {
+        let mut winit_app = WinitApp::new(
             event_handler,
-            event_sender: self.event_sender,
-            event_receiver: self.event_receiver,
-            window_context: self.window_context,
-            window_context_event_sender: self.window_context_event_sender,
-        };
+            self.event_sender,
+            self.event_receiver,
+            self.window_context,
+            self.window_context_event_sender,
+        );
         let event_loop = self.event_loop;
 
         let _ = event_loop.run_app(&mut winit_app);
@@ -65,6 +65,24 @@ struct WinitApp<H: FnMut(AnyEvent)> {
     event_receiver: MpscEventReceiver<AnyEvent>,
     window_context: WindowContext,
     window_context_event_sender: WindowContextEventSender,
+}
+
+impl<H: FnMut(AnyEvent)> WinitApp<H> {
+    pub(crate) fn new(
+        event_handler: H,
+        event_sender: MpscEventSender<AnyEvent>,
+        event_receiver: MpscEventReceiver<AnyEvent>,
+        window_context: WindowContext,
+        window_context_event_sender: WindowContextEventSender,
+    ) -> Self {
+        Self {
+            event_handler,
+            event_sender,
+            event_receiver,
+            window_context,
+            window_context_event_sender,
+        }
+    }
 }
 
 impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
