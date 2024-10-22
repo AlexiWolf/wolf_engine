@@ -96,17 +96,26 @@ impl EventSender<WindowContextEvent> for WindowContextEventSender {
 
 #[cfg(test)]
 mod window_context_tests {
-    use wolf_engine_events::mpsc;
+    use wolf_engine_events::mpsc::{self, MpscEventReceiver};
 
     use crate::event::WindowContextEvent;
 
     use super::*;
 
+    fn test_init() -> (
+        MpscEventSender<AnyEvent>,
+        MpscEventReceiver<AnyEvent>,
+        WindowContext,
+        WindowContextEventSender,
+    ) {
+        let (event_sender, event_receiver) = mpsc::event_queue();
+        let (context, context_event_sender) = WindowContext::new(event_sender.clone());
+        (event_sender, event_receiver, context, context_event_sender)
+    }
+
     #[test]
     fn should_resize_windows() {
-        let (event_sender, _event_receiver) = mpsc::event_queue();
-        let (context, context_event_sender) = WindowContext::new(event_sender.clone());
-
+        let (_, _, context, context_event_sender) = test_init();
         let window = context.create_window(WindowSettings::default().with_size((100, 100)));
 
         context_event_sender
