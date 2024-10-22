@@ -161,4 +161,10 @@ impl WindowState {
     pub fn resize(&self, width: u32, height: u32) {
         self.settings.write().unwrap().size = (width, height);
     }
+
+    pub fn handle(&self) -> Option<WindowHandle> {
+        None
+    }
+
+    pub fn set_handle(&self, handle: WindowHandle) {}
 }
