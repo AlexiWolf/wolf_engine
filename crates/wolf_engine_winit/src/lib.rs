@@ -3,14 +3,14 @@ use std::{collections::HashMap, sync::Arc};
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
-    event::StartCause,
+    event::{StartCause, WindowEvent as WinitEvent},
     event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
     window::{Window, WindowAttributes, WindowId},
 };
 use wolf_engine_events::{
     dynamic::AnyEvent,
     mpsc::{self, MpscEventReceiver, MpscEventSender},
-    EventReceiver,
+    EventReceiver, EventSender,
 };
 use wolf_engine_window::{
     backend::WindowSystem,
@@ -105,18 +105,34 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
 
     fn process_events(&mut self, event_loop: &ActiveEventLoop) {
         while let Some(event) = self.event_receiver.next_event() {
+            println!("{event:?}");
             self.handle_event(event_loop, event);
         }
+        (self.event_handler)(Box::new(WindowEvent::EventsCleared));
     }
 
     fn handle_event(&mut self, event_loop: &ActiveEventLoop, event: AnyEvent) {
         if let Some(context_event) = event.downcast_ref::<WindowContextEvent>() {
             match context_event {
+                WindowContextEvent::Exited => {
+                    event_loop.exit();
+                    (self.event_handler)(Box::new(WindowEvent::Exited))
+                }
                 WindowContextEvent::WindowCreated(uuid, settings) => self
                     .pending_windows
                     .push((uuid.to_owned(), settings.to_owned())),
 
-                WindowContextEvent::WindowClosed(_) => (),
+                WindowContextEvent::WindowRedrawRequested(uuid) => {
+                    if let Some(window) = self.windows.get(uuid) {
+                        window.request_redraw();
+                    }
+                }
+                WindowContextEvent::WindowClosed(uuid) => match self.windows.remove(uuid) {
+                    Some(window) => {
+                        let _ = self.id_map.remove(&window.id());
+                    }
+                    None => (),
+                },
                 _ => (),
             }
         }
@@ -147,6 +163,13 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
             (self.event_handler)(Box::new(WindowEvent::WindowCreated(uuid, Ok(()))));
         }
     }
+
+    fn resize_window(&mut self, uuid: Uuid, width: u32, height: u32) {
+        self.window_context_event_sender
+            .send_event(WindowContextEvent::WindowResized(uuid, width, height))
+            .unwrap();
+        (self.event_handler)(Box::new(WindowEvent::WindowResized(uuid, width, height)))
+    }
 }
 
 impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
@@ -172,9 +195,27 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
 
     fn window_event(
         &mut self,
-        event_loop: &ActiveEventLoop,
+        _event_loop: &ActiveEventLoop,
         window_id: WindowId,
         event: winit::event::WindowEvent,
     ) {
+        let uuid = match self.id_map.get(&window_id) {
+            Some(uuid) => uuid,
+            None => return,
+        }
+        .to_owned();
+        println!("{event:?}");
+        match event {
+            WinitEvent::CloseRequested => {
+                (self.event_handler)(Box::new(WindowEvent::WindowClosed(uuid)))
+            }
+            WinitEvent::Resized(new_size) => {
+                self.resize_window(uuid, new_size.width, new_size.height)
+            }
+            WinitEvent::RedrawRequested => {
+                (self.event_handler)(Box::new(WindowEvent::WindowRedrawRequested(uuid)))
+            }
+            _ => (),
+        }
     }
 }
