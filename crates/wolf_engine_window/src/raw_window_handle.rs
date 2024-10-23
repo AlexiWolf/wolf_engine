@@ -41,6 +41,8 @@ impl<T> HasRwh5Handles for T {}
 pub trait HasRawWindowHandles: HasRwh6Handles + HasRwh5Handles {}
 impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
+/// Provides access to the platform-specific, raw window handle, and display handle of a
+/// [`Window`](crate::Window).
 #[derive(Clone)]
 pub struct WindowHandle {
     uuid: Uuid,
