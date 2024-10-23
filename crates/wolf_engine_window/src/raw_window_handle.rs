@@ -12,7 +12,8 @@ pub trait HasRwh6Handles: rwh_06::HasWindowHandle + rwh_06::HasDisplayHandle {}
 #[cfg(feature = "rwh_06")]
 impl<T> HasRwh6Handles for T where T: rwh_06::HasWindowHandle + rwh_06::HasDisplayHandle {}
 
-/// Placeholder for when the `rwh_06` feature is not enabled.
+/// A placeholder for when the `rwh_06` feature is not enabled.
+#[doc(hidden)]
 #[cfg(not(feature = "rwh_06"))]
 pub trait HasRwh6Handles {}
 #[cfg(not(feature = "rwh_06"))]
@@ -24,7 +25,8 @@ pub trait HasRwh5Handles: rwh_05::HasRawWindowHandle + rwh_05::HasRawDisplayHand
 #[cfg(feature = "rwh_05")]
 impl<T> HasRwh5Handles for T where T: rwh_05::HasRawWindowHandle + rwh_05::HasRawDisplayHandle {}
 
-/// Placeholder for when the `rwh_05` feature is not enabled.
+/// A placeholder for when the `rwh_05` feature is not enabled.
+#[doc(hidden)]
 #[cfg(not(feature = "rwh_05"))]
 pub trait HasRwh5Handles {}
 #[cfg(not(feature = "rwh_05"))]
