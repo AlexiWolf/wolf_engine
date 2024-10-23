@@ -5,6 +5,7 @@ pub use rwh_05;
 
 #[cfg(feature = "rwh_06")]
 pub use rwh_06;
+
 use uuid::Uuid;
 
 #[cfg(not(any(feature = "rwh_06", feature = "rwh_05")))]
