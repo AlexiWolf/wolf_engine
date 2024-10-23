@@ -10,9 +10,6 @@ homepage = "https://github.com/AlexiWolf/wolf_engine"
 keywords = ["wolf-engine", "gamedev", "windowing"]
 categories = ["game-development", "gui"]
 
-[features]
-default = ["rwh_06"]
-
 [dependencies]
 wolf_engine_input = { version = "0.1.2", path = "../wolf_engine_input", features = ["winit"] }
 wolf_engine_events = { version = "0.1.0", path = "../wolf_engine_events" }
