@@ -105,7 +105,6 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
 
     fn process_events(&mut self, event_loop: &ActiveEventLoop) {
         while let Some(event) = self.event_receiver.next_event() {
-            println!("{event:?}");
             self.handle_event(event_loop, event);
         }
         (self.event_handler)(Box::new(WindowEvent::EventsCleared));
@@ -127,9 +126,11 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
                         window.request_redraw();
                     }
                 }
-                WindowContextEvent::WindowClosed(uuid) => if let Some(window) = self.windows.remove(uuid) {
-                    let _ = self.id_map.remove(&window.id());
-                },
+                WindowContextEvent::WindowClosed(uuid) => {
+                    if let Some(window) = self.windows.remove(uuid) {
+                        let _ = self.id_map.remove(&window.id());
+                    }
+                }
                 _ => (),
             }
         }
@@ -201,7 +202,6 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
             None => return,
         }
         .to_owned();
-        println!("{event:?}");
         match event {
             WinitEvent::CloseRequested => {
                 (self.event_handler)(Box::new(WindowEvent::WindowClosed(uuid)))
