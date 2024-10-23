@@ -7,6 +7,9 @@ pub use rwh_05;
 pub use rwh_06;
 use uuid::Uuid;
 
+#[cfg(not(any(feature = "rwh_06", feature = "rwh_05")))]
+compile_error!("You must enable at least one rwh version: 'rwh_06', or 'rwh_05'");
+
 /// A type which has [rwh_06] handles.
 #[cfg(feature = "rwh_06")]
 pub trait HasRwh6Handles: rwh_06::HasWindowHandle + rwh_06::HasDisplayHandle {}
