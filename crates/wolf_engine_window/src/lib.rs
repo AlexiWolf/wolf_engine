@@ -16,7 +16,7 @@ pub use uuid::Uuid;
 
 /// Error-types used by the window system.
 pub mod error;
-/// Re-exports supported [`raw_window_handle`](crate::raw_window_handle::rwh_06) versions.
+/// Re-exports supported `raw_window_handle` versions.
 pub mod raw_window_handle;
 
 #[cfg(test)]

@@ -36,7 +36,7 @@ pub trait HasRwh5Handles {}
 #[cfg(not(feature = "rwh_05"))]
 impl<T> HasRwh5Handles for T {}
 
-/// A type which has all currently-enabled [`raw_window_handle`](rwh_06) handles.
+/// A type which has all currently-enabled `raw_window_handle` handles.
 pub trait HasRawWindowHandles: HasRwh6Handles + HasRwh5Handles {}
 impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
