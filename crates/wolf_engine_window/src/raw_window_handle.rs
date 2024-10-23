@@ -46,14 +46,14 @@ impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 #[derive(Clone)]
 pub struct WindowHandle {
     uuid: Uuid,
-    window: Arc<dyn HasRawWindowHandles + Send + Sync>,
+    inner: Arc<dyn HasRawWindowHandles + Send + Sync>,
 }
 
 impl WindowHandle {
-    pub fn new(window: Arc<dyn HasRawWindowHandles + Send + Sync>) -> Self {
+    pub fn new(inner: Arc<dyn HasRawWindowHandles + Send + Sync>) -> Self {
         Self {
             uuid: Uuid::new_v4(),
-            window,
+            inner,
         }
     }
 }
@@ -72,11 +72,11 @@ impl Debug for WindowHandle {
             debug_struct = debug_struct
                 .field(
                     "rwh_06_window_handle",
-                    &rwh_06::HasWindowHandle::window_handle(&self.window),
+                    &rwh_06::HasWindowHandle::window_handle(&self.inner),
                 )
                 .field(
                     "rwh_06_display_handle",
-                    &rwh_06::HasDisplayHandle::display_handle(&self.window),
+                    &rwh_06::HasDisplayHandle::display_handle(&self.inner),
                 );
         }
 
@@ -85,11 +85,11 @@ impl Debug for WindowHandle {
             debug_struct = debug_struct
                 .field(
                     "rwh_05_window_handle",
-                    &rwh_05::HasRawWindowHandle::raw_window_handle(&self.window),
+                    &rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner),
                 )
                 .field(
                     "rwh_05_display_handle",
-                    &rwh_05::HasRawDisplayHandle::raw_display_handle(&self.window),
+                    &rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner),
                 );
         }
 
@@ -100,27 +100,27 @@ impl Debug for WindowHandle {
 #[cfg(feature = "rwh_06")]
 impl rwh_06::HasWindowHandle for WindowHandle {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasWindowHandle::window_handle(self.window.as_ref())
+        rwh_06::HasWindowHandle::window_handle(self.inner.as_ref())
     }
 }
 
 #[cfg(feature = "rwh_06")]
 impl rwh_06::HasDisplayHandle for WindowHandle {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasDisplayHandle::display_handle(self.window.as_ref())
+        rwh_06::HasDisplayHandle::display_handle(self.inner.as_ref())
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawWindowHandle for WindowHandle {
     fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        rwh_05::HasRawWindowHandle::raw_window_handle(self.window.as_ref())
+        rwh_05::HasRawWindowHandle::raw_window_handle(self.inner.as_ref())
     }
 }
 
 #[cfg(feature = "rwh_05")]
 unsafe impl rwh_05::HasRawDisplayHandle for WindowHandle {
     fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        rwh_05::HasRawDisplayHandle::raw_display_handle(self.window.as_ref())
+        rwh_05::HasRawDisplayHandle::raw_display_handle(self.inner.as_ref())
     }
 }
