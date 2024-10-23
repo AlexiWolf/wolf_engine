@@ -5,6 +5,7 @@ pub use rwh_05;
 
 #[cfg(feature = "rwh_06")]
 pub use rwh_06;
+use uuid::Uuid;
 
 /// A type which has [rwh_06] handles.
 #[cfg(feature = "rwh_06")]
@@ -38,18 +39,22 @@ impl<T> HasRawWindowHandles for T where T: HasRwh6Handles + HasRwh5Handles {}
 
 #[derive(Clone)]
 pub struct WindowHandle {
+    uuid: Uuid,
     window: Arc<dyn HasRawWindowHandles + Send + Sync>,
 }
 
 impl WindowHandle {
     pub fn new(window: Arc<dyn HasRawWindowHandles + Send + Sync>) -> Self {
-        Self { window }
+        Self {
+            uuid: Uuid::new_v4(),
+            window,
+        }
     }
 }
 
 impl PartialEq for WindowHandle {
     fn eq(&self, other: &Self) -> bool {
-        self.window.window_handle().unwrap() == other.window.window_handle().unwrap()
+        self.uuid == other.uuid
     }
 }
 
@@ -86,12 +91,14 @@ impl Debug for WindowHandle {
     }
 }
 
+#[cfg(feature = "rwh_06")]
 impl rwh_06::HasWindowHandle for WindowHandle {
     fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasWindowHandle::window_handle(self.window.as_ref())
     }
 }
 
+#[cfg(feature = "rwh_06")]
 impl rwh_06::HasDisplayHandle for WindowHandle {
     fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
         rwh_06::HasDisplayHandle::display_handle(self.window.as_ref())
