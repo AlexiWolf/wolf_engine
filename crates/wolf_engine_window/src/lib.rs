@@ -7,7 +7,7 @@
 
 pub mod backend;
 mod context;
-pub use context::*;
+pub use context::WindowContext;
 mod window;
 pub use window::*;
 

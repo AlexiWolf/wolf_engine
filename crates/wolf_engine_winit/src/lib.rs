@@ -13,11 +13,14 @@ use wolf_engine_events::{
     EventReceiver, EventSender,
 };
 use wolf_engine_window::{
-    backend::{event::WindowContextEvent, WindowSystem},
+    backend::{
+        event::{WindowContextEvent, WindowContextEventSender},
+        WindowSystem,
+    },
     error::WindowError,
     event::WindowEvent,
     raw_window_handle::WindowHandle,
-    Uuid, WindowContext, WindowContextEventSender, WindowSettings,
+    Uuid, WindowContext, WindowSettings,
 };
 
 pub fn init() -> Result<WinitBackend, WindowError> {

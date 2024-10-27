@@ -7,6 +7,8 @@ pub mod event {
 
     use crate::{Uuid, WindowSettings};
 
+    pub use crate::context::WindowContextEventSender;
+
     #[derive(Clone, PartialEq, Debug)]
     pub enum WindowContextEvent {
         WindowRenameRequested(Uuid, String),
