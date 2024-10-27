@@ -13,9 +13,9 @@ use wolf_engine_events::{
     EventReceiver, EventSender,
 };
 use wolf_engine_window::{
-    backend::WindowSystem,
+    backend::{event::WindowContextEvent, WindowSystem},
     error::WindowError,
-    event::{WindowContextEvent, WindowEvent},
+    event::WindowEvent,
     raw_window_handle::WindowHandle,
     Uuid, WindowContext, WindowContextEventSender, WindowSettings,
 };

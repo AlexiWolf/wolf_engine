@@ -3,7 +3,7 @@ use std::sync::{Arc, RwLock};
 use uuid::Uuid;
 use wolf_engine_events::EventSender;
 
-use crate::{event::WindowContextEvent, raw_window_handle::WindowHandle, WindowContext};
+use crate::{backend::event::WindowContextEvent, raw_window_handle::WindowHandle, WindowContext};
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -165,7 +165,11 @@ impl WindowState {
     }
 
     pub fn handle(&self) -> Option<WindowHandle> {
-        self.handle.read().unwrap().as_ref().map(|handle| handle.to_owned())
+        self.handle
+            .read()
+            .unwrap()
+            .as_ref()
+            .map(|handle| handle.to_owned())
     }
 
     pub fn set_handle(&self, handle: WindowHandle) {

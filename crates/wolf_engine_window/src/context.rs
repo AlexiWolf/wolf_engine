@@ -8,7 +8,7 @@ use wolf_engine_events::{
     dynamic::AnyEvent, mpsc::MpscEventSender, EventSender, ReceiverDroppedError,
 };
 
-use crate::{event::WindowContextEvent, Window, WindowSettings, WindowState};
+use crate::{backend::event::WindowContextEvent, Window, WindowSettings, WindowState};
 
 #[derive(Clone)]
 /// A link to the window system.
@@ -112,7 +112,7 @@ mod window_context_tests {
         EventReceiver,
     };
 
-    use crate::event::WindowContextEvent;
+    use crate::backend::event::WindowContextEvent;
 
     use super::*;
 
