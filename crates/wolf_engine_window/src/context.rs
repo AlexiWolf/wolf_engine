@@ -88,6 +88,9 @@ impl WindowContext {
     }
 }
 
+/// Provides a link to the [`WindowContext`] to send events from the backend.
+///
+/// Events sent through this event sender are not buffered, and will be processed immediately.
 pub struct WindowContextEventSender {
     context: WindowContext,
 }
