@@ -11,18 +11,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added public re-export of `wolf_engine_input` as `input`.
   - Added `input` feature to enable / disable the `input` module.
     - Added `input` feature to the default feature-set.
-  - Added `winit` feature to enable / disable Winit integration engine-wide.
 - Added `wolf_engine_events` crate.
   - Added public re-export of `wolf_engine_events` as `events`.
 - Added `wolf_engine_window` crate.
   - Added public re-export of `wolf_engine_window` as `window`.
   - Added `window` feature to enable the `window` module.
+- Added `wolf_engine_winit` crate.
+  - Added `winit` feature to enable / disable Winit integration engine-wide.
 
 ## [wolf_engine_window]
 
 ### [Unreleased]
 
 - Changed to event-driven window creation.
+- Rewrote the window system with support for alternative backends.
+  - Addded `backend` module, and `WindowSystem` trait.
+  - Removed the `EventLoop` (replaced it with `WindowSystem::run()`.)
+  - Removed `init()` function.  An equivalent to this function should be
+    provided by the window backend crate.
 
 ### [0.3] - 2024-08-12
 
