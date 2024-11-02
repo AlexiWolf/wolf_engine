@@ -34,7 +34,7 @@ fn test() -> Result<(), Failed> {
                     let _window =
                         context.create_window(WindowSettings::default().with_visible(false));
                 }
-                WindowEvent::WindowCreated(_, window_result) => {
+                WindowEvent::WindowReady(_, window_result) => {
                     window_result.as_ref().expect("Window creation succeeded");
                     context.exit();
                 }

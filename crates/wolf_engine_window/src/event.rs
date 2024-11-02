@@ -14,7 +14,7 @@ pub enum WindowEvent {
     Exited,
     EventsCleared,
     Input(Option<Uuid>, Input),
-    WindowCreated(Uuid, Result<(), WindowError>),
+    WindowReady(Uuid, Result<(), WindowError>),
     WindowRedrawRequested(Uuid),
     WindowClosed(Uuid),
     WindowResized(Uuid, u32, u32),

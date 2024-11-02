@@ -22,7 +22,7 @@ fn main() {
                 WindowEvent::EventsCleared => {
                     window.redraw();
                 }
-                WindowEvent::WindowCreated(_, _) => {
+                WindowEvent::WindowReady(_, _) => {
                     canvas = Some({
                         let handle = window.handle().unwrap();
                         let (width, height) = window.size();

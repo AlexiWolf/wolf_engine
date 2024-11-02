@@ -159,7 +159,7 @@ impl<H: FnMut(AnyEvent)> WinitApp<H> {
             self.windows.insert(uuid, window);
             self.window_context
                 .insert_window_handle(uuid, window_handle);
-            (self.event_handler)(Box::new(WindowEvent::WindowCreated(uuid, Ok(()))));
+            (self.event_handler)(Box::new(WindowEvent::WindowReady(uuid, Ok(()))));
         }
     }
 
