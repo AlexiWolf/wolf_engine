@@ -1,35 +1,14 @@
-use std::{collections::HashMap, sync::Arc};
+use std::sync::{Arc, RwLock};
 
 use uuid::Uuid;
-use winit::{
-    dpi::PhysicalSize,
-    window::{Fullscreen, Window as WinitWindow, WindowAttributes, WindowId},
-};
-use wolf_engine_events::{mpsc::MpscEventSender, EventSender};
+use wolf_engine_events::EventSender;
 
-use crate::event::BackendEvent;
+use crate::{backend::event::WindowContextEvent, raw_window_handle::WindowHandle, WindowContext};
 
 /// The fullscreen-mode for a Window.
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub enum FullscreenMode {
     Borderless,
-}
-
-impl From<Fullscreen> for FullscreenMode {
-    fn from(fullscreen: Fullscreen) -> Self {
-        match fullscreen {
-            Fullscreen::Borderless(_) => FullscreenMode::Borderless,
-            Fullscreen::Exclusive(_) => panic!("Exclusive fullscreen is not yet supported"),
-        }
-    }
-}
-
-impl From<FullscreenMode> for Fullscreen {
-    fn from(fullscreen_mode: FullscreenMode) -> Self {
-        match fullscreen_mode {
-            FullscreenMode::Borderless => Fullscreen::Borderless(None),
-        }
-    }
 }
 
 /// The settings used by the [`WindowContext`](crate::WindowContext) when creating the window.
@@ -85,156 +64,115 @@ impl Default for WindowSettings {
     }
 }
 
-impl From<WindowSettings> for WindowAttributes {
-    fn from(val: WindowSettings) -> Self {
-        WindowAttributes::default()
-            .with_title(val.title)
-            .with_inner_size(PhysicalSize::new(val.size.0, val.size.1))
-            .with_resizable(val.is_resizable)
-            .with_visible(val.is_visible)
-    }
-}
-
 /// A window.
 #[derive(Clone)]
 pub struct Window {
-    uuid: Uuid,
-    event_sender: MpscEventSender<BackendEvent>,
-    inner: Arc<WinitWindow>,
+    context: WindowContext,
+    state: Arc<WindowState>,
+}
+
+impl Window {
+    pub(crate) fn new(context: WindowContext, state: Arc<WindowState>) -> Self {
+        Self { context, state }
+    }
+
+    /// Get the uuid of the window.
+    pub fn id(&self) -> Uuid {
+        self.state.uuid
+    }
+
+    /// Get the current size of the window.
+    pub fn size(&self) -> (u32, u32) {
+        self.state.size()
+    }
+
+    /// Set the title of the window.
+    pub fn set_title(&self, new_title: &str) {
+        self.context
+            .event_sender
+            .send_event(Box::new(WindowContextEvent::WindowRenameRequested(
+                self.id(),
+                new_title.into(),
+            )))
+            .unwrap();
+    }
+
+    /// Get the current fullscreen-mode, if the window is in full-screen.
+    pub fn fullscreen_mode(&self) -> Option<FullscreenMode> {
+        None
+    }
+
+    /// Set the fullscreen-mode.
+    pub fn set_fullscreen_mode(&self, _fullscreen_mode: Option<FullscreenMode>) {}
+
+    /// Request a redraw of the window.
+    pub fn redraw(&self) {
+        self.context
+            .event_sender
+            .send_event(Box::new(WindowContextEvent::WindowRedrawRequested(
+                self.id(),
+            )))
+            .unwrap();
+    }
+
+    pub fn handle(&self) -> Option<WindowHandle> {
+        self.state.handle()
+    }
 }
 
 impl PartialEq for Window {
     fn eq(&self, other: &Self) -> bool {
-        self.uuid == other.uuid
+        self.state.uuid == other.state.uuid
     }
 }
 
 impl Eq for Window {}
 
-impl Window {
-    pub(crate) fn new(
-        uuid: Uuid,
-        event_sender: MpscEventSender<BackendEvent>,
-        inner: WinitWindow,
-    ) -> Self {
-        Self {
-            uuid,
-            event_sender,
-            inner: Arc::new(inner),
-        }
-    }
-
-    /// Get the uuid of the window.
-    pub fn id(&self) -> Uuid {
-        self.uuid
-    }
-
-    /// Get the current size of the window.
-    pub fn size(&self) -> (u32, u32) {
-        let size = self.inner.inner_size();
-        (size.width, size.height)
-    }
-
-    /// Set the title of the window.
-    pub fn set_title(&self, new_title: &str) {
-        self.inner.set_title(new_title);
-    }
-
-    /// Get the current fullscreen-mode, if the window is in full-screen.
-    pub fn fullscreen_mode(&self) -> Option<FullscreenMode> {
-        self.inner.fullscreen().map(|fullscreen| fullscreen.into())
-    }
-
-    /// Set the fullscreen-mode.
-    pub fn set_fullscreen_mode(&self, fullscreen_mode: Option<FullscreenMode>) {
-        let fullscreen = fullscreen_mode.map(|fullscreen_mode| fullscreen_mode.into());
-        self.inner.set_fullscreen(fullscreen);
-    }
-
-    /// Request a redraw of the window.
-    pub fn redraw(&self) {
-        self.inner.request_redraw();
-    }
-}
-
-impl rwh_06::HasWindowHandle for Window {
-    fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasWindowHandle::window_handle(&self.inner)
-    }
-}
-
-impl rwh_06::HasDisplayHandle for Window {
-    fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
-        rwh_06::HasDisplayHandle::display_handle(&self.inner)
-    }
-}
-
-#[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawWindowHandle for Window {
-    fn raw_window_handle(&self) -> rwh_05::RawWindowHandle {
-        rwh_05::HasRawWindowHandle::raw_window_handle(&self.inner)
-    }
-}
-
-#[cfg(feature = "rwh_05")]
-unsafe impl rwh_05::HasRawDisplayHandle for Window {
-    fn raw_display_handle(&self) -> rwh_05::RawDisplayHandle {
-        rwh_05::HasRawDisplayHandle::raw_display_handle(&self.inner)
-    }
-}
-
 impl Drop for Window {
     fn drop(&mut self) {
-        let weak = Arc::downgrade(&self.inner);
+        let weak = Arc::downgrade(&self.state);
         if weak.strong_count() == 1 {
+            self.context.remove_window_state(self.id());
             let _ = self
+                .context
                 .event_sender
-                .send_event(BackendEvent::WindowDropped(self.uuid));
+                .send_event(Box::new(WindowContextEvent::WindowClosed(self.id())));
         }
     }
 }
 
-impl std::fmt::Debug for Window {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("Window")
-            .field("uuid", &self.uuid)
-            .field("inner", &self.inner)
-            .finish()
-    }
+pub(crate) struct WindowState {
+    pub uuid: Uuid,
+    pub settings: RwLock<WindowSettings>,
+    pub handle: RwLock<Option<WindowHandle>>,
 }
 
-#[derive(Clone, Debug)]
-pub(crate) struct WindowIdMap {
-    window_ids: HashMap<WindowId, Uuid>,
-}
-
-impl WindowIdMap {
-    pub fn new() -> Self {
+impl WindowState {
+    pub fn new(uuid: Uuid, settings: WindowSettings) -> Self {
         Self {
-            window_ids: HashMap::new(),
+            uuid,
+            settings: RwLock::new(settings),
+            handle: RwLock::new(None),
         }
     }
 
-    pub fn insert(&mut self, window: &Window) {
-        self.window_ids.insert(window.inner.id(), window.id());
+    pub fn size(&self) -> (u32, u32) {
+        self.settings.read().unwrap().size
     }
 
-    pub fn remove(&mut self, uuid: Uuid) {
-        if let Some(winit_id) = self.winit_id_of(uuid) {
-            let _ = self.window_ids.remove(&winit_id);
-        }
+    pub fn resize(&self, width: u32, height: u32) {
+        self.settings.write().unwrap().size = (width, height);
     }
 
-    pub fn uuid_of(&self, winit_id: WindowId) -> Option<Uuid> {
-        Some(self.window_ids.get(&winit_id)?.to_owned())
+    pub fn handle(&self) -> Option<WindowHandle> {
+        self.handle
+            .read()
+            .unwrap()
+            .as_ref()
+            .map(|handle| handle.to_owned())
     }
 
-    pub fn winit_id_of(&self, uuid: Uuid) -> Option<WindowId> {
-        for (winit_id, stored_uuid) in self.window_ids.iter() {
-            if uuid == *stored_uuid {
-                return Some(*winit_id);
-            }
-        }
-        None
+    pub fn set_handle(&self, handle: WindowHandle) {
+        *self.handle.write().unwrap() = Some(handle);
     }
 }

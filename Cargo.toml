@@ -17,18 +17,19 @@ members = ["crates/*"]
 wolf_engine_events = { version = "0.1.0", path = "crates/wolf_engine_events" }
 wolf_engine_input = { version = "0.1.2", path = "crates/wolf_engine_input", optional = true }
 wolf_engine_window = { version = "0.3.0", path = "crates/wolf_engine_window", optional = true }
+wolf_engine_winit = { version = "0.1.0", path = "crates/wolf_engine_winit", optional = true }
 
 [features]
-default = ["input"]
+default = ["window", "rwh_06", "input"]
 input = ["wolf_engine_input"]
-rwh_05 = ["wolf_engine_window/rwh_05"]
-rwh_06 = ["wolf_engine_window/rwh_06"]
-winit = ["wolf_engine_input/winit"]
 window = ["wolf_engine_window"]
+winit = ["wolf_engine_winit", "wolf_engine_input/winit"]
+rwh_06 = ["wolf_engine_window/rwh_06", "wolf_engine_winit/rwh_06"]
+rwh_05 = ["wolf_engine_window/rwh_05", "wolf_engine_winit/rwh_05"]
 
 [dev-dependencies]
 winit = "0.30"
-pixels = "0.13.0"
+pixels = "0.13"
 
 [[example]]
 name = "input"
@@ -36,4 +37,4 @@ required-features = ["winit"]
 
 [[example]]
 name = "window"
-required-features = ["window", "rwh_05"]
+required-features = ["winit", "rwh_05"]
