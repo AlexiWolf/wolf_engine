@@ -1,9 +1,8 @@
 use std::{process::ExitCode, time::Duration};
 
-use event::WindowEvent;
 use libtest_mimic::{Arguments, Failed, Trial};
 use wolf_engine_events::event_loop::EventLoop;
-use wolf_engine_window::{backend::WindowSystem, *};
+use wolf_engine_window::{backend::WindowSystem, WindowEvent, WindowSettings};
 
 pub fn main() -> ExitCode {
     timeout(Duration::from_secs(1));

@@ -1,6 +1,6 @@
 use pixels::{wgpu::Color, Pixels, SurfaceTexture};
 use wolf_engine_events::event_loop::EventLoop;
-use wolf_engine_window::{backend::WindowSystem, event::WindowEvent, WindowSettings};
+use wolf_engine_window::{backend::WindowSystem, WindowEvent, WindowSettings};
 
 fn main() {
     let window_system = wolf_engine_winit::init().unwrap();

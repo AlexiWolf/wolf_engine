@@ -11,11 +11,14 @@ pub use context::WindowContext;
 mod window;
 pub use window::*;
 
-pub mod event;
+mod event;
+pub use event::*;
+
 pub use uuid::Uuid;
 
-/// Error-types used by the window system.
-pub mod error;
+mod error;
+pub use error::*;
+
 /// Re-exports supported `raw_window_handle` versions.
 pub mod raw_window_handle;
 

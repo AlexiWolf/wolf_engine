@@ -17,10 +17,8 @@ use wolf_engine_window::{
         event::{WindowContextEvent, WindowContextEventSender},
         WindowSystem,
     },
-    error::WindowError,
-    event::WindowEvent,
     raw_window_handle::WindowHandle,
-    Uuid, WindowContext, WindowSettings,
+    Uuid, WindowContext, WindowError, WindowEvent, WindowSettings,
 };
 
 pub fn init() -> Result<WinitBackend, WindowError> {
