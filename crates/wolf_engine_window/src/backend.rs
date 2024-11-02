@@ -1,3 +1,6 @@
+//! Types, events, ext. used to interfance with an external platform / platform-specific window
+//! system.
+
 use wolf_engine_events::{dynamic::AnyEvent, event_loop::EventLoop};
 
 use crate::WindowContext;
