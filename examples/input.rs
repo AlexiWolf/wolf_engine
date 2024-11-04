@@ -42,12 +42,8 @@ pub fn main() {
 
 fn process_input(input: &Input) {
     match input {
-        Input::Keyboard {
-            state,
-            scancode,
-            keycode,
-            is_repeat,
-        } => println!("Key: {state:?}, {scancode:?}, {keycode:?}, {is_repeat:?}"),
+        Input::KeyPressed { key, is_repeat } => println!("Key: {key:?}, {is_repeat:?}"),
+        Input::KeyReleased { key } => println!("Key: {key:?}"),
         Input::MouseMove { x, y } => println!("Mouse Moved: {x}, {y}"),
         Input::RawMouseMove { delta_x, delta_y } => {
             println!("Raw Mouse Moved: {delta_x}, {delta_y}")

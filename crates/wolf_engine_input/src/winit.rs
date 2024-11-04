@@ -1,4 +1,4 @@
-use crate::keyboard::KeyCode;
+use crate::keyboard::{Key, KeyCode};
 use crate::mouse::MouseButton;
 use crate::{ButtonState, Input, ToInput};
 
@@ -45,18 +45,20 @@ impl ToInput for WindowEvent {
 
 impl From<KeyEvent> for Input {
     fn from(event: KeyEvent) -> Input {
-        let state = event.state.into();
-        let scancode = event.physical_key.to_scancode().unwrap_or(0);
-        let keycode = match event.physical_key.into() {
-            KeyCode::Unknown => None,
-            keycode => Some(keycode),
+        let key = Key {
+            scancode: event.physical_key.to_scancode().unwrap_or(0),
+            keycode: match event.physical_key.into() {
+                KeyCode::Unknown => None,
+                keycode => Some(keycode),
+            },
         };
-        let is_repeat = event.repeat;
-        Input::Keyboard {
-            state,
-            scancode,
-            keycode,
-            is_repeat,
+
+        match event.state {
+            ElementState::Pressed => Input::KeyPressed {
+                key,
+                is_repeat: event.repeat,
+            },
+            ElementState::Released => Input::KeyReleased { key },
         }
     }
 }
@@ -76,17 +78,19 @@ impl ToInput for DeviceEvent {
 
 impl From<RawKeyEvent> for Input {
     fn from(event: RawKeyEvent) -> Input {
-        let state = event.state.into();
-        let scancode = event.physical_key.to_scancode().unwrap_or(0);
-        let keycode = match event.physical_key.into() {
-            KeyCode::Unknown => None,
-            keycode => Some(keycode),
+        let key = Key {
+            scancode: event.physical_key.to_scancode().unwrap_or(0),
+            keycode: match event.physical_key.into() {
+                KeyCode::Unknown => None,
+                keycode => Some(keycode),
+            },
         };
-        Input::Keyboard {
-            state,
-            scancode,
-            keycode,
-            is_repeat: false,
+        match event.state {
+            ElementState::Pressed => Input::KeyPressed {
+                key,
+                is_repeat: false,
+            },
+            ElementState::Released => Input::KeyReleased { key },
         }
     }
 }
