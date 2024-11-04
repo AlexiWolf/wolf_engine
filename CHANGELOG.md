@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_window]
 
-### [Unreleased]
+### [0.4] 2024-11-03
 
 - Changed to event-driven window creation.
 - Rewrote the window system with support for alternative backends.
