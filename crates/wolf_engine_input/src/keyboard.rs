@@ -1,5 +1,11 @@
 //! Provides types related to keyboard input.
 
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub struct Key {
+    pub scancode: u32,
+    pub keycode: Option<KeyCode>,
+}
+
 /// Provides a set of named keys based on a US 104-key QWERTY keyboard.
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 #[non_exhaustive]
