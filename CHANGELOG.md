@@ -157,7 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [wolf_engine_events]
 
-### [Unreleased]
+### [0.2.1] - 2024-11-03
 
 - Add missing docs / changelog entry. 
 
