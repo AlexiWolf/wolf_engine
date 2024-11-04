@@ -11,7 +11,7 @@ rwh_05 = ["winit/rwh_05"]
 [dependencies]
 wolf_engine_events = { version = "0.2.1", path = "../wolf_engine_events" }
 wolf_engine_input = { version = "0.1.2", path = "../wolf_engine_input", features = ["winit"] }
-wolf_engine_window = { version = "0.3.0", path = "../wolf_engine_window" }
+wolf_engine_window = { version = "0.4.0", path = "../wolf_engine_window" }
 
 winit = "0.30"
 
