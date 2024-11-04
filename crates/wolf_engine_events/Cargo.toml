@@ -1,7 +1,7 @@
 [package]
 name = "wolf_engine_events"
 description = "An event modules for Wolf Engine."
-version = "0.1.0"
+version = "0.2.0"
 authors = ["AlexiWolf <alexi@wolvesin.space>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
