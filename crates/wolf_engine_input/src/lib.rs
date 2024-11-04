@@ -12,17 +12,15 @@ pub mod mouse;
 #[cfg(feature = "winit")]
 mod winit;
 
-use keyboard::KeyCode;
+use keyboard::{Key, KeyCode};
 use mouse::MouseButton;
 
 /// Provides a set of common input events.
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Input {
-    /// A keyboard button was pressed / released.
-    Keyboard {
-        state: ButtonState,
-        scancode: u32,
-        keycode: Option<KeyCode>,
+    /// A keyboard button was pressed.
+    KeyPressed {
+        key: Key,
 
         /// Indicates if this is a repeat key press.
         ///
@@ -30,6 +28,9 @@ pub enum Input {
         /// amount of time.   This value is `true` for these repeat events.
         is_repeat: bool,
     },
+
+    /// A keyboard button was released
+    KeyReleased { key: Key },
 
     /// The mouse has moved.
     ///
