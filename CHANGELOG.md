@@ -159,24 +159,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
-- Removed the `dynamic` feature.
-  - Removed the `dynamic` module.
-  - Removed `dynamic` feature to enable / disable the `dynamic` module.
-  - Removed `dynamic` module.
-    - Removed `event_loop` module.
-      - Removed `EventLoop` struct.
-        - Removed `EventReceiver` impl.
-        - Removed `Default` impl.
-        - Removed `event_sender()` method.
-    - Removed `events` module.
-      - Removed `Quit` event.
-      - Removed `EventsCleared` event.
-    - Removed `DynamicEvent` trait.
-    - Removed `DynamicEventSender` trait.
-      - Removed auto-impl for `EventSender<DynamicEventBox>` types.
-      - Removed a provided `send_event()` method.
-    - Removed `DynamicEventBox` type-def of `Box<dyn DynamicEvent>`.
-    - Removed `DynamicEvent` derive macro.
+- Add missing docs / changelog entry. 
+
+### [0.2] - 2024-11-03
+
+- Simplified the dynamic event system a bit.
+  - Removed the `dynamic` feature flag, since most things are likely going to
+    use the dynamic events system anyways.
+  - Renamed `DynaimcEventBox` to `AnyEvent`.
+  - Removed derive macro for `DynamicEvent`.
+  - Removed `DynamicEventSender`.
+  - Removed the `dynamic::events` module.
+  - Removed the `dynamic::event_loop` module.
+  - Changed the `EventLoop` struct into a trait.
+
 
 ### [0.1] - 2024-03-07
 
