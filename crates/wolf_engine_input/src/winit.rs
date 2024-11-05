@@ -27,10 +27,14 @@ impl ToInput for WindowEvent {
                 x: position.x.trunc() as f32,
                 y: position.y.trunc() as f32,
             }),
-            WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButtonPressed {
-                state: (*state).into(),
-                button: (*button).into(),
-            }),
+            WindowEvent::MouseInput { state, button, .. } => match state {
+                ElementState::Pressed => Some(Input::MouseButtonPressed {
+                    button: (*button).into(),
+                }),
+                ElementState::Released => Some(Input::MouseButtonReleased {
+                    button: (*button).into(),
+                }),
+            },
             WindowEvent::MouseWheel {
                 delta: MouseScrollDelta::LineDelta(x, y),
                 ..
