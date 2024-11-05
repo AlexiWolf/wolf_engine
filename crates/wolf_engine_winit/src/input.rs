@@ -49,7 +49,7 @@ impl ToInput for WinitWindowEvent {
                 x: position.x.trunc() as f32,
                 y: position.y.trunc() as f32,
             }),
-            WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButton {
+            WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButtonPressed {
                 state: (*state).into(),
                 button: (*button).into(),
             }),

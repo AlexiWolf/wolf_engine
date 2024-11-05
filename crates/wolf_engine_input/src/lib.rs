@@ -30,27 +30,41 @@ pub enum Input {
     },
 
     /// A keyboard button was released
-    KeyReleased { key: Key },
+    KeyReleased {
+        key: Key,
+    },
 
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved to a specific point in the window.
-    MouseMovedTo { x: f32, y: f32 },
+    MouseMovedTo {
+        x: f32,
+        y: f32,
+    },
 
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved, and by how much.  It's most useful to games with
     /// FPS-like camera controls.
-    MouseMoved { delta_x: f32, delta_y: f32 },
+    MouseMoved {
+        delta_x: f32,
+        delta_y: f32,
+    },
 
     /// A mouse button was pressed / released.
-    MouseButton {
-        state: ButtonState,
+    MouseButtonPressed {
+        button: MouseButton,
+    },
+
+    MouseButtonReleased {
         button: MouseButton,
     },
 
     /// The mouse was scrolled.
-    MouseScroll { delta_x: f32, delta_y: f32 },
+    MouseScroll {
+        delta_x: f32,
+        delta_y: f32,
+    },
 }
 
 /// Indicates the current state of a button input.
