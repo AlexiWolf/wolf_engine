@@ -44,8 +44,8 @@ fn process_input(input: &Input) {
     match input {
         Input::KeyPressed { key, is_repeat } => println!("Key: {key:?}, {is_repeat:?}"),
         Input::KeyReleased { key } => println!("Key: {key:?}"),
-        Input::MouseMove { x, y } => println!("Mouse Moved: {x}, {y}"),
-        Input::RawMouseMove { delta_x, delta_y } => {
+        Input::MouseMovedTo { x, y } => println!("Mouse Moved: {x}, {y}"),
+        Input::MouseMoved { delta_x, delta_y } => {
             println!("Raw Mouse Moved: {delta_x}, {delta_y}")
         }
         Input::MouseButton { state, button } => println!("Mouse Button: {button:?} {state:?}"),

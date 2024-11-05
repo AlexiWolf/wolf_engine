@@ -35,13 +35,13 @@ pub enum Input {
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved to a specific point in the window.
-    MouseMove { x: f32, y: f32 },
+    MouseMovedTo { x: f32, y: f32 },
 
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved, and by how much.  It's most useful to games with
     /// FPS-like camera controls.
-    RawMouseMove { delta_x: f32, delta_y: f32 },
+    MouseMoved { delta_x: f32, delta_y: f32 },
 
     /// A mouse button was pressed / released.
     MouseButton {

@@ -1,6 +1,8 @@
-use crate::keyboard::{Key, KeyCode};
-use crate::mouse::MouseButton;
-use crate::{ButtonState, Input, ToInput};
+use std::ops::Deref;
+
+use wolf_engine_input::keyboard::KeyCode;
+use wolf_engine_input::mouse::MouseButton;
+use wolf_engine_input::{ButtonState, Input, ToInput};
 
 use winit::event::{KeyEvent, MouseScrollDelta, WindowEvent};
 use winit::{
@@ -9,7 +11,17 @@ use winit::{
     platform::scancode::PhysicalKeyExtScancode,
 };
 
-impl<T> ToInput for winit::event::Event<T> {
+pub struct WinitEvent<T: 'static>(winit::event::Event<T>);
+
+impl<T> Deref for WinitEvent<T> {
+    type Target = winit::event::Event<T>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<T> ToInput for WinitEvent<T> {
     fn to_input(&self) -> Option<Input> {
         match self {
             Event::DeviceEvent { event, .. } => event.to_input(),
@@ -19,7 +31,17 @@ impl<T> ToInput for winit::event::Event<T> {
     }
 }
 
-impl ToInput for WindowEvent {
+pub struct WinitWindowEvent(winit::event::WindowEvent);
+
+impl Deref for WinitWindowEvent {
+    type Target = winit::event::WindowEvent;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl ToInput for WinitWindowEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             WindowEvent::KeyboardInput { event, .. } => Some(event.clone().into()),
@@ -45,20 +67,18 @@ impl ToInput for WindowEvent {
 
 impl From<KeyEvent> for Input {
     fn from(event: KeyEvent) -> Input {
-        let key = Key {
-            scancode: event.physical_key.to_scancode().unwrap_or(0),
-            keycode: match event.physical_key.into() {
-                KeyCode::Unknown => None,
-                keycode => Some(keycode),
-            },
+        let state = event.state.into();
+        let scancode = event.physical_key.to_scancode().unwrap_or(0);
+        let keycode = match event.physical_key.into() {
+            KeyCode::Unknown => None,
+            keycode => Some(keycode),
         };
-
-        match event.state {
-            ElementState::Pressed => Input::KeyPressed {
-                key,
-                is_repeat: event.repeat,
-            },
-            ElementState::Released => Input::KeyReleased { key },
+        let is_repeat = event.repeat;
+        Input::Keyboard {
+            state,
+            scancode,
+            keycode,
+            is_repeat,
         }
     }
 }
@@ -78,19 +98,17 @@ impl ToInput for DeviceEvent {
 
 impl From<RawKeyEvent> for Input {
     fn from(event: RawKeyEvent) -> Input {
-        let key = Key {
-            scancode: event.physical_key.to_scancode().unwrap_or(0),
-            keycode: match event.physical_key.into() {
-                KeyCode::Unknown => None,
-                keycode => Some(keycode),
-            },
+        let state = event.state.into();
+        let scancode = event.physical_key.to_scancode().unwrap_or(0);
+        let keycode = match event.physical_key.into() {
+            KeyCode::Unknown => None,
+            keycode => Some(keycode),
         };
-        match event.state {
-            ElementState::Pressed => Input::KeyPressed {
-                key,
-                is_repeat: false,
-            },
-            ElementState::Released => Input::KeyReleased { key },
+        Input::Keyboard {
+            state,
+            scancode,
+            keycode,
+            is_repeat: false,
         }
     }
 }
