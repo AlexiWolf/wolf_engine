@@ -42,11 +42,11 @@ pub fn main() {
 
 fn process_input(input: &Input) {
     match input {
-        Input::KeyPressed { key, is_repeat } => println!("Key: {key:?}, {is_repeat:?}"),
-        Input::KeyReleased { key } => println!("Key: {key:?}"),
-        Input::MouseMovedTo { x, y } => println!("Mouse Moved: {x}, {y}"),
+        Input::KeyPressed { key, is_repeat } => println!("Key pressed: {key:?}, {is_repeat:?}"),
+        Input::KeyReleased { key } => println!("Key released: {key:?}"),
+        Input::MouseMovedTo { x, y } => println!("Mouse Moved to: {x}px, {y}px"),
         Input::MouseMoved { delta_x, delta_y } => {
-            println!("Raw Mouse Moved: {delta_x}, {delta_y}")
+            println!("Mouse Moved: {delta_x}, {delta_y}")
         }
         Input::MouseButtonPressed { button } => {
             println!("Mouse Button pressed: {button:?}")
