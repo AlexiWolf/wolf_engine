@@ -12,6 +12,7 @@ use wolf_engine_events::{
     mpsc::{self, MpscEventReceiver, MpscEventSender},
     EventReceiver, EventSender,
 };
+use wolf_engine_input::ToInput;
 use wolf_engine_window::{
     backend::{
         event::{WindowContextEvent, WindowContextEventSender},
@@ -213,7 +214,24 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
             WinitEvent::RedrawRequested => {
                 (self.event_handler)(Box::new(WindowEvent::WindowRedrawRequested(uuid)))
             }
-            _ => (),
+            _ => match event.to_input() {
+                Some(input) => {
+                    (self.event_handler)(Box::new(WindowEvent::Input(Some(uuid), input)))
+                }
+                None => (),
+            },
+        }
+    }
+
+    fn device_event(
+        &mut self,
+        _event_loop: &ActiveEventLoop,
+        _device_id: winit::event::DeviceId,
+        event: winit::event::DeviceEvent,
+    ) {
+        match event.to_input() {
+            Some(input) => (self.event_handler)(Box::new(WindowEvent::Input(None, input))),
+            None => (),
         }
     }
 }
