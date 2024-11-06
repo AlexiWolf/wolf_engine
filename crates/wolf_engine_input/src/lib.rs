@@ -12,7 +12,7 @@ pub mod mouse;
 #[cfg(feature = "winit")]
 mod winit;
 
-use keyboard::{Key, KeyCode};
+use keyboard::Key;
 use mouse::MouseButton;
 
 /// Provides a set of common input events.
