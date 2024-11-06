@@ -12,17 +12,15 @@ pub mod mouse;
 #[cfg(feature = "winit")]
 mod winit;
 
-use keyboard::KeyCode;
+use keyboard::Key;
 use mouse::MouseButton;
 
 /// Provides a set of common input events.
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Input {
-    /// A keyboard button was pressed / released.
-    Keyboard {
-        state: ButtonState,
-        scancode: u32,
-        keycode: Option<KeyCode>,
+    /// A keyboard button was pressed.
+    KeyPressed {
+        key: Key,
 
         /// Indicates if this is a repeat key press.
         ///
@@ -31,32 +29,42 @@ pub enum Input {
         is_repeat: bool,
     },
 
+    /// A keyboard button was released
+    KeyReleased {
+        key: Key,
+    },
+
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved to a specific point in the window.
-    MouseMove { x: f32, y: f32 },
+    MouseMovedTo {
+        x: f32,
+        y: f32,
+    },
 
     /// The mouse has moved.
     ///
     /// This event indicates the mouse has moved, and by how much.  It's most useful to games with
     /// FPS-like camera controls.
-    RawMouseMove { delta_x: f32, delta_y: f32 },
+    MouseMoved {
+        delta_x: f32,
+        delta_y: f32,
+    },
 
     /// A mouse button was pressed / released.
-    MouseButton {
-        state: ButtonState,
+    MouseButtonPressed {
+        button: MouseButton,
+    },
+
+    MouseButtonReleased {
         button: MouseButton,
     },
 
     /// The mouse was scrolled.
-    MouseScroll { delta_x: f32, delta_y: f32 },
-}
-
-/// Indicates the current state of a button input.
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum ButtonState {
-    Down,
-    Up,
+    MouseScrolled {
+        delta_x: f32,
+        delta_y: f32,
+    },
 }
 
 /// Provides an adapter to convert external input events to an [`Input`].

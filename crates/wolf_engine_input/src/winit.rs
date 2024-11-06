@@ -1,6 +1,6 @@
-use crate::keyboard::KeyCode;
+use crate::keyboard::{Key, KeyCode};
 use crate::mouse::MouseButton;
-use crate::{ButtonState, Input, ToInput};
+use crate::{Input, ToInput};
 
 use winit::event::{KeyEvent, MouseScrollDelta, WindowEvent};
 use winit::{
@@ -23,18 +23,22 @@ impl ToInput for WindowEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             WindowEvent::KeyboardInput { event, .. } => Some(event.clone().into()),
-            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMove {
+            WindowEvent::CursorMoved { position, .. } => Some(Input::MouseMovedTo {
                 x: position.x.trunc() as f32,
                 y: position.y.trunc() as f32,
             }),
-            WindowEvent::MouseInput { state, button, .. } => Some(Input::MouseButton {
-                state: (*state).into(),
-                button: (*button).into(),
-            }),
+            WindowEvent::MouseInput { state, button, .. } => match state {
+                ElementState::Pressed => Some(Input::MouseButtonPressed {
+                    button: (*button).into(),
+                }),
+                ElementState::Released => Some(Input::MouseButtonReleased {
+                    button: (*button).into(),
+                }),
+            },
             WindowEvent::MouseWheel {
                 delta: MouseScrollDelta::LineDelta(x, y),
                 ..
-            } => Some(Input::MouseScroll {
+            } => Some(Input::MouseScrolled {
                 delta_x: *x,
                 delta_y: *y,
             }),
@@ -45,18 +49,20 @@ impl ToInput for WindowEvent {
 
 impl From<KeyEvent> for Input {
     fn from(event: KeyEvent) -> Input {
-        let state = event.state.into();
-        let scancode = event.physical_key.to_scancode().unwrap_or(0);
-        let keycode = match event.physical_key.into() {
-            KeyCode::Unknown => None,
-            keycode => Some(keycode),
+        let key = Key {
+            scancode: event.physical_key.to_scancode().unwrap_or(0),
+            keycode: match event.physical_key.into() {
+                KeyCode::Unknown => None,
+                keycode => Some(keycode),
+            },
         };
-        let is_repeat = event.repeat;
-        Input::Keyboard {
-            state,
-            scancode,
-            keycode,
-            is_repeat,
+
+        match event.state {
+            ElementState::Pressed => Input::KeyPressed {
+                key,
+                is_repeat: event.repeat,
+            },
+            ElementState::Released => Input::KeyReleased { key },
         }
     }
 }
@@ -65,7 +71,7 @@ impl ToInput for DeviceEvent {
     fn to_input(&self) -> Option<Input> {
         match self {
             DeviceEvent::Key(event) => Some(event.clone().into()),
-            DeviceEvent::MouseMotion { delta } => Some(Input::RawMouseMove {
+            DeviceEvent::MouseMotion { delta } => Some(Input::MouseMoved {
                 delta_x: delta.0 as f32,
                 delta_y: delta.1 as f32,
             }),
@@ -76,26 +82,19 @@ impl ToInput for DeviceEvent {
 
 impl From<RawKeyEvent> for Input {
     fn from(event: RawKeyEvent) -> Input {
-        let state = event.state.into();
-        let scancode = event.physical_key.to_scancode().unwrap_or(0);
-        let keycode = match event.physical_key.into() {
-            KeyCode::Unknown => None,
-            keycode => Some(keycode),
+        let key = Key {
+            scancode: event.physical_key.to_scancode().unwrap_or(0),
+            keycode: match event.physical_key.into() {
+                KeyCode::Unknown => None,
+                keycode => Some(keycode),
+            },
         };
-        Input::Keyboard {
-            state,
-            scancode,
-            keycode,
-            is_repeat: false,
-        }
-    }
-}
-
-impl From<ElementState> for ButtonState {
-    fn from(state: ElementState) -> Self {
-        match state {
-            ElementState::Pressed => ButtonState::Down,
-            ElementState::Released => ButtonState::Up,
+        match event.state {
+            ElementState::Pressed => Input::KeyPressed {
+                key,
+                is_repeat: false,
+            },
+            ElementState::Released => Input::KeyReleased { key },
         }
     }
 }
