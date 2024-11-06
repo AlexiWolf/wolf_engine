@@ -1,6 +1,6 @@
 use crate::keyboard::{Key, KeyCode};
 use crate::mouse::MouseButton;
-use crate::{ButtonState, Input, ToInput};
+use crate::{Input, ToInput};
 
 use winit::event::{KeyEvent, MouseScrollDelta, WindowEvent};
 use winit::{
@@ -95,15 +95,6 @@ impl From<RawKeyEvent> for Input {
                 is_repeat: false,
             },
             ElementState::Released => Input::KeyReleased { key },
-        }
-    }
-}
-
-impl From<ElementState> for ButtonState {
-    fn from(state: ElementState) -> Self {
-        match state {
-            ElementState::Pressed => ButtonState::Down,
-            ElementState::Released => ButtonState::Up,
         }
     }
 }
