@@ -61,7 +61,7 @@ pub enum Input {
     },
 
     /// The mouse was scrolled.
-    MouseScroll {
+    MouseScrolled {
         delta_x: f32,
         delta_y: f32,
     },

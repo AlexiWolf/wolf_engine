@@ -38,7 +38,7 @@ impl ToInput for WindowEvent {
             WindowEvent::MouseWheel {
                 delta: MouseScrollDelta::LineDelta(x, y),
                 ..
-            } => Some(Input::MouseScroll {
+            } => Some(Input::MouseScrolled {
                 delta_x: *x,
                 delta_y: *y,
             }),

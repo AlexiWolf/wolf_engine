@@ -54,6 +54,8 @@ fn process_input(input: &Input) {
         Input::MouseButtonReleased { button } => {
             println!("Mouse Button released: {button:?}")
         }
-        Input::MouseScroll { delta_x, delta_y } => println!("Mouse Scrolled: {delta_x} {delta_y}"),
+        Input::MouseScrolled { delta_x, delta_y } => {
+            println!("Mouse Scrolled: {delta_x} {delta_y}")
+        }
     }
 }
