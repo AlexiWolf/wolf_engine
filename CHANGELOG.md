@@ -100,6 +100,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed "raw" keyboard input to use the normal `Keyboard` input.
   - Removed `Input::RawKeyboard` variant.
+- Changed to pressed / released events for buttons.
+  - Removed `ButtonState`.
+- Renamed events to be in past-tense.
 
 ### [0.1.2] - 2023-07-09
 
