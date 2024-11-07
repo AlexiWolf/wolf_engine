@@ -94,6 +94,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `HasRwh6Handles` trait.
 - Added public re-export of the `winit` crate.
 
+
+## [wolf_engine_winit]
+
+## [Unreleased]
+
+- Added EventLoop / main-loop implementation based on `winit`.
+- Added basic window-system features:
+  - Added window creation / deletion.
+  - Added window resizing.
+  - Added multi-window support.
+  - Added Raw Window Handle integration.
+  - Added window inputs.
+
 ## [wolf_engine_input]
 
 ### [Unreleased]
