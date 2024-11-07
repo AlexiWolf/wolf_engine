@@ -214,9 +214,11 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
             WinitEvent::RedrawRequested => {
                 (self.event_handler)(Box::new(WindowEvent::WindowRedrawRequested(uuid)))
             }
-            _ => if let Some(input) = event.to_input() {
-                (self.event_handler)(Box::new(WindowEvent::Input(Some(uuid), input)))
-            },
+            _ => {
+                if let Some(input) = event.to_input() {
+                    (self.event_handler)(Box::new(WindowEvent::Input(Some(uuid), input)))
+                }
+            }
         }
     }
 
@@ -226,6 +228,8 @@ impl<H: FnMut(AnyEvent)> ApplicationHandler for WinitApp<H> {
         _device_id: winit::event::DeviceId,
         event: winit::event::DeviceEvent,
     ) {
-        if let Some(input) = event.to_input() { (self.event_handler)(Box::new(WindowEvent::Input(None, input))) }
+        if let Some(input) = event.to_input() {
+            (self.event_handler)(Box::new(WindowEvent::Input(None, input)))
+        }
     }
 }
