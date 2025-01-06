@@ -14,6 +14,8 @@ categories = ["game-development", "game-engines"]
 members = ["crates/*"]
 
 [dependencies]
+blit = "0.8.5"
+rand = "0.8.5"
 wolf_engine_events = { version = "0.2.1", path = "crates/wolf_engine_events" }
 wolf_engine_input = { version = "0.1.2", path = "crates/wolf_engine_input", optional = true }
 wolf_engine_window = { version = "0.4.0", path = "crates/wolf_engine_window", optional = true }
@@ -29,7 +31,7 @@ rwh_05 = ["wolf_engine_window/rwh_05", "wolf_engine_winit/rwh_05"]
 
 [dev-dependencies]
 winit = "0.30"
-pixels = "0.13"
+pixels = "0.14"
 
 [[example]]
 name = "input"
